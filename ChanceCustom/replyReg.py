@@ -70,12 +70,12 @@ def replyValueRegTotal(message, valDict):
     res_message = message
     for listRegTotal_this in listRegTotal:
         res_message = re.sub(listRegTotal_this[0], listRegTotal_this[1], res_message)
-    res_message = replyValueReg(res_message, valDict, listRegTotal_this)
+    res_message = replyValueReg(res_message, valDict)
     for listRegTotal_this in listRegTotalAfter:
         res_message = re.sub(listRegTotal_this[0], listRegTotal_this[1], res_message)
     return res_message
 
-def replyValueReg(message, valDict, rule):
+def replyValueReg(message, valDict):
     flag_now = 'plant'
     count = 0
     len_count = len(message)
