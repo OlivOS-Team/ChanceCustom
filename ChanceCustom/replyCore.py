@@ -16,6 +16,8 @@ _________ ___________________ ____  __.
 import OlivOS
 import ChanceCustom
 
+import re
+
 def unity_reply(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     reply_runtime(
         plugin_event = plugin_event,
@@ -62,6 +64,7 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                     valDict
                                 )
                             )
+                            break
                     elif 'perfix' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message.startswith(tmp_dictCustomData_this[key_this]['key']):
                             valDict['内容1'] = tmp_message[len(tmp_dictCustomData_this[key_this]['key']):]
@@ -72,8 +75,23 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                     valDict
                                 )
                             )
+                            break
                     elif 'reg' == tmp_dictCustomData_this[key_this]['matchType']:
-                        pass
+                        res_re = re.match(tmp_dictCustomData_this[key_this]['key'], tmp_message)
+                        if res_re != None:
+                            res_re_list = res_re.groups()
+                            count = 1
+                            for res_re_list_this in res_re_list:
+                                valDict['内容%s' % str(count)] = res_re_list_this
+                                count += 1
+                            reply(
+                                plugin_event,
+                                ChanceCustom.replyReg.replyValueRegTotal(
+                                    tmp_dictCustomData_this[key_this]['value'],
+                                    valDict
+                                )
+                            )
+                            break
 
 def reply(plugin_event:OlivOS.API.Event, message:str):
     plugin_event.reply(message)
