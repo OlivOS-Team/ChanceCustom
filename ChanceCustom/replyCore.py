@@ -82,7 +82,13 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                             res_re_list = res_re.groups()
                             count = 1
                             for res_re_list_this in res_re_list:
-                                valDict['内容%s' % str(count)] = res_re_list_this
+                                key = '内容%s' % str(count)
+                                value = ''
+                                if type(res_re_list_this) == str:
+                                    value = res_re_list_this
+                                elif res_re_list_this != None:
+                                    value = ''
+                                valDict[key] = value
                                 count += 1
                             reply(
                                 plugin_event,
