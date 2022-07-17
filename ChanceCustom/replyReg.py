@@ -34,6 +34,13 @@ listRegTotalFun = [
     ['更新常量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp()],
     ['赋值常量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp()],
 
+    # >常用变量2<
+    ['随机数',['X','Y'], ChanceCustom.replyBase.RangeNumFunTemp()],
+    ['补位随机数',['X-Y'], ChanceCustom.replyBase.PaddingRangeNumFunTemp()],
+    ['随机字符',[], ChanceCustom.replyBase.RangeCharFunTemp()],
+    ['运行目录',[], ChanceCustom.replyBase.RunDirectoryFunTemp()],
+    ['应用目录',[], ChanceCustom.replyBase.AppDirectoryFunTemp()],
+
     # >循环变量<
     ['循环', ['循环次数', '循环体'], ChanceCustom.replyBase.forRangeFunTemp()],
     ['Fori', ['遍历体', '遍历文本', '分隔符'], ChanceCustom.replyBase.forEachFunTemp()],

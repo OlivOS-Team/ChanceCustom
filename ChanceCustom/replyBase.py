@@ -15,6 +15,9 @@ _________ ___________________ ____  __.
 
 import OlivOS
 import ChanceCustom
+import random
+import os
+import sys
 
 import re
 
@@ -283,3 +286,83 @@ def updateValFunTemp():
             return res
         return updateVal_f
     return updateValFun
+
+def RangeNumFunTemp():
+    def RangeNumFun(valDict):
+        def RangeNum_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = 0
+            resDict = {}
+            getCharRaw(resDict, 'X', '0', groupDict)
+            getCharRaw(resDict, 'Y', None, groupDict)
+            if resDict['Y'] == None:
+                if '-' in resDict['X']:
+                    try:
+                        tmp = resDict['X'].split('-')
+                        x = int(tmp[0])
+                        y = int(tmp[1])
+                    except:
+                        x = 0
+                        y = 0
+                else:
+                    x = 0
+                    y = 0
+            else:
+                getNumRegTatol(resDict, 'X', '0', groupDict, valDict)
+                getNumRegTatol(resDict, 'Y', '0', groupDict, valDict)
+                x = resDict['X']
+                y = resDict['Y']
+            res = random.randint(x,y)
+            return str(res)
+        return RangeNum_f
+    return RangeNumFun
+
+def PaddingRangeNumFunTemp():
+    def PaddingRangeNumFun(valDict):
+        def PaddingRangeNum_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = 0
+            resDict = {}
+            getCharRaw(resDict, 'X-Y', '0-0', groupDict)
+            try:
+                tmp = resDict['X-Y'].split('-')
+                x = int(tmp[0])
+                y = int(tmp[1])
+            except:
+                x = 0
+                y = 0
+            res = str(random.randint(x,y))
+            length = len(str(y))
+            res = res.zfill(length)
+            return res
+        return PaddingRangeNum_f
+    return PaddingRangeNumFun
+
+def RangeCharFunTemp():
+    def RangeCharFun(valDict):
+        def RangeChar_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            alphabet = 'AaBbCcDdEdFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789'
+            res = random.choice(alphabet)
+            return res
+        return RangeChar_f
+    return RangeCharFun
+
+def RunDirectoryFunTemp():
+    def RunDirectoryFun(valDict):
+        def RunDirectory_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = os.path.split(os.path.realpath(sys.argv[0]))[0]
+            return res
+        return RunDirectory_f
+    return RunDirectoryFun
+
+def AppDirectoryFunTemp():
+    def AppDirectoryFun(valDict):
+        def AppDirectory_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = os.path.split(os.path.realpath(sys.argv[0]))[0]
+            res += '\\plugin\\data\\ChanceCustom\\'
+            return res
+        return AppDirectory_f
+    return AppDirectoryFun
