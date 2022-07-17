@@ -5,8 +5,8 @@ _________ ___________________ ____  __.
 \     \___\     \___|    |   |    |  \ 
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
-@File      :   replyBase.py
-@Author    :   lunzhiPenxil仑质
+@File      :   replyRandom.py
+@Author    :   lunzhiPenxil仑质、Amber-Keter
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
