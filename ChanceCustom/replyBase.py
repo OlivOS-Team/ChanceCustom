@@ -300,7 +300,7 @@ def AppDirectoryFunTemp():
         def AppDirectory_f(matched:'re.Match|dict'):
             groupDict = getGroupDictInit(matched)
             res = os.path.split(os.path.realpath(sys.argv[0]))[0]
-            res += '\\plugin\\data\\ChanceCustom\\'
+            res += '/plugin/data/ChanceCustom/'
             return res
         return AppDirectory_f
     return AppDirectoryFun
