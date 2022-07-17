@@ -19,7 +19,7 @@ import random
 
 import re
 
-def RangeNumFunTemp():
+def RangeNumFunTemp(flagPadding:bool = False):
     def RangeNumFun(valDict):
         def RangeNum_f(matched:'re.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
@@ -44,31 +44,12 @@ def RangeNumFunTemp():
                 ChanceCustom.replyBase.getNumRegTatol(resDict, 'Y', '0', groupDict, valDict)
                 x = resDict['X']
                 y = resDict['Y']
-            res = random.randint(x,y)
-            return str(res)
+            res = str(random.randint(x,y))
+            if flagPadding:
+                res = res.zfill(len(str(y)))
+            return res
         return RangeNum_f
     return RangeNumFun
-
-def PaddingRangeNumFunTemp():
-    def PaddingRangeNumFun(valDict):
-        def PaddingRangeNum_f(matched:'re.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
-            res = 0
-            resDict = {}
-            ChanceCustom.replyBase.getCharRaw(resDict, 'X-Y', '0-0', groupDict)
-            try:
-                tmp = resDict['X-Y'].split('-')
-                x = int(tmp[0])
-                y = int(tmp[1])
-            except:
-                x = 0
-                y = 0
-            res = str(random.randint(x,y))
-            length = len(str(y))
-            res = res.zfill(length)
-            return res
-        return PaddingRangeNum_f
-    return PaddingRangeNumFun
 
 def RangeCharFunTemp():
     def RangeCharFun(valDict):
