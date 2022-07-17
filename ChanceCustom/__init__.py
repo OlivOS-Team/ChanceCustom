@@ -18,6 +18,7 @@ from . import main
 from . import load
 from . import replyCore
 from . import replyBase
+from . import replyRandom
 from . import replyOlivaDice
 from . import replyReg
 if(platform.system() == 'Windows'):
