@@ -105,7 +105,7 @@ class ConfigUI(object):
         self.UIObject['tree'].column('KEY', width = 90)
         self.UIObject['tree'].column('MATCHTYPE', width = 90)
         self.UIObject['tree'].column('MATCHPLACE', width = 90)
-        self.UIObject['tree'].column('VALUE', width = 160)
+        self.UIObject['tree'].column('VALUE', width = 140)
         self.UIObject['tree'].column('PRIORITY', width = 50)
         self.UIObject['tree'].heading('KEY', text = '关键词')
         self.UIObject['tree'].heading('MATCHTYPE', text = '匹配类型')
@@ -116,8 +116,22 @@ class ConfigUI(object):
         self.UIObject['tree_rightkey_menu'] = tkinter.Menu(self.UIObject['root'], tearoff = False)
         #self.UIObject['tree'].bind('<<TreeviewSelect>>', lambda x : self.treeSelect('tree', x))
         self.tree_load()
-        self.UIObject['tree'].place(x = 15, y = 64, width = 488 , height = 321)
+        self.UIObject['tree'].place(x = 15, y = 64, width = 488 - 18, height = 321)
         self.UIObject['tree'].bind('<Button-3>', lambda x : self.tree_rightKey(x))
+        self.UIObject['tree_yscroll'] = ttk.Scrollbar(
+            self.UIObject['root'],
+            orient = "vertical",
+            command = self.UIObject['tree'].yview
+        )
+        self.UIObject['tree_yscroll'].place(
+            x = 15 + 488 - 18,
+            y = 64,
+            width = 18,
+            height = 321
+        )
+        self.UIObject['tree'].configure(
+            yscrollcommand = self.UIObject['tree_yscroll'].set
+        )
 
     def tree_UI_Button_init(self, name, text, command, x, y, width, height):
         self.UIObject[name] = tkinter.Button(
