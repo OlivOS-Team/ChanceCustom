@@ -50,6 +50,11 @@ listRegTotalFun = [
     ['运行目录', [], ChanceCustom.replyBase.RunDirectoryFunTemp()],
     ['应用目录', [], ChanceCustom.replyBase.AppDirectoryFunTemp()],
 
+    # >网页访问变量<
+    ['访问-UTF', ['网址'], ChanceCustom.replyWeb.httpGetPageFunTemp(type = 'UTF')],
+    ['访问-GBK', ['网址'], ChanceCustom.replyWeb.httpGetPageFunTemp(type = 'GBK')],
+    ['访问', ['网址'], ChanceCustom.replyWeb.httpGetPageFunTemp()],
+
     # >循环变量<
     ['循环', ['循环次数', '循环体'], ChanceCustom.replyBase.forRangeFunTemp()],
     ['Fori', ['遍历体', '遍历文本', '分隔符'], ChanceCustom.replyBase.forEachFunTemp()],

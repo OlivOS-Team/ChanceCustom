@@ -19,6 +19,7 @@ from . import load
 from . import replyCore
 from . import replyBase
 from . import replyIO
+from . import replyWeb
 from . import replyRandom
 from . import replyOlivaDice
 from . import replyReg
