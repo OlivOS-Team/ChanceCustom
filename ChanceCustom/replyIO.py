@@ -13,7 +13,6 @@ _________ ___________________ ____  __.
 @Desc      :   None
 '''
 
-from codecs import escape_decode
 import OlivOS
 import ChanceCustom
 
