@@ -6,7 +6,7 @@ _________ ___________________ ____  __.
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyBase.py
-@Author    :   lunzhiPenxil仑质
+@Author    :   lunzhiPenxil仑质、Amber-Keter
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
@@ -254,15 +254,12 @@ def setValFunTemp():
             res = ''
             resDict = {}
             getCharRegTatol(resDict, '自定义名称', '', groupDict, valDict)
-            getCharRaw(resDict, '赋值内容', '', groupDict)
+            getCharRegTatol(resDict, '赋值内容', '', groupDict, valDict)
             key = resDict['自定义名称']
             if 'val_raw_data' not in valDict:
                 valDict['val_raw_data'] = {}
             valDict['val_raw_data'][key] = resDict['赋值内容']
-            valDict[key] = ChanceCustom.replyReg.replyValueRegTotal(
-                valDict['val_raw_data'][key],
-                valDict = valDict
-            )
+            valDict[key] = valDict['val_raw_data'][key]
             return res
         return setVal_f
     return setValFun
@@ -278,10 +275,7 @@ def updateValFunTemp():
             if 'val_raw_data' not in valDict:
                 valDict['val_raw_data'] = {}
             if key in valDict['val_raw_data']:
-                valDict[key] = ChanceCustom.replyReg.replyValueRegTotal(
-                    valDict['val_raw_data'][key],
-                    valDict = valDict
-                )
+                valDict[key] = valDict['val_raw_data'][key]
             return res
         return updateVal_f
     return updateValFun

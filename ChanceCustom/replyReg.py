@@ -34,13 +34,21 @@ listRegTotalFun = [
     ['更新常量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp()],
     ['赋值常量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp()],
 
-    # >常用变量2<
-    ['随机数',['X', 'Y'], ChanceCustom.replyRandom.RangeNumFunTemp(flagPadding = False)],
-    ['补位随机数',['X', 'Y'], ChanceCustom.replyRandom.RangeNumFunTemp(flagPadding = True)],
-    ['随机字符',[], ChanceCustom.replyRandom.RangeCharFunTemp()],
+    # >文件操作<
+    ['读入', ['文件路径'], ChanceCustom.replyIO.fileReadFunTemp()],
+    ['写出', ['欲写内容', '文件路径'], ChanceCustom.replyIO.fileWriteFunTemp()],
+    ['读配置', ['文件路径', '配置节', '配置项', '默认值'], ChanceCustom.replyIO.iniGetFunTemp()],
+    ['写配置', ['文件路径', '配置节', '配置项', '写入值'], ChanceCustom.replyIO.iniSetFunTemp()],
+    ['取配置', ['文件路径', '配置节'], ChanceCustom.replyIO.iniGetOptionsFunTemp()],
+    ['取配节', ['文件路径'], ChanceCustom.replyIO.iniGetSectionFunTemp()],
 
-    ['运行目录',[], ChanceCustom.replyBase.RunDirectoryFunTemp()],
-    ['应用目录',[], ChanceCustom.replyBase.AppDirectoryFunTemp()],
+    # >常用变量2<
+    ['随机数', ['X', 'Y'], ChanceCustom.replyRandom.RangeNumFunTemp(flagPadding = False)],
+    ['补位随机数', ['X', 'Y'], ChanceCustom.replyRandom.RangeNumFunTemp(flagPadding = True)],
+    ['随机字符', [], ChanceCustom.replyRandom.RangeCharFunTemp()],
+
+    ['运行目录', [], ChanceCustom.replyBase.RunDirectoryFunTemp()],
+    ['应用目录', [], ChanceCustom.replyBase.AppDirectoryFunTemp()],
 
     # >循环变量<
     ['循环', ['循环次数', '循环体'], ChanceCustom.replyBase.forRangeFunTemp()],
