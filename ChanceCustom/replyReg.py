@@ -52,6 +52,7 @@ listRegTotalFun = [
     ['写配置', ['文件路径', '配置节', '配置项', '写入值'], ChanceCustom.replyIO.iniSetFunTemp()],
     ['取配置', ['文件路径', '配置节'], ChanceCustom.replyIO.iniGetOptionsFunTemp()],
     ['取配节', ['文件路径'], ChanceCustom.replyIO.iniGetSectionFunTemp()],
+
     ['读Json', ['文件路径', '默认值', '...'], ChanceCustom.replyJson.jsonGetFunTemp()],
     ['写Json-插列表-自动', ['文件路径', '插入值', '...'], ChanceCustom.replyJson.jsonAppendFunTemp(flagValType = 'auto')],
     ['写Json-插列表-文本', ['文件路径', '插入值', '...'], ChanceCustom.replyJson.jsonAppendFunTemp(flagValType = 'str')],

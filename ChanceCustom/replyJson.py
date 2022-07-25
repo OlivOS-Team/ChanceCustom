@@ -38,12 +38,13 @@ def jsonSetDataHandler(data:str, pathList:list, setVal:str, flagValType:str):
             elif count == len(pathList) - 1:
                 data_in = None
                 try:
-                    data_in = json.loads(setVal)
+                    if flagValType == 'str':
+                        data_in = setVal
+                    else:
+                        data_in = json.loads(setVal)
                 except:
                     data_in = setVal
-                if flagValType == 'str':
-                    data_in = str(data_in)
-                elif type(data_in) not in [dict, list]:
+                if type(data_in) not in [dict, list]:
                     if flagValType == 'default':
                         data_in = str(data_in)
                     elif flagValType == 'auto':
@@ -314,12 +315,13 @@ def jsonAppendDataHandler(data:str, pathList:list, setVal:str, flagValType:str):
             count += 1
         data_in = None
         try:
-            data_in = json.loads(setVal)
+            if flagValType == 'str':
+                data_in = setVal
+            else:
+                data_in = json.loads(setVal)
         except:
             data_in = setVal
-        if flagValType == 'str':
-            data_in = str(data_in)
-        elif type(data_in) not in [dict, list]:
+        if type(data_in) not in [dict, list]:
             if flagValType == 'default':
                 data_in = str(data_in)
             elif flagValType == 'auto':
