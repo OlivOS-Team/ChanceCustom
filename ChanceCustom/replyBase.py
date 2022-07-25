@@ -20,6 +20,11 @@ import sys
 
 import re
 
+def getDataRaw(resDict, calKey, default, groupDict):
+    resDict[calKey] = default
+    if calKey in groupDict:
+        resDict[calKey] = groupDict[calKey]
+
 def getCharRaw(resDict, calKey, default, groupDict):
     resDict[calKey] = default
     if calKey in groupDict:
@@ -256,10 +261,10 @@ def setValFunTemp():
             getCharRegTatol(resDict, '自定义名称', '', groupDict, valDict)
             getCharRegTatol(resDict, '赋值内容', '', groupDict, valDict)
             key = resDict['自定义名称']
-            if 'val_raw_data' not in valDict:
-                valDict['val_raw_data'] = {}
-            valDict['val_raw_data'][key] = resDict['赋值内容']
-            valDict[key] = valDict['val_raw_data'][key]
+            if 'valRawData' not in valDict:
+                valDict['valRawData'] = {}
+            valDict['valRawData'][key] = resDict['赋值内容']
+            valDict[key] = valDict['valRawData'][key]
             return res
         return setVal_f
     return setValFun
@@ -272,10 +277,10 @@ def updateValFunTemp():
             resDict = {}
             getCharRegTatol(resDict, '自定义名称', '', groupDict, valDict)
             key = resDict['自定义名称']
-            if 'val_raw_data' not in valDict:
-                valDict['val_raw_data'] = {}
-            if key in valDict['val_raw_data']:
-                valDict[key] = valDict['val_raw_data'][key]
+            if 'valRawData' not in valDict:
+                valDict['valRawData'] = {}
+            if key in valDict['valRawData']:
+                valDict[key] = valDict['valRawData'][key]
             return res
         return updateVal_f
     return updateValFun

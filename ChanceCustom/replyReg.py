@@ -34,6 +34,17 @@ listRegTotalFun = [
     ['更新常量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp()],
     ['赋值常量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp()],
 
+    # >Json解析<
+    ['Json读', ['来源', '默认值', '...'], ChanceCustom.replyJson.jsonGetStrFunTemp()],
+    ['Json写-插列表-自动', ['来源', '插入值', '...'], ChanceCustom.replyJson.jsonAppendStrFunTemp(flagValType = 'auto')],
+    ['Json写-插列表-文本', ['来源', '插入值', '...'], ChanceCustom.replyJson.jsonAppendStrFunTemp(flagValType = 'str')],
+    ['Json写-插列表', ['来源', '插入值', '...'], ChanceCustom.replyJson.jsonAppendStrFunTemp(flagValType = 'default')],
+    ['Json写-自动', ['来源', '写入值', '...'], ChanceCustom.replyJson.jsonSetStrFunTemp(flagValType = 'auto')],
+    ['Json写-文本', ['来源', '写入值', '...'], ChanceCustom.replyJson.jsonSetStrFunTemp(flagValType = 'str')],
+    ['Json写', ['来源', '写入值', '...'], ChanceCustom.replyJson.jsonSetStrFunTemp(flagValType = 'default')],
+    ['Json删', ['来源', '...'], ChanceCustom.replyJson.jsonDelStrFunTemp()],
+    ['Json取', ['来源', '分隔符', '...'], ChanceCustom.replyJson.jsonGetListStrFunTemp()],
+
     # >文件操作<
     ['读入', ['文件路径'], ChanceCustom.replyIO.fileReadFunTemp()],
     ['写出', ['欲写内容', '文件路径'], ChanceCustom.replyIO.fileWriteFunTemp()],
@@ -41,6 +52,15 @@ listRegTotalFun = [
     ['写配置', ['文件路径', '配置节', '配置项', '写入值'], ChanceCustom.replyIO.iniSetFunTemp()],
     ['取配置', ['文件路径', '配置节'], ChanceCustom.replyIO.iniGetOptionsFunTemp()],
     ['取配节', ['文件路径'], ChanceCustom.replyIO.iniGetSectionFunTemp()],
+    ['读Json', ['文件路径', '默认值', '...'], ChanceCustom.replyJson.jsonGetFunTemp()],
+    ['写Json-插列表-自动', ['文件路径', '插入值', '...'], ChanceCustom.replyJson.jsonAppendFunTemp(flagValType = 'auto')],
+    ['写Json-插列表-文本', ['文件路径', '插入值', '...'], ChanceCustom.replyJson.jsonAppendFunTemp(flagValType = 'str')],
+    ['写Json-插列表', ['文件路径', '插入值', '...'], ChanceCustom.replyJson.jsonAppendFunTemp(flagValType = 'default')],
+    ['写Json-自动', ['文件路径', '写入值', '...'], ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'auto')],
+    ['写Json-文本', ['文件路径', '写入值', '...'], ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'str')],
+    ['写Json', ['文件路径', '写入值', '...'], ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')],
+    ['删Json', ['文件路径', '...'], ChanceCustom.replyJson.jsonDelFunTemp()],
+    ['取Json', ['文件路径', '分隔符', '...'], ChanceCustom.replyJson.jsonGetListFunTemp()],
 
     # >常用变量2<
     ['随机数', ['X', 'Y'], ChanceCustom.replyRandom.RangeNumFunTemp(flagPadding = False)],
@@ -106,6 +126,7 @@ def replyValueReg(message, valDict):
     calDict = {}
     cal_this = ''
     stack_count = 0
+    flag_isArgs = False
     while count < len_count:
         if 'plant' == flag_now:
             if replyValueRegJudge('【', message, count):
@@ -127,17 +148,23 @@ def replyValueReg(message, valDict):
         elif 'para' == flag_now:
             if replyValueRegJudge('【', message, count):
                 stack_count += 1
-                if rule != None and cal_pos < len(rule[1]):
+                if (rule != None and cal_pos < len(rule[1])) or flag_isArgs:
                     cal_this += message[count]
                 count += len('【')
             elif replyValueRegJudge('】', message, count):
                 if stack_count > 0:
                     stack_count -= 1
-                    if rule != None and cal_pos < len(rule[1]):
+                    if (rule != None and cal_pos < len(rule[1])) or flag_isArgs:
                         cal_this += message[count]
                 else:
-                    if rule != None and cal_pos < len(rule[1]):
+                    if rule != None and cal_pos < len(rule[1]) - 1:
                         calDict[rule[1][cal_pos]] = cal_this
+                    elif rule != None and cal_pos == len(rule[1]) - 1 and rule[1][cal_pos] != '...':
+                        calDict[rule[1][cal_pos]] = cal_this
+                    elif rule != None and cal_pos >= len(rule[1]) - 1 and len(rule[1]) > 0 and rule[1][-1] == '...':
+                        if '...' not in calDict:
+                            calDict['...'] = []
+                        calDict['...'].append(cal_this)
                     if rule != None:
                         if type(rule[2]) == str:
                             res_message += rule[2]
@@ -148,16 +175,24 @@ def replyValueReg(message, valDict):
                     calDict = {}
                     cal_this = ''
                     stack_count = 0
+                    flag_isArgs = False
                     flag_now = 'plant'
                 count += len('】')
             elif stack_count == 0 and replyValueRegJudge('>=<', message, count):
-                if rule != None and cal_pos < len(rule[1]):
+                if rule != None and cal_pos < len(rule[1]) - 1:
                     calDict[rule[1][cal_pos]] = cal_this
+                elif rule != None and cal_pos == len(rule[1]) - 1 and rule[1][cal_pos] != '...':
+                    calDict[rule[1][cal_pos]] = cal_this
+                elif rule != None and cal_pos >= len(rule[1]) - 1 and len(rule[1]) > 0 and rule[1][-1] == '...':
+                    if '...' not in calDict:
+                        calDict['...'] = []
+                    calDict['...'].append(cal_this)
+                    flag_isArgs = True
                 cal_this = ''
                 cal_pos += 1
                 count += len('>=<')
             else:
-                if rule != None and cal_pos < len(rule[1]):
+                if (rule != None and cal_pos < len(rule[1])) or flag_isArgs:
                     cal_this += message[count]
                 count += 1
     return res_message

@@ -25,27 +25,39 @@ def unity_reply(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, ev
         event_name = event_name
     )
 
+def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
+    #内置变量，用于内部调用
+    valDict['innerVal'] = {}
+    valDict['innerVal']['plugin_event'] = plugin_event
+    valDict['innerVal']['Proc'] = Proc
+    valDict['innerVal']['platform'] = plugin_event.platform
+    if 'group_message' == event_name:
+        valDict['innerVal']['host_id'] = plugin_event.data.host_id
+        valDict['innerVal']['group_id'] = plugin_event.data.group_id
+        valDict['innerVal']['hag_id'] = plugin_event.data.group_id
+        if plugin_event.data.host_id != None:
+            valDict['innerVal']['hag_id'] = '%s|%s' % (str(plugin_event.data.host_id), str(plugin_event.data.group_id))
+        valDict['innerVal']['user_id'] = plugin_event.data.user_id
+    elif 'private_message' == event_name:
+        valDict['innerVal']['user_id'] = plugin_event.data.user_id
+
 def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     tmp_dictCustomData = ChanceCustom.load.dictCustomData
     tmp_hash_list = ['unity', plugin_event.bot_info.hash]
     tmp_message = plugin_event.data.message
     falg_matchPlace_target = 0
     valDict = {}
-    valDict['platform'] = plugin_event.platform
+
     if 'group_message' == event_name:
         falg_matchPlace_target |= 1
-        valDict['host_id'] = plugin_event.data.host_id
-        valDict['group_id'] = plugin_event.data.group_id
-        valDict['hag_id'] = plugin_event.data.group_id
-        if plugin_event.data.host_id != None:
-            valDict['hag_id'] = '%s|%s' % (str(plugin_event.data.host_id), str(plugin_event.data.group_id))
-        valDict['user_id'] = plugin_event.data.user_id
-    if 'private_message' == event_name:
+    elif 'private_message' == event_name:
         falg_matchPlace_target |= 2
-        valDict['user_id'] = plugin_event.data.user_id
+
+    getValDict(valDict, plugin_event, Proc, event_name)
+
     for tmp_hash_list_this in tmp_hash_list:
-        valDict['bot_hash'] = tmp_hash_list_this
-        valDict['bot_hash_self'] = plugin_event.bot_info.hash
+        valDict['innerVal']['bot_hash'] = tmp_hash_list_this
+        valDict['innerVal']['bot_hash_self'] = plugin_event.bot_info.hash
         if tmp_hash_list_this in tmp_dictCustomData['data']:
             tmp_dictCustomData_this = tmp_dictCustomData['data'][tmp_hash_list_this]
             it_list_tmp_dictCustomData = ChanceCustom.load.getCustomDataSortKeyList(

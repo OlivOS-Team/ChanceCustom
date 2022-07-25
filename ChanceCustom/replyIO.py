@@ -18,6 +18,7 @@ import ChanceCustom
 
 import re
 import configparser
+import json
 
 def iniSetFunTemp():
     def iniSetFun(valDict):
@@ -139,4 +140,3 @@ def fileWriteFunTemp():
             return res
         return fileWrite_f
     return fileWriteFun
-

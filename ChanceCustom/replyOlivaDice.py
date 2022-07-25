@@ -38,7 +38,7 @@ def drawFunTemp():
                 for i in range(resDict['牌数']):
                     res_draw = OlivaDiceCore.drawCard.draw(
                         key_str = resDict['牌堆名'],
-                        bot_hash = valDict['bot_hash_self'],
+                        bot_hash = valDict['innerVal']['bot_hash_self'],
                         flag_need_give_back = resDict['是否放回']
                     )
                     if res_draw != None:
@@ -63,9 +63,9 @@ def RDFunTemp():
                 tmp_template_customDefault = None
                 tmp_hagID = None
                 if 'hag_id' in valDict:
-                    tmp_hagID = valDict['hag_id']
-                tmp_pc_id = valDict['user_id']
-                tmp_pc_platform = valDict['platform']['platform']
+                    tmp_hagID = valDict['innerVal']['hag_id']
+                tmp_pc_id = valDict['innerVal']['user_id']
+                tmp_pc_platform = valDict['innerVal']['platform']['platform']
                 tmp_pcHash = OlivaDiceCore.pcCard.getPcHash(
                     tmp_pc_id,
                     tmp_pc_platform
