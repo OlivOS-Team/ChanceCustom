@@ -82,7 +82,40 @@ class ConfigUI(object):
         )
         self.UIObject['root'].configure(bg = self.UIConfig['color_001'])
 
+        self.UIData['hash_now'] = 'unity'
         self.tree_init()
+
+        self.tree_UI_Combobox_init(
+            obj_root = 'root',
+            obj_name = 'root_hash',
+            str_name = 'root_hash_StringVar',
+            x = 50,
+            y = 20,
+            width_t = 35,
+            width = 140,
+            height = 24,
+            action = None,
+            title = '账号'
+        )
+        self.UIData['hash_default'] = 'unity'
+        self.UIData['hash_default_key'] = '全局'
+        self.UIData['hash_find'] = {
+            self.UIData['hash_default_key']: self.UIData['hash_default']
+        }
+        self.UIData['hash_list'] = [self.UIData['hash_default_key']]
+        for hash_this in ChanceCustom.load.dictBotInfo:
+            key_info = '%s | %s' % (
+                ChanceCustom.load.dictBotInfo[hash_this].platform['platform'],
+                ChanceCustom.load.dictBotInfo[hash_this].id
+            )
+            self.UIData['hash_list'].append(key_info)
+            self.UIData['hash_find'][key_info] = hash_this
+        self.UIObject['root_hash']['value'] = tuple(self.UIData['hash_list'])
+        self.UIObject['root_hash'].current(
+            self.UIData['hash_list'].index(
+                self.UIData['hash_default_key']
+            )
+        )
 
         self.tree_UI_Button_init(
             name = 'root_Button_SAVE',
@@ -133,6 +166,40 @@ class ConfigUI(object):
             yscrollcommand = self.UIObject['tree_yscroll'].set
         )
 
+    def tree_UI_Combobox_init(self, obj_root, obj_name, str_name, x, y, width_t, width, height, action, title = ''):
+        self.UIObject[obj_name + '=Label'] = tkinter.Label(
+            self.UIObject[obj_root],
+            text = title
+        )
+        self.UIObject[obj_name + '=Label'].configure(
+            bg = self.UIConfig['color_001'],
+            fg = self.UIConfig['color_004']
+        )
+        self.UIObject[obj_name + '=Label'].place(
+            x = x - width_t,
+            y = y,
+            width = width_t,
+            height = height
+        )
+        self.UIData[str_name] = tkinter.StringVar()
+        self.UIObject[obj_name] = ttk.Combobox(
+            self.UIObject[obj_root],
+            textvariable = self.UIData[str_name]
+        )
+        self.UIObject[obj_name].place(
+            x = x,
+            y = y,
+            width = width,
+            height = height
+        )
+        self.UIObject[obj_name].configure(state='readonly')
+        self.UIObject[obj_name].bind('<<ComboboxSelected>>', lambda x : self.tree_UI_Combobox_ComboboxSelected(x, action, obj_name))
+
+    def tree_UI_Combobox_ComboboxSelected(self, action, event, target):
+        if target == 'root_hash':
+            self.UIData['hash_now'] = self.UIData['hash_find'][self.UIData['root_hash_StringVar'].get()]
+            self.tree_load()
+
     def tree_UI_Button_init(self, name, text, command, x, y, width, height):
         self.UIObject[name] = tkinter.Button(
             self.UIObject['root'],
@@ -167,7 +234,7 @@ class ConfigUI(object):
 
     def tree_load(self):
         tmp_dictCustomData = ChanceCustom.load.dictCustomData
-        tmp_hashSelection = 'unity'
+        tmp_hashSelection = self.UIData['hash_now']
         tmp_tree_item_children = self.UIObject['tree'].get_children()
         for tmp_tree_item_this in tmp_tree_item_children:
             self.UIObject['tree'].delete(tmp_tree_item_this)
@@ -208,7 +275,7 @@ class ConfigUI(object):
 
     def tree_edit(self, action):
         key_now = None
-        bot_hash_now = 'unity'
+        bot_hash_now = self.UIData['hash_now']
         if action == 'update' or action == 'delete':
             key_now = get_tree_force(self.UIObject['tree'])['text']
             if key_now == '':
