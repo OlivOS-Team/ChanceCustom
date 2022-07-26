@@ -18,7 +18,7 @@ import ChanceCustom
 
 import platform
 
-version = '0.0.1'
+version = '0.1.0'
 
 class Event(object):
     def init(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow):
