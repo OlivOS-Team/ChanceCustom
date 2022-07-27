@@ -74,6 +74,7 @@ def jsonSetFunTemp(flagValType:str = 'default'):
                 ]
             json_data = ''
             try:
+                ChanceCustom.replyIO.releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'r', encoding = 'utf-8') as json_f:
                     json_data = json_f.read()
             except:
@@ -290,18 +291,26 @@ def jsonDelStrFunTemp():
     return jsonDelStrFun
 
 def jsonAppendDataHandler(data:str, pathList:list, setVal:str, flagValType:str):
-    json_data = []
+    json_data = None
     try:
         json_data = json.loads(data)
     except:
-        json_data = []
-    json_data_this = json_data
+        json_data = None
     count = 0
     try:
+        if len(pathList) > 0:
+            if json_data == None:
+                json_data = {}
+            else:
+                json_data = []
+        json_data_this = json_data
         for key_this in pathList:
             if count < len(pathList):
                 if key_this not in json_data_this:
-                    json_data_this[key_this] = {}
+                    if count == len(pathList) - 1:
+                        json_data_this[key_this] = []
+                    else:
+                        json_data_this[key_this] = {}
                 if type(json_data_this) == dict and key_this in json_data_this:
                     json_data_this = json_data_this[key_this]
                 elif type(json_data_this) == list and (
@@ -350,6 +359,7 @@ def jsonAppendFunTemp(flagValType:str = 'default'):
                 ]
             json_data = ''
             try:
+                ChanceCustom.replyIO.releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'r', encoding = 'utf-8') as json_f:
                     json_data = json_f.read()
             except:

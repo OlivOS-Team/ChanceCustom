@@ -18,7 +18,20 @@ import ChanceCustom
 
 import re
 import configparser
-import json
+import os
+
+def releasePath(path):
+    path = path.replace('\\', '/')
+    path_list = path.split('/')
+    count = 0
+    path_total = ''
+    for path_list_this in path_list:
+        if count > 0 and count < len(path_list) - 1:
+            path_total = '/'.join(path_list[:count + 1])
+            if not os.path.exists(path_total):
+                os.makedirs(path_total)
+        count += 1
+
 
 def iniSetFunTemp():
     def iniSetFun(valDict):
@@ -33,6 +46,7 @@ def iniSetFunTemp():
                 ChanceCustom.replyBase.getCharRegTatol(resDict, '配置项', None, groupDict, valDict)
                 ChanceCustom.replyBase.getCharRegTatol(resDict, '写入值', None, groupDict, valDict)
                 try:
+                    releasePath(resDict['文件路径'])
                     ini.read(resDict['文件路径'], encoding = 'utf-8')
                     if None != resDict['配置项']:
                         if resDict['配置节'] not in ini.sections():
@@ -133,6 +147,7 @@ def fileWriteFunTemp():
             ChanceCustom.replyBase.getCharRegTatol(resDict, '欲写内容', '', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
             try:
+                releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'w', encoding = 'utf-8') as file_f:
                     file_f.write(resDict['欲写内容'])
             except:
