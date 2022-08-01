@@ -21,6 +21,7 @@ from . import replyBase
 from . import replyIO
 from . import replyJson
 from . import replyWeb
+from . import replyEval
 from . import replyRandom
 from . import replyOlivaDice
 from . import replyReg
