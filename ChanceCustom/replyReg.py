@@ -91,7 +91,10 @@ listRegTotalFun = [
 
     # >OlivaDice联动<
     ['牌堆', ['牌堆名', '牌数', '是否放回', '分隔符'], ChanceCustom.replyOlivaDice.drawFunTemp()],
-    ['RD', ['表达式'], ChanceCustom.replyOlivaDice.RDFunTemp()]
+    ['RD', ['表达式'], ChanceCustom.replyOlivaDice.RDFunTemp()],
+
+    # >算法计算<
+    ['计算', ['计算公式'], ChanceCustom.replyEval.evalExprFunTemp()]
 ]
 
 listRegTotal = [
