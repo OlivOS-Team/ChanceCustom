@@ -101,7 +101,7 @@ class Lexer:
                 c = self.string[k]
                 if c in Symbol._WHITESPACE:
                     k += 1
-                elif c == '-' and self.string[k-1] in Symbol._BINARY_OPERATOR:
+                elif c == '-' and self.string[k-1] in Symbol._BINARY_OPERATOR | set('(（'):
                     minus = True
                     k += 1
                 elif c in Symbol._SINGLE_CHAR_TOKENS:
