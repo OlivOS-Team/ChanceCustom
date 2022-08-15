@@ -4,9 +4,9 @@
     "namespace" : "ChanceCustom",
     "info" : "以自定义回复为核心，附带群管、监控、词库、语音、图片、调用接口、对接网站、黑白名单、定时任务、网页爬虫、简单编程、入群验证、发言限制、简易QQ、Web服务器、制作接口等功能。交流群661366095",
     "priority" : 40000,
-    "version" : "0.1.1",
-    "svn" : 6,
-    "compatible_svn" : 100,
+    "version" : "0.1.3",
+    "svn" : 8,
+    "compatible_svn" : 101,
     "message_mode" : "old_string",
     "support" : [
         {
