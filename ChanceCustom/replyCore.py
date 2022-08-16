@@ -17,6 +17,7 @@ import OlivOS
 import ChanceCustom
 
 import re
+import random
 
 def unity_reply(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     reply_runtime(
@@ -56,7 +57,7 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
     valDict['defaultVal']['机器人ID'] = str(plugin_event.bot_info.id)
     if event_name == 'group_message':
         valDict['defaultVal']['当前群号'] = plugin_event.data.group_id
-    
+
 
 def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     tmp_dictCustomData = ChanceCustom.load.dictCustomData
@@ -86,10 +87,11 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                 if (falg_matchPlace_target & falg_matchPlace) != 0:
                     if 'full' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message == tmp_dictCustomData_this[key_this]['key']:
+                            tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                             reply(
                                 plugin_event,
                                 ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_dictCustomData_this[key_this]['value'],
+                                    tmp_value,
                                     valDict
                                 )
                             )
@@ -97,10 +99,11 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                     elif 'perfix' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message.startswith(tmp_dictCustomData_this[key_this]['key']):
                             valDict['内容1'] = tmp_message[len(tmp_dictCustomData_this[key_this]['key']):]
+                            tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                             reply(
                                 plugin_event,
                                 ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_dictCustomData_this[key_this]['value'],
+                                    tmp_value,
                                     valDict
                                 )
                             )
@@ -119,10 +122,11 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                     value = ''
                                 valDict[key] = value
                                 count += 1
+                            tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                             reply(
                                 plugin_event,
                                 ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_dictCustomData_this[key_this]['value'],
+                                    tmp_value,
                                     valDict
                                 )
                             )
