@@ -24,6 +24,22 @@ listRegTotalFun = [
     # >常用变量<
     ['内容', ['x'], ChanceCustom.replyBase.getContextFunTemp()],
 
+    ['艾特', [], ChanceCustom.replyBase.getDefaultValFunTemp('艾特')],
+    ['当前群号', [], ChanceCustom.replyBase.getDefaultValFunTemp('当前群号')],
+    ['当前群名', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('当前群名')],
+    ['当前群人数', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('当前群人数')],
+    ['当前群上限', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('当前群上限')],
+    ['当前频道号', [], ChanceCustom.replyBase.getDefaultValFunTemp('当前频道号')],
+    ['发送者QQ', [], ChanceCustom.replyBase.getDefaultValFunTemp('发送者QQ')],
+    ['发送者ID', [], ChanceCustom.replyBase.getDefaultValFunTemp('发送者ID')],
+    ['发送者昵称', [], ChanceCustom.replyBase.getDefaultValFunTemp('发送者昵称')],
+    ['机器人名字', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('机器人名字')],
+    ['机器人QQ', [], ChanceCustom.replyBase.getDefaultValFunTemp('机器人QQ')],
+    ['机器人ID', [], ChanceCustom.replyBase.getDefaultValFunTemp('机器人ID')],
+    ['权限', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('权限')],
+    ['发送者名片', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('发送者名片')],
+    ['发送者专属头衔', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('发送者专属头衔')],
+
     # >自定义变量<
     ['变量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp()],
     ['更新变量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp()],

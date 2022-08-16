@@ -31,6 +31,7 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
     valDict['innerVal']['plugin_event'] = plugin_event
     valDict['innerVal']['Proc'] = Proc
     valDict['innerVal']['platform'] = plugin_event.platform
+    valDict['innerVal']['event_name'] = event_name
     if 'group_message' == event_name:
         valDict['innerVal']['host_id'] = plugin_event.data.host_id
         valDict['innerVal']['group_id'] = plugin_event.data.group_id
@@ -40,6 +41,22 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
     elif 'private_message' == event_name:
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
+
+    #预设变量，用于供外部调用
+    valDict['defaultVal'] = {}
+    valDict['defaultVal']['当前群号'] = ''
+    valDict['defaultVal']['当前频道号'] = ''
+    valDict['defaultVal']['发送者QQ'] = str(plugin_event.data.user_id)
+    valDict['defaultVal']['发送者ID'] = str(plugin_event.data.user_id)
+    valDict['defaultVal']['艾特'] = '[CQ:at,qq=%s]' % str(plugin_event.data.user_id)
+    valDict['defaultVal']['发送者昵称'] = ''
+    if 'name' in plugin_event.data.sender:
+        valDict['defaultVal']['发送者昵称'] = plugin_event.data.sender['name']
+    valDict['defaultVal']['机器人QQ'] = str(plugin_event.bot_info.id)
+    valDict['defaultVal']['机器人ID'] = str(plugin_event.bot_info.id)
+    if event_name == 'group_message':
+        valDict['defaultVal']['当前群号'] = plugin_event.data.group_id
+    
 
 def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     tmp_dictCustomData = ChanceCustom.load.dictCustomData

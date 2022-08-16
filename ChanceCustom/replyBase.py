@@ -237,6 +237,85 @@ def getContextFunTemp():
         return getContext_f
     return getContextFun
 
+def getDefaultValFunTemp(key):
+    def getDefaultValFun(valDict):
+        def getDefaultVal_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            if key in valDict['defaultVal']:
+                if type(valDict['defaultVal'][key]) == str:
+                    res = valDict['defaultVal'][key]
+            return res
+        return getDefaultVal_f
+    return getDefaultValFun
+
+def getDefaultValWithAPIFunTemp(key):
+    def getDefaultValWithAPIFun(valDict):
+        def getDefaultValWithAPI_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            if 'apiTemp' not in valDict:
+                valDict['apiTemp'] = {}
+            if key in ['机器人名字']:
+                resObj = valDict['innerVal']['plugin_event'].get_stranger_info(valDict['innerVal']['plugin_event'].bot_info.id)
+                if resObj != None and resObj['active']:
+                    if key == '机器人名字':
+                        res = resObj['data']['name']
+            elif key in ['权限', '发送者名片', '发送者专属头衔']:
+                if valDict['innerVal']['event_name'] == 'group_message':
+                    resObj = valDict['innerVal']['plugin_event'].get_group_member_info(
+                        group_id = valDict['innerVal']['group_id'],
+                        user_id = valDict['innerVal']['user_id'],
+                        host_id = valDict['innerVal']['host_id']
+                    )
+                    if resObj != None and resObj['active']:
+                        if key == '权限':
+                            if 'role' in resObj['data']:
+                                if 'owner' == resObj['data']['role']:
+                                    res = '群主'
+                                elif 'admin' == resObj['data']['role']:
+                                    res = '群管'
+                                elif 'member' == resObj['data']['role']:
+                                    res = '群员'
+                                else:
+                                    res = '群员'
+                            else:
+                                res = '群员'
+                        elif key == '发送者名片':
+                            if 'name' in resObj['data']:
+                                res = resObj['data']['name']
+                            if 'card' in resObj['data'] and resObj['data']['card'] != '':
+                                res = resObj['data']['card']
+                        elif key == '发送者专属头衔':
+                            if 'title' in resObj['data']:
+                                res = resObj['data']['title']
+                else:
+                    pass
+            elif key in ['当前群名', '当前群人数', '当前群上限']:
+                if valDict['innerVal']['event_name'] == 'group_message':
+                    resObj = valDict['innerVal']['plugin_event'].get_group_info(
+                        group_id = valDict['innerVal']['group_id'],
+                        host_id = valDict['innerVal']['host_id']
+                    )
+                    if resObj != None and resObj['active']:
+                        resObj['data']
+                        if key == '当前群名':
+                            if 'name' in resObj['data']:
+                                res = resObj['data']['name']
+                        elif key == '当前群人数':
+                            if 'member_count' in resObj['data']:
+                                res = str(resObj['data']['member_count'])
+                        elif key == '当前群上限':
+                            if 'max_member_count' in resObj['data']:
+                                res = str(resObj['data']['max_member_count'])
+                else:
+                    pass
+            return res
+        return getDefaultValWithAPI_f
+    return getDefaultValWithAPIFun
+
 def getValFunTemp():
     def getValFun(valDict):
         def getVal_f(matched:'re.Match|dict'):
@@ -264,7 +343,8 @@ def setValFunTemp():
             if 'valRawData' not in valDict:
                 valDict['valRawData'] = {}
             valDict['valRawData'][key] = resDict['赋值内容']
-            valDict[key] = valDict['valRawData'][key]
+            if key not in valDict or type(valDict[key]) == str:
+                valDict[key] = valDict['valRawData'][key]
             return res
         return setVal_f
     return setValFun
@@ -280,7 +360,8 @@ def updateValFunTemp():
             if 'valRawData' not in valDict:
                 valDict['valRawData'] = {}
             if key in valDict['valRawData']:
-                valDict[key] = valDict['valRawData'][key]
+                if key not in valDict or type(valDict[key]) == str:
+                    valDict[key] = valDict['valRawData'][key]
             return res
         return updateVal_f
     return updateValFun
