@@ -18,8 +18,8 @@ import ChanceCustom
 
 import platform
 
-version = '0.1.5'
-svn = 10
+version = '0.1.6'
+svn = 11
 
 version_full = '%s(%d)' % (version, svn)
 
@@ -42,7 +42,7 @@ class Event(object):
         ChanceCustom.replyCore.unity_reply(plugin_event, Proc, 'group_message')
 
     def poke(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow):
-        pass
+        ChanceCustom.replyCore.unity_reply(plugin_event, Proc, 'poke')
 
     def save(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow):
         ChanceCustom.load.saveCustomData()

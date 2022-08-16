@@ -42,6 +42,15 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
     elif 'private_message' == event_name:
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
+    elif 'poke_private' == event_name:
+        valDict['innerVal']['user_id'] = str(plugin_event.data.target_id)
+        valDict['innerVal']['event_name'] = 'private_message'
+    elif 'poke_group' == event_name:
+        valDict['innerVal']['user_id'] = str(plugin_event.data.target_id)
+        valDict['innerVal']['event_name'] = 'group_message'
+        valDict['innerVal']['host_id'] = None
+        valDict['innerVal']['group_id'] = plugin_event.data.group_id
+        valDict['innerVal']['hag_id'] = plugin_event.data.group_id
 
     #预设变量，用于供外部调用
     valDict['defaultVal'] = {}
@@ -51,18 +60,27 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
     valDict['defaultVal']['发送者ID'] = str(plugin_event.data.user_id)
     valDict['defaultVal']['艾特'] = '[CQ:at,qq=%s]' % str(plugin_event.data.user_id)
     valDict['defaultVal']['发送者昵称'] = ''
-    if 'name' in plugin_event.data.sender:
-        valDict['defaultVal']['发送者昵称'] = plugin_event.data.sender['name']
+    if event_name in ['poke_group', 'poke_private']:
+        resObj = plugin_event.get_stranger_info(plugin_event.data.user_id)
+        if resObj != None and resObj['active']:
+            valDict['defaultVal']['发送者昵称'] = resObj['data']['name']
+    else:
+        if 'name' in plugin_event.data.sender:
+            valDict['defaultVal']['发送者昵称'] = plugin_event.data.sender['name']
     valDict['defaultVal']['机器人QQ'] = str(plugin_event.bot_info.id)
     valDict['defaultVal']['机器人ID'] = str(plugin_event.bot_info.id)
-    if event_name == 'group_message':
+    if event_name in ['group_message', 'poke_group']:
         valDict['defaultVal']['当前群号'] = plugin_event.data.group_id
 
 
 def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     tmp_dictCustomData = ChanceCustom.load.dictCustomData
     tmp_hash_list = ['unity', plugin_event.bot_info.hash]
-    tmp_message = plugin_event.data.message
+    tmp_message = ''
+    if event_name in ['poke']:
+        tmp_message = '[戳一戳]'
+    else:
+        tmp_message = plugin_event.data.message
     falg_matchPlace_target = 0
     valDict = {}
 
@@ -70,6 +88,16 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         falg_matchPlace_target |= 1
     elif 'private_message' == event_name:
         falg_matchPlace_target |= 2
+    elif 'poke' == event_name:
+        if str(plugin_event.data.target_id) == str(plugin_event.bot_info.id):
+            if plugin_event.data.group_id in [-1, None]:
+                falg_matchPlace_target |= 2
+                event_name = 'poke_private'
+            else:
+                falg_matchPlace_target |= 1
+                event_name = 'poke_group'
+        else:
+            return
 
     getValDict(valDict, plugin_event, Proc, event_name)
 
