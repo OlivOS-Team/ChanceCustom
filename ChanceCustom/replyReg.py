@@ -40,6 +40,14 @@ listRegTotalFun = [
     ['发送者名片', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('发送者名片')],
     ['发送者专属头衔', [], ChanceCustom.replyBase.getDefaultValWithAPIFunTemp('发送者专属头衔')],
 
+    # 转义
+    ['转义', ['xxx'], ChanceCustom.replyBase.codeEscapeFunTemp()],
+    ['反转义', ['xxx'], ChanceCustom.replyBase.codeDisEscapeFunTemp()],
+
+    # 系统调用
+    ['延时', ['秒'], ChanceCustom.replyContent.flowSleepFunTemp()],
+    ['延迟', ['秒'], ChanceCustom.replyContent.flowSleepFunTemp()],
+
     # >自定义变量<
     ['变量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp()],
     ['更新变量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp()],
@@ -98,6 +106,9 @@ listRegTotalFun = [
     ['跳出', [], '[跳出]'],
     ['继续', [], '[继续]'],
 
+    # >IO流<
+    ['输出流', ['加入文本', '标识类型', '输出类型', '返回msgID'], ChanceCustom.replyContent.flowOutputFunTemp()],
+
     # >比较判断<
     ['判空', ['被判断文本', '为空替换文本'], ChanceCustom.replyBase.ifEmptyFunTemp()],
     ['判断', ['被比较文本', '比较文本', '不相同返回文本', '相同返回文本'], ChanceCustom.replyBase.ifIsFunTemp()],
@@ -125,6 +136,22 @@ listRegTotalAfter = [
     ['#fgf', '>=<'],
     ['#xh', '*'],
     ['#jh', '#']
+]
+
+listRegTotalDisEscape = [
+    ['#zzk', '【'],
+    ['#yzk', '】'],
+    ['#fgf', '>=<'],
+    ['#xh', '*'],
+    ['#jh', '#']
+]
+
+listRegTotalEscape = [
+    ['#', '#jh'],
+    ['*', '#xh'],
+    ['>=<', '#fgf'],
+    ['】', '#yzk'],
+    ['【', '#zzk']
 ]
 
 def replyValueRegTotal(message, valDict):

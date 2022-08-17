@@ -384,3 +384,44 @@ def AppDirectoryFunTemp():
             return res
         return AppDirectory_f
     return AppDirectoryFun
+
+def codeEscapeFunTemp():
+    def codeEscapeFun(valDict):
+        def codeEscape_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            getCharRaw(resDict, 'xxx', '', groupDict)
+            res_tmp = resDict['xxx']
+            for key_this in ChanceCustom.replyReg.listRegTotalEscape:
+                res_tmp = res_tmp.replace(key_this[0], key_this[1])
+            res = ChanceCustom.replyReg.replyValueRegTotal(
+                res_tmp,
+                valDict = valDict
+            )
+            return res
+        return codeEscape_f
+    return codeEscapeFun
+
+def codeDisEscapeFunTemp():
+    def codeDisEscapeFun(valDict):
+        def codeDisEscape_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            getCharRaw(resDict, 'xxx', '', groupDict)
+            res_tmp = resDict['xxx']
+            res_tmp = ChanceCustom.replyReg.replyValueRegTotal(
+                res_tmp,
+                valDict = valDict
+            )
+            for key_this in ChanceCustom.replyReg.listRegTotalDisEscape:
+                res_tmp = res_tmp.replace(key_this[0], key_this[1])
+            res_tmp = ChanceCustom.replyReg.replyValueRegTotal(
+                res_tmp,
+                valDict = valDict
+            )
+            res = res_tmp
+            return res
+        return codeDisEscape_f
+    return codeDisEscapeFun

@@ -116,28 +116,32 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                     if 'full' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message == tmp_dictCustomData_this[key_this]['key']:
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            reply(
-                                plugin_event,
-                                ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_value,
-                                    valDict
-                                )
+                            msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                tmp_value,
+                                valDict
                             )
+                            if len(msg) > 0:
+                                reply(
+                                    plugin_event,
+                                    msg
+                                )
                             break
                     elif 'perfix' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message.startswith(tmp_dictCustomData_this[key_this]['key']):
-                            valDict['内容1'] = tmp_message[len(tmp_dictCustomData_this[key_this]['key']):]
+                            valDict['内容1'] = codeEscape(tmp_message[len(tmp_dictCustomData_this[key_this]['key']):])
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            reply(
-                                plugin_event,
-                                ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_value,
-                                    valDict
-                                )
+                            msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                tmp_value,
+                                valDict
                             )
+                            if len(msg) > 0:
+                                reply(
+                                    plugin_event,
+                                    msg
+                                )
                             break
                     elif 'reg' == tmp_dictCustomData_this[key_this]['matchType']:
-                        res_re = re.match(tmp_dictCustomData_this[key_this]['key'], tmp_message)
+                        res_re = re.match('^%s$' % tmp_dictCustomData_this[key_this]['key'], tmp_message)
                         if res_re != None:
                             res_re_list = res_re.groups()
                             count = 1
@@ -148,17 +152,31 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                     value = res_re_list_this
                                 elif res_re_list_this != None:
                                     value = ''
-                                valDict[key] = value
+                                valDict[key] = codeEscape(value)
                                 count += 1
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            reply(
-                                plugin_event,
-                                ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_value,
-                                    valDict
-                                )
+                            msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                tmp_value,
+                                valDict
                             )
+                            if len(msg) > 0:
+                                reply(
+                                    plugin_event,
+                                    msg
+                                )
                             break
+
+def codeDisEscape(data):
+    res = data
+    for key_this in ChanceCustom.replyReg.listRegTotalDisEscape:
+        res = res.replace(key_this[0], key_this[1])
+    return res
+
+def codeEscape(data):
+    res = data
+    for key_this in ChanceCustom.replyReg.listRegTotalEscape:
+        res = res.replace(key_this[0], key_this[1])
+    return res
 
 def reply(plugin_event:OlivOS.API.Event, message:str):
     plugin_event.reply(message)
