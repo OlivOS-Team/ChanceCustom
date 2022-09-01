@@ -139,7 +139,7 @@ def customEval(get_one_token):
     operator_stack = []
     operand_stack = []
     token = get_one_token()
-    while token:
+    while token or (type(token) == int and token == 0):
         if isinstance(token, (int, float)):
             operand_stack.append(token)
         elif token in Symbol._BINARY_OPERATOR:
