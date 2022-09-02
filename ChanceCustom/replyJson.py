@@ -298,8 +298,8 @@ def jsonAppendDataHandler(data:str, pathList:list, setVal:str, flagValType:str):
         json_data = None
     count = 0
     try:
-        if len(pathList) > 0:
-            if json_data == None:
+        if json_data == None:
+            if len(pathList) > 0:
                 json_data = {}
             else:
                 json_data = []
