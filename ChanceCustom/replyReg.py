@@ -127,7 +127,12 @@ listRegTotalFun = [
     ['统计', ['被统计文本', '统计出现的文本'], ChanceCustom.replyEval.wordCountFunTemp()],
     ['取MD5', ['被取目标', 'MD5位数'], ChanceCustom.replyEval.getMD5FunTemp()],
     ['进制', ['待转化数值', '原数值进制', '目标进制'], ChanceCustom.replyEval.baseConvFunTmp()],
-    ['补位', ['待补位文本', '结果长度', '补位字符', '结尾/开头'], ChanceCustom.replyEval.charPaddingFunTemp()]
+    ['补位', ['待补位文本', '结果长度', '补位字符', '结尾/开头'], ChanceCustom.replyEval.charPaddingFunTemp()],
+    
+    # >自定义函数<
+    ['函数全局', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
+    ['函数', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
+    ['', ['...'], ChanceCustom.replyBase.getFuncValFunTemp()]
 ]
 
 listRegTotal = [

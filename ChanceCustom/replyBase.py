@@ -425,3 +425,72 @@ def codeDisEscapeFunTemp():
             return res
         return codeDisEscape_f
     return codeDisEscapeFun
+
+def setFuncValFunTemp(flagGlobal = False):
+    def setFuncValFun(valDict):
+        def setFuncVal_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            getCharRegTatol(resDict, '函数名称', '', groupDict, valDict)
+            getDataRaw(resDict, '代码体', None, groupDict)
+            key = resDict['函数名称']
+            if key != None:
+                if 'funcValRawData' not in valDict:
+                    valDict['funcValRawData'] = {}
+                if 'funcValRawGData' not in valDict:
+                    valDict['funcValRawGData'] = {}
+                if flagGlobal:
+                    valDict['funcValRawGData'][key] = resDict['代码体']
+                else:
+                    valDict['funcValRawData'][key] = resDict['代码体']
+            return res
+        return setFuncVal_f
+    return setFuncValFun
+
+def getFuncValFunTemp():
+    def setFuncValFun(valDict):
+        def setFuncVal_f(matched:'re.Match|dict'):
+            groupDict = getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            resValDict = {}
+            getDataRaw(resDict, '...', None, groupDict)
+            if None != resDict['...']:
+                resDict['...'] = [
+                    ChanceCustom.replyReg.replyValueRegTotal(
+                        resData_this,
+                        valDict = valDict
+                    ) for resData_this in resDict['...']
+                ]
+                if len(resDict['...']) > 0:
+                    keyRaw = resDict['...'][0]
+                    keyHit = None
+                    resRaw = ''
+                    if keyHit == None and 'funcValRawData' in valDict:
+                        for key in valDict['funcValRawData']:
+                            if keyRaw.startswith(key):
+                                keyHit = key
+                                resRaw = valDict['funcValRawData'][key]
+                                break
+                    if keyHit == None and 'funcValRawGData' in valDict:
+                        for key in valDict['funcValRawGData']:
+                            if keyRaw.startswith(key):
+                                keyHit = key
+                                resRaw = valDict['funcValRawGData'][key]
+                                break
+                    if keyHit != None:
+                        resValDict['参数1'] = keyRaw[len(key):]
+                        count = 2
+                        for resValDict_this in resDict['...'][1:]:
+                            resValDict['参数%d' % count] = str(resValDict_this)
+                            count += 1
+                        for resValDict_this in resValDict:
+                            resRaw = resRaw.replace('[%s]' % resValDict_this, resValDict[resValDict_this])
+                        res = ChanceCustom.replyReg.replyValueRegTotal(
+                            resRaw,
+                            valDict = valDict
+                        )
+            return res
+        return setFuncVal_f
+    return setFuncValFun

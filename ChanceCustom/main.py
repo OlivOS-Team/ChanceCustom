@@ -34,6 +34,16 @@ class Event(object):
         if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
             import OlivaDiceCore
             OlivaDiceCore.crossHook.dictHookList['model'].append(['ChanceCustom', version_full])
+        for bot_info_this in Proc.Proc_data['bot_info_dict']:
+            bot_info = Proc.Proc_data['bot_info_dict'][bot_info_this]
+            fake_plugin_event = OlivOS.API.Event(
+                OlivOS.contentAPI.fake_sdk_event(
+                    bot_info = bot_info,
+                    fakename = OlivaDiceCore.data.OlivaDiceCore_name
+                ),
+                Proc.log
+            )
+            ChanceCustom.replyCore.unity_reply(fake_plugin_event, Proc, 'init')
 
     def private_message(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow):
         ChanceCustom.replyCore.unity_reply(plugin_event, Proc, 'private_message')
