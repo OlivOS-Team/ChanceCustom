@@ -18,8 +18,11 @@ import ChanceCustom
 
 import tkinter
 from tkinter import ttk
-from tkinter import filedialog
 from tkinter import messagebox
+try:
+    from tkinter import filedialog
+except:
+    pass
 import os
 import shutil
 import json
@@ -457,7 +460,11 @@ class ConfigUI(object):
     def ccpk_read(self):
         tmp_dictCustomData = ChanceCustom.load.dictCustomData
         tmp_hashSelection = self.UIData['hash_now']
-        ccpk_load_path_list = filedialog.askopenfilenames(title = '导入...', filetypes=[("程心包", "*.ccpk")])
+        ccpk_load_path_list = []
+        try:
+            ccpk_load_path_list = filedialog.askopenfilenames(title = '导入...', filetypes=[("程心包", "*.ccpk")])
+        except:
+            tkinter.messagebox.showwarning('运行失败', '你需要使用最新版OlivOS才能使用此功能')
         for ccpk_load_path in ccpk_load_path_list:
             try:
                 with zipfile.ZipFile(ccpk_load_path, 'r', zipfile.ZIP_DEFLATED) as z:
@@ -1082,7 +1089,11 @@ class PackUpUI(object):
         ccpk_key_list = self.UIData['list_listbox_R']
         if ccpk_name == '':
             return
-        ccpk_save_path = filedialog.asksaveasfilename(title = '保存至...', filetypes=[("程心包", "*.ccpk")])
+        ccpk_save_path = ''
+        try:
+            ccpk_save_path = filedialog.asksaveasfilename(title = '保存至...', filetypes=[("程心包", "*.ccpk")])
+        except:
+            tkinter.messagebox.showwarning('运行失败', '你需要使用最新版OlivOS才能使用此功能')
         if ccpk_save_path == '':
             return
         else:
