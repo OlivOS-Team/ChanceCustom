@@ -481,6 +481,7 @@ class ConfigUI(object):
                                 for key_this in ccpk_data['data']:
                                     tmp_dictCustomData['data'][tmp_hashSelection][key_this] = ccpk_data['data'][key_this]
                                 tmp_dictCustomData['ccpkList'][tmp_hashSelection][ccpk_data['info']['name']] = ccpk_data
+                    removeDir('./plugin/data/ChanceCustom/tmp')
             except:
                 tkinter.messagebox.showwarning('导入失败', '导入 %s 时失败' % ccpk_load_path)
         self.tree_save()
