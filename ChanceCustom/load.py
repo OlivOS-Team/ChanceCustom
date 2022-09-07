@@ -23,7 +23,7 @@ listPlugin = []
 
 dictBotInfo = {}
 
-dataVersion = 1
+dataVersion = 2
 
 dictCustomData = {}
 
@@ -37,16 +37,28 @@ def initEmptyCustomData():
     global dictCustomData
     dictCustomData = {
         'dataVersion': dataVersion,
-        'data': {}
+        'data': {},
+        'ccpkList': {}
     }
 
 def initCheckCustomData():
     global dictCustomData
-    res = True
     if 'data' not in dictCustomData:
         initEmptyCustomData()
     if 'dataVersion' not in dictCustomData:
         initEmptyCustomData()
+
+def fixCheckCustomData():
+    global dictCustomData
+    if 'dataVersion' not in dictCustomData:
+        dictCustomData['dataVersion'] = dataVersion
+    if dictCustomData['dataVersion'] < dataVersion:
+        if dictCustomData['dataVersion'] == 1:
+            dictCustomData['dataVersion'] = dataVersion
+    if 'data' not in dictCustomData:
+        dictCustomData['data'] = {}
+    if 'ccpkList' not in dictCustomData:
+        dictCustomData['ccpkList'] = {}
 
 def initCustomData(botInfo = None):
     global dictCustomData
@@ -59,12 +71,15 @@ def initCustomData(botInfo = None):
             dictCustomData = json.loads(dictCustomData_f.read())
     except:
         initEmptyCustomData()
+    fixCheckCustomData()
     tmp_hash_list = ['unity']
     if botInfo != None:
         tmp_hash_list.extend(list(botInfo.keys()))
     for tmp_hash_list_this in tmp_hash_list:
         if tmp_hash_list_this not in dictCustomData['data']:
             dictCustomData['data'][tmp_hash_list_this] = {}
+        if tmp_hash_list_this not in dictCustomData['ccpkList']:
+            dictCustomData['ccpkList'][tmp_hash_list_this] = {}
 
 def getCustomDataSortKeyList(data, reverse = False):
     tmp_sort_list = []

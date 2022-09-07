@@ -18,6 +18,12 @@ import ChanceCustom
 
 import tkinter
 from tkinter import ttk
+from tkinter import filedialog
+from tkinter import messagebox
+import os
+import shutil
+import json
+import zipfile
 
 dictColorContext = {
     'color_001': '#00A0EA',
@@ -83,6 +89,7 @@ class ConfigUI(object):
         self.UIObject['root'].configure(bg = self.UIConfig['color_001'])
 
         self.UIData['hash_now'] = 'unity'
+        self.init_notebook()
         self.tree_init()
 
         self.tree_UI_Combobox_init(
@@ -118,12 +125,32 @@ class ConfigUI(object):
         )
 
         self.tree_UI_Button_init(
+            name = 'root_Button_IMPORT',
+            text = '导入...',
+            command = lambda : self.ccpk_read(),
+            x = 240,
+            y = 15,
+            width = 80,
+            height = 34
+        )
+
+        self.tree_UI_Button_init(
+            name = 'root_Button_PACK',
+            text = '打包...',
+            command = lambda : self.ccpk_pack(),
+            x = 330,
+            y = 15,
+            width = 80,
+            height = 34
+        )
+
+        self.tree_UI_Button_init(
             name = 'root_Button_SAVE',
             text = '保存',
             command = lambda : self.tree_save(),
-            x = 380,
+            x = 420,
             y = 15,
-            width = 120,
+            width = 80,
             height = 34
         )
 
@@ -131,8 +158,70 @@ class ConfigUI(object):
         self.UIObject['root'].mainloop()
         ChanceCustom.load.flag_open = False
 
+
+    def init_notebook(self):
+        self.UIData['style'] = ttk.Style()
+        self.UIData['style'].element_create('Plain.Notebook.tab', "from", 'default')
+        self.UIData['style'].layout(
+            "TNotebook.Tab",
+            [('Plain.Notebook.tab', {'children':
+                [('Notebook.padding', {'side': 'top', 'children':
+                    [('Notebook.focus', {'side': 'top', 'children':
+                        [('Notebook.label', {'side': 'top', 'sticky': ''})],
+                    'sticky': 'nswe'})],
+                'sticky': 'nswe'})],
+            'sticky': 'nswe'})])
+        self.UIData['style'].configure(
+            "TNotebook",
+            background = self.UIConfig['color_001'],
+            borderwidth = 0,
+            relief = tkinter.FLAT,
+            padding = [-1, 1, -3, -3],
+            tabmargins = [5, 5, 0, 0]
+        )
+        self.UIData['style'].configure(
+            "TNotebook.Tab",
+            background = self.UIConfig['color_006'],
+            foreground = self.UIConfig['color_001'],
+            padding = 4,
+            borderwidth = 0,
+            font = ('等线', 12, 'bold')
+        )
+        self.UIData['style'].map(
+            "TNotebook.Tab",
+            background = [
+                ('selected', self.UIConfig['color_004']),
+                ('!selected', self.UIConfig['color_003'])
+            ],
+            foreground = [
+                ('selected', self.UIConfig['color_003']),
+                ('!selected', self.UIConfig['color_004'])
+            ]
+        )
+
+        self.UIObject['Notebook_root'] = ttk.Notebook(self.UIObject['root'], style = 'TNotebook')
+        self.UIObject['Notebook_root'].place(x = 15, y = 64, width = 488, height = 321)
+        self.UIObject['Notebook_root'].grid_rowconfigure(0, weight = 15)
+        self.UIObject['Notebook_root'].grid_columnconfigure(0, weight = 15)
+
     def tree_init(self):
-        self.UIObject['tree'] = ttk.Treeview(self.UIObject['root'])
+        self.UIObject['frame_key_root'] = tkinter.Frame(self.UIObject['Notebook_root'])
+        self.UIObject['frame_key_root'].configure(relief = tkinter.FLAT)
+        self.UIObject['frame_key_root'].grid(
+            row = 0,
+            column = 0,
+            sticky = "nsew",
+            rowspan = 1,
+            columnspan = 1,
+            padx = (0, 0),
+            pady = (0, 0),
+            ipadx = 0,
+            ipady = 0
+        )
+        self.UIObject['frame_key_root'].grid_rowconfigure(0, weight = 15)
+        self.UIObject['frame_key_root'].grid_columnconfigure(0, weight = 15)
+        self.UIObject['frame_key_root'].grid_columnconfigure(1, weight = 1)
+        self.UIObject['tree'] = ttk.Treeview(self.UIObject['frame_key_root'])
         self.UIObject['tree']['show'] = 'headings'
         self.UIObject['tree']['columns'] = ('KEY', 'MATCHTYPE', 'MATCHPLACE', 'VALUE', 'PRIORITY')
         self.UIObject['tree'].column('KEY', width = 90)
@@ -146,25 +235,106 @@ class ConfigUI(object):
         self.UIObject['tree'].heading('VALUE', text = '回复')
         self.UIObject['tree'].heading('PRIORITY', text = '优先级')
         self.UIObject['tree']['selectmode'] = 'browse'
-        self.UIObject['tree_rightkey_menu'] = tkinter.Menu(self.UIObject['root'], tearoff = False)
+        self.UIObject['tree_rightkey_menu'] = tkinter.Menu(self.UIObject['frame_key_root'], tearoff = False)
         #self.UIObject['tree'].bind('<<TreeviewSelect>>', lambda x : self.treeSelect('tree', x))
-        self.tree_load()
-        self.UIObject['tree'].place(x = 15, y = 64, width = 488 - 18, height = 321)
+        self.UIObject['tree'].grid(
+            row = 0,
+            column = 0,
+            sticky = "nswe",
+            rowspan = 1,
+            columnspan = 1,
+            padx = (0, 0),
+            pady = (0, 0),
+            ipadx = 0,
+            ipady = 0
+        )
         self.UIObject['tree'].bind('<Button-3>', lambda x : self.tree_rightKey(x))
         self.UIObject['tree_yscroll'] = ttk.Scrollbar(
-            self.UIObject['root'],
+            self.UIObject['frame_key_root'],
             orient = "vertical",
             command = self.UIObject['tree'].yview
-        )
-        self.UIObject['tree_yscroll'].place(
-            x = 15 + 488 - 18,
-            y = 64,
-            width = 18,
-            height = 321
         )
         self.UIObject['tree'].configure(
             yscrollcommand = self.UIObject['tree_yscroll'].set
         )
+        self.UIObject['tree_yscroll'].grid(
+            row = 0,
+            column = 1,
+            sticky = "nse",
+            rowspan = 1,
+            columnspan = 1,
+            padx = (0, 0),
+            pady = (0, 0),
+            ipadx = 0,
+            ipady = 0
+        )
+
+        self.UIObject['frame_ccpk_root'] = tkinter.Frame(self.UIObject['Notebook_root'])
+        self.UIObject['frame_ccpk_root'].configure(relief = tkinter.FLAT)
+        self.UIObject['frame_ccpk_root'].grid(
+            row = 0,
+            column = 0,
+            sticky = "nsew",
+            rowspan = 1,
+            columnspan = 1,
+            padx = (0, 0),
+            pady = (0, 0),
+            ipadx = 0,
+            ipady = 0
+        )
+        self.UIObject['frame_ccpk_root'].grid_rowconfigure(0, weight = 15)
+        self.UIObject['frame_ccpk_root'].grid_columnconfigure(0, weight = 15)
+        self.UIObject['frame_ccpk_root'].grid_columnconfigure(1, weight = 1)
+        self.UIObject['tree_ccpk'] = ttk.Treeview(self.UIObject['frame_ccpk_root'])
+        self.UIObject['tree_ccpk']['show'] = 'headings'
+        self.UIObject['tree_ccpk']['columns'] = ('NAME', 'AUTHOR', 'VERSION', 'INFO')
+        self.UIObject['tree_ccpk'].column('NAME', width = 90)
+        self.UIObject['tree_ccpk'].column('AUTHOR', width = 90)
+        self.UIObject['tree_ccpk'].column('VERSION', width = 90)
+        self.UIObject['tree_ccpk'].column('INFO', width = 190)
+        self.UIObject['tree_ccpk'].heading('NAME', text = '包名')
+        self.UIObject['tree_ccpk'].heading('AUTHOR', text = '作者')
+        self.UIObject['tree_ccpk'].heading('VERSION', text = '版本')
+        self.UIObject['tree_ccpk'].heading('INFO', text = '说明')
+        self.UIObject['tree_ccpk']['selectmode'] = 'browse'
+        self.UIObject['tree_ccpk_rightkey_menu'] = tkinter.Menu(self.UIObject['frame_ccpk_root'], tearoff = False)
+        #self.UIObject['tree_ccpk'].bind('<<TreeviewSelect>>', lambda x : self.treeSelect('tree_ccpk', x))
+        self.UIObject['tree_ccpk'].grid(
+            row = 0,
+            column = 0,
+            sticky = "nswe",
+            rowspan = 1,
+            columnspan = 1,
+            padx = (0, 0),
+            pady = (0, 0),
+            ipadx = 0,
+            ipady = 0
+        )
+        self.UIObject['tree_ccpk'].bind('<Button-3>', lambda x : self.tree_rightKey(x, 'ccpk'))
+        self.UIObject['tree_ccpk_yscroll'] = ttk.Scrollbar(
+            self.UIObject['frame_ccpk_root'],
+            orient = "vertical",
+            command = self.UIObject['tree_ccpk'].yview
+        )
+        self.UIObject['tree_ccpk'].configure(
+            yscrollcommand = self.UIObject['tree_ccpk_yscroll'].set
+        )
+        self.UIObject['tree_ccpk_yscroll'].grid(
+            row = 0,
+            column = 1,
+            sticky = "nse",
+            rowspan = 1,
+            columnspan = 1,
+            padx = (0, 0),
+            pady = (0, 0),
+            ipadx = 0,
+            ipady = 0
+        )
+
+        self.UIObject['Notebook_root'].add(self.UIObject['frame_key_root'], text="关键词")
+        self.UIObject['Notebook_root'].add(self.UIObject['frame_ccpk_root'], text="导入包")
+
+        self.tree_load()
 
     def tree_UI_Combobox_init(self, obj_root, obj_name, str_name, x, y, width_t, width, height, action, title = ''):
         self.UIObject[obj_name + '=Label'] = tkinter.Label(
@@ -262,16 +432,108 @@ class ConfigUI(object):
                 )
             except:
                 pass
+        tmp_tree_item_children = self.UIObject['tree_ccpk'].get_children()
+        for tmp_tree_item_this in tmp_tree_item_children:
+            self.UIObject['tree_ccpk'].delete(tmp_tree_item_this)
+        for tmp_dictCustomData_this in tmp_dictCustomData['ccpkList'][tmp_hashSelection]:
+            try:
+                self.UIObject['tree_ccpk'].insert(
+                    '',
+                    0,
+                    text = tmp_dictCustomData_this,
+                    values=(
+                        tmp_dictCustomData['ccpkList'][tmp_hashSelection][tmp_dictCustomData_this]['info']['name'],
+                        tmp_dictCustomData['ccpkList'][tmp_hashSelection][tmp_dictCustomData_this]['info']['author'],
+                        tmp_dictCustomData['ccpkList'][tmp_hashSelection][tmp_dictCustomData_this]['info']['version'],
+                        tmp_dictCustomData['ccpkList'][tmp_hashSelection][tmp_dictCustomData_this]['info']['info'],
+                    )
+                )
+            except:
+                pass
 
     def tree_save(self):
         ChanceCustom.load.saveCustomData()
 
-    def tree_rightKey(self, event):
-        self.UIObject['tree_rightkey_menu'].delete(0, tkinter.END)
-        self.UIObject['tree_rightkey_menu'].add_command(label = '添加', command = lambda : self.tree_edit('create'))
-        self.UIObject['tree_rightkey_menu'].add_command(label = '编辑', command = lambda : self.tree_edit('update'))
-        self.UIObject['tree_rightkey_menu'].add_command(label = '删除', command = lambda : self.tree_edit('delete'))
-        self.UIObject['tree_rightkey_menu'].post(event.x_root, event.y_root)
+    def ccpk_read(self):
+        tmp_dictCustomData = ChanceCustom.load.dictCustomData
+        tmp_hashSelection = self.UIData['hash_now']
+        ccpk_load_path_list = filedialog.askopenfilenames(title = '导入...', filetypes=[("程心包", "*.ccpk")])
+        for ccpk_load_path in ccpk_load_path_list:
+            try:
+                with zipfile.ZipFile(ccpk_load_path, 'r', zipfile.ZIP_DEFLATED) as z:
+                    releaseDir('./plugin')
+                    releaseDir('./plugin/data')
+                    releaseDir('./plugin/data/ChanceCustom')
+                    removeDir('./plugin/data/ChanceCustom/tmp')
+                    releaseDir('./plugin/data/ChanceCustom/tmp')
+                    z.extractall('./plugin/data/ChanceCustom/tmp')
+                    with open('./plugin/data/ChanceCustom/tmp/data.json', 'r', encoding = 'utf-8') as f:
+                        ccpk_data = json.loads(f.read())
+                        if 'type' in ccpk_data and ccpk_data['type'] == 'ccpk':
+                            if 'dataVersion' in ccpk_data and ccpk_data['dataVersion'] == 2:
+                                for key_this in ccpk_data['data']:
+                                    tmp_dictCustomData['data'][tmp_hashSelection][key_this] = ccpk_data['data'][key_this]
+                                tmp_dictCustomData['ccpkList'][tmp_hashSelection][ccpk_data['info']['name']] = ccpk_data
+            except:
+                tkinter.messagebox.showwarning('导入失败', '导入 %s 时失败' % ccpk_load_path)
+        self.tree_save()
+        self.tree_load()
+
+    def ccpk_pack(self):
+        bot_hash_now = self.UIData['hash_now']
+        PackUpUI(
+            action = 'create',
+            key = None,
+            bot_hash = bot_hash_now,
+            edit_commit_callback = None,
+            root = self
+        ).start()
+
+    def tree_rightKey(self, event, name = 'key'):
+        if name == 'key':
+            self.UIObject['tree_rightkey_menu'].delete(0, tkinter.END)
+            self.UIObject['tree_rightkey_menu'].add_command(label = '添加', command = lambda : self.tree_edit('create'))
+            self.UIObject['tree_rightkey_menu'].add_command(label = '编辑', command = lambda : self.tree_edit('update'))
+            self.UIObject['tree_rightkey_menu'].add_command(label = '删除', command = lambda : self.tree_edit('delete'))
+            self.UIObject['tree_rightkey_menu'].post(event.x_root, event.y_root)
+        elif name == 'ccpk':
+            self.UIObject['tree_ccpk_rightkey_menu'].delete(0, tkinter.END)
+            self.UIObject['tree_ccpk_rightkey_menu'].add_command(label = '卸载', command = lambda : self.ccpk_remove(flagDelete = True))
+            self.UIObject['tree_ccpk_rightkey_menu'].add_command(label = '解绑(不删关键词)', command = lambda : self.ccpk_remove(flagDelete = False))
+            self.UIObject['tree_ccpk_rightkey_menu'].add_command(label = '重新安装', command = lambda : self.ccpk_reinstall())
+            self.UIObject['tree_ccpk_rightkey_menu'].post(event.x_root, event.y_root)
+
+    def ccpk_remove(self, flagDelete = True):
+        tmp_dictCustomData = ChanceCustom.load.dictCustomData
+        key_now = None
+        bot_hash_now = self.UIData['hash_now']
+        key_now = get_tree_force(self.UIObject['tree_ccpk'])['text']
+        if key_now == '':
+            key_now = None
+        if key_now != None:
+            if key_now in tmp_dictCustomData['ccpkList'][bot_hash_now]:
+                if flagDelete:
+                    for key_this in tmp_dictCustomData['ccpkList'][bot_hash_now][key_now]['data']:
+                        if key_this in tmp_dictCustomData['data'][bot_hash_now]:
+                            tmp_dictCustomData['data'][bot_hash_now].pop(key_this)
+                tmp_dictCustomData['ccpkList'][bot_hash_now].pop(key_now)
+            self.tree_save()
+            self.tree_load()
+
+    def ccpk_reinstall(self):
+        tmp_dictCustomData = ChanceCustom.load.dictCustomData
+        key_now = None
+        bot_hash_now = self.UIData['hash_now']
+        key_now = get_tree_force(self.UIObject['tree_ccpk'])['text']
+        if key_now == '':
+            key_now = None
+        if key_now != None:
+            if key_now in tmp_dictCustomData['ccpkList'][bot_hash_now]:
+                for key_this in tmp_dictCustomData['ccpkList'][bot_hash_now][key_now]['data']:
+                    if key_this not in tmp_dictCustomData['data'][bot_hash_now]:
+                        tmp_dictCustomData['data'][bot_hash_now][key_this] = tmp_dictCustomData['ccpkList'][bot_hash_now][key_now]['data'][key_this]
+            self.tree_save()
+            self.tree_load()
 
     def tree_edit(self, action):
         key_now = None
@@ -565,3 +827,320 @@ class TreeEditUI(object):
 
 def get_tree_force(tree_obj):
     return tree_obj.item(tree_obj.focus())
+
+
+class PackUpUI(object):
+    def __init__(self, action, key = None, bot_hash = 'unity', edit_commit_callback = None, root = None):
+        self.root = root
+        self.key = key
+        self.action = action
+        self.bot_hash = bot_hash
+        self.edit_commit_callback = edit_commit_callback
+        self.UIObject = {}
+        self.UIConfig = {}
+        self.UIConfig.update(dictColorContext)
+        self.UIData = {}
+        self.UIData['click_record'] = {}
+
+    def start(self):
+        self.UIObject['edit_root'] = tkinter.Toplevel()
+        self.UIObject['edit_root'].title('打包...')
+        self.UIObject['edit_root'].geometry('600x400')
+        self.UIObject['edit_root'].resizable(
+            width = False,
+            height = False
+        )
+        self.UIObject['edit_root'].configure(bg = self.UIConfig['color_001'])
+
+        self.UIObject['label_info'] = tkinter.Label(
+            self.UIObject['edit_root'],
+            text = '从左侧列表中选择需要打包的回复词',
+            bg = self.UIConfig['color_001'],
+            fg = self.UIConfig['color_004']
+        )
+        self.UIObject['label_info'].place(
+            x = 15,
+            y = 15,
+            width = 600 - 15 * 2,
+            height = 24
+        )
+
+        self.UIObject['listbox_L_StringVar'] = tkinter.StringVar()
+        self.UIObject['listbox_L'] = tkinter.Listbox(self.UIObject['edit_root'])
+        self.UIObject['listbox_L'].configure(
+            listvariable = self.UIObject['listbox_L_StringVar']
+        )
+        self.UIObject['listbox_L'].place(x = 45, y = 45, width = 250 - 18, height = 200)
+        self.UIObject['listbox_L_yscroll'] = ttk.Scrollbar(
+            self.UIObject['edit_root'],
+            orient = "vertical",
+            command = self.UIObject['listbox_L'].yview
+        )
+        self.UIObject['listbox_L_yscroll'].place(
+            x = 45 + 250 - 18,
+            y = 45,
+            width = 18,
+            height = 200
+        )
+        self.UIObject['listbox_L'].configure(
+            yscrollcommand = self.UIObject['listbox_L_yscroll'].set
+        )
+        self.UIObject['listbox_L'].bind('<<ListboxSelect>>', lambda x : self.listbox_selected(x, 'listbox_L', 'listbox_R'))
+
+        self.UIObject['listbox_R_StringVar'] = tkinter.StringVar()
+        self.UIObject['listbox_R'] = tkinter.Listbox(self.UIObject['edit_root'])
+        self.UIObject['listbox_R'].configure(
+            listvariable = self.UIObject['listbox_R_StringVar']
+        )
+        self.UIObject['listbox_R'].place(x = 600 - (250 + 45), y = 45, width = 250 - 18, height = 200)
+        self.UIObject['listbox_R_yscroll'] = ttk.Scrollbar(
+            self.UIObject['edit_root'],
+            orient = "vertical",
+            command = self.UIObject['listbox_R'].yview
+        )
+        self.UIObject['listbox_R_yscroll'].place(
+            x = 600 - 45 - 18,
+            y = 45,
+            width = 18,
+            height = 200
+        )
+        self.UIObject['listbox_R'].configure(
+            yscrollcommand = self.UIObject['listbox_R_yscroll'].set
+        )
+        self.UIObject['listbox_R'].bind('<<ListboxSelect>>', lambda x : self.listbox_selected(x, 'listbox_R', 'listbox_L'))
+
+        self.init_data()
+        self.load_data()
+
+        self.tree_edit_UI_Entry_init(
+            obj_root = 'edit_root',
+            obj_name = 'entry_NAME',
+            str_name = 'entry_NAME_StringVar',
+            x = 65,
+            y = 260,
+            width_t = 50,
+            width = 150,
+            height = 26,
+            action = None,
+            title = '名称'
+        )
+
+        self.tree_edit_UI_Entry_init(
+            obj_root = 'edit_root',
+            obj_name = 'entry_AUTHOR',
+            str_name = 'entry_AUTHOR_StringVar',
+            x = 255,
+            y = 260,
+            width_t = 50,
+            width = 150,
+            height = 26,
+            action = None,
+            title = '作者'
+        )
+
+        self.tree_edit_UI_Entry_init(
+            obj_root = 'edit_root',
+            obj_name = 'entry_VERSION',
+            str_name = 'entry_VERSION_StringVar',
+            x = 455,
+            y = 260,
+            width_t = 50,
+            width = 100,
+            height = 26,
+            action = None,
+            title = '版本'
+        )
+
+        self.tree_edit_UI_Entry_init(
+            obj_root = 'edit_root',
+            obj_name = 'entry_INFO',
+            str_name = 'entry_INFO_StringVar',
+            x = 65,
+            y = 300,
+            width_t = 50,
+            width = 600 - 65 - 45,
+            height = 26,
+            action = None,
+            title = '说明'
+        )
+
+        self.tree_UI_Button_init(
+            name = 'button_PACK_SAVE',
+            text = '打包并保存至...',
+            command = lambda : self.pack_save(),
+            x = 45,
+            y = 340,
+            width = 600 - 45 * 2,
+            height = 34
+        )
+
+        self.UIObject['edit_root'].iconbitmap('./resource/tmp_favoricon.ico')
+        self.UIObject['edit_root'].mainloop()
+
+    def tree_UI_Button_init(self, name, text, command, x, y, width, height):
+        self.UIObject[name] = tkinter.Button(
+            self.UIObject['edit_root'],
+            text = text,
+            command = command,
+            bd = 0,
+            activebackground = self.UIConfig['color_002'],
+            activeforeground = self.UIConfig['color_001'],
+            bg = self.UIConfig['color_003'],
+            fg = self.UIConfig['color_004'],
+            relief = 'groove'
+        )
+        self.UIObject[name].bind('<Enter>', lambda x : self.buttom_action(name, '<Enter>'))
+        self.UIObject[name].bind('<Leave>', lambda x : self.buttom_action(name, '<Leave>'))
+        self.UIObject[name].bind('<Button-1>', lambda x : self.clickRecord(name, x))
+        self.UIObject[name].place(
+            x = x,
+            y = y,
+            width = width,
+            height = height
+        )
+
+    def buttom_action(self, name, action):
+        if name in self.UIObject:
+            if action == '<Enter>':
+                self.UIObject[name].configure(bg = self.UIConfig['color_006'])
+            if action == '<Leave>':
+                self.UIObject[name].configure(bg = self.UIConfig['color_003'])
+
+    def clickRecord(self, name, event):
+        self.UIData['click_record'][name] = event
+
+    def tree_edit_UI_Entry_init(self, obj_root, obj_name, str_name, x, y, width_t, width, height, action, title = '', mode = 'NONE'):
+        self.UIObject[obj_name + '=Label'] = tkinter.Label(
+            self.UIObject[obj_root],
+            text = title
+        )
+        self.UIObject[obj_name + '=Label'].configure(
+            bg = self.UIConfig['color_001'],
+            fg = self.UIConfig['color_004']
+        )
+        self.UIObject[obj_name + '=Label'].place(
+            x = x - width_t,
+            y = y,
+            width = width_t,
+            height = height
+        )
+        self.UIData[str_name] = tkinter.StringVar()
+        self.UIObject[obj_name] = tkinter.Entry(
+            self.UIObject[obj_root],
+            textvariable = self.UIData[str_name]
+        )
+        self.UIObject[obj_name].configure(
+            bg = self.UIConfig['color_004'],
+            fg = self.UIConfig['color_005'],
+            bd = 0
+        )
+        if mode == 'SAFE':
+            self.UIObject[obj_name].configure(
+                show = '●'
+            )
+        self.UIObject[obj_name].place(
+            x = x,
+            y = y,
+            width = width,
+            height = height
+        )
+
+    def init_data(self):
+        tmp_dictCustomData = ChanceCustom.load.dictCustomData
+        tmp_hashSelection = self.bot_hash
+        self.UIData['list_listbox_L'] = ChanceCustom.load.getCustomDataSortKeyList(
+            data = tmp_dictCustomData['data'][tmp_hashSelection],
+            reverse = True
+        )
+        self.UIData['list_listbox_R'] = []
+
+    def load_data(self):
+        self.UIObject['listbox_L_StringVar'].set(value = self.UIData['list_listbox_L'])
+        self.UIObject['listbox_R_StringVar'].set(value = self.UIData['list_listbox_R'])
+
+    def listbox_selected(self, event, name, name_to):
+        selected_indices = self.UIObject[name].curselection()
+        selected_langs = [self.UIObject[name].get(i) for i in selected_indices]
+        list_this_new:list = []
+        list_to_this_new:list = self.UIData['list_%s' % name_to]
+        for list_it in self.UIData['list_%s' % name]:
+            if list_it in selected_langs:
+                list_to_this_new.append(list_it)
+            else:
+                list_this_new.append(list_it)
+        self.UIData['list_%s' % name] = list_this_new
+        self.UIObject[name].select_clear(0,None)
+        self.load_data()
+
+    def pack_save(self):
+        tmp_dictCustomData = ChanceCustom.load.dictCustomData
+        tmp_hashSelection = self.bot_hash
+        ccpk_name = self.UIData['entry_NAME_StringVar'].get()
+        ccpk_author = self.UIData['entry_AUTHOR_StringVar'].get()
+        ccpk_version = self.UIData['entry_VERSION_StringVar'].get()
+        ccpk_info = self.UIData['entry_INFO_StringVar'].get()
+        ccpk_key_list = self.UIData['list_listbox_R']
+        if ccpk_name == '':
+            return
+        ccpk_save_path = filedialog.asksaveasfilename(title = '保存至...', filetypes=[("程心包", "*.ccpk")])
+        if ccpk_save_path == '':
+            return
+        else:
+            ccpk_save_path += '.ccpk'
+        ccpk_data = {
+            'type': 'ccpk',
+            'dataVersion' : ChanceCustom.load.dataVersion,
+            'info': {
+                'name': ccpk_name,
+                'author': ccpk_author,
+                'version': ccpk_version,
+                'info': ccpk_info
+            },
+            'data': {}
+        }
+        for ccpk_key_this in ccpk_key_list:
+            if ccpk_key_this in tmp_dictCustomData['data'][tmp_hashSelection]:
+                ccpk_data['data'][ccpk_key_this] = tmp_dictCustomData['data'][tmp_hashSelection][ccpk_key_this]
+        releaseDir('./plugin')
+        releaseDir('./plugin/data')
+        releaseDir('./plugin/data/ChanceCustom')
+        releaseDir('./plugin/data/ChanceCustom/pack')
+        removeDir('./plugin/data/ChanceCustom/pack/tmp')
+        removeDir('./plugin/data/ChanceCustom/pack/tmp.ccpk')
+        releaseDir('./plugin/data/ChanceCustom/pack/tmp')
+        ccpk_tmp_dir_path = './plugin/data/ChanceCustom/pack/tmp'
+        ccpk_tmp_path = ccpk_tmp_dir_path + '/data.json'
+        with open(ccpk_tmp_path, 'w', encoding = 'utf-8') as ccpk_tmp_path_f:
+            ccpk_tmp_path_f.write(json.dumps(ccpk_data, ensure_ascii = False, indent = 4))
+        ccpk_tmp_path = './plugin/data/ChanceCustom/pack/tmp.ccpk'
+        with zipfile.ZipFile(ccpk_tmp_path, 'w', zipfile.ZIP_DEFLATED) as z:
+            for dirpath, dirnames, filenames in os.walk(ccpk_tmp_dir_path):
+                for filename in filenames:
+                    fpath = dirpath.replace(ccpk_tmp_dir_path, '')
+                    for filename in filenames:
+                        z.write(os.path.join(dirpath, filename), os.path.join(fpath, filename))
+        copyFile(ccpk_tmp_path, ccpk_save_path)
+        removeDir(ccpk_tmp_dir_path)
+        removeDir(ccpk_tmp_path)
+        tkinter.messagebox.showinfo('完成打包', '程心导入包已保存至 %s' % ccpk_save_path)
+
+def releaseDir(dir_path):
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+def removeDir(dir_path):
+    try:
+        if os.path.exists(dir_path):
+            shutil.rmtree(dir_path)
+    except:
+        try:
+            if os.path.exists(dir_path):
+                os.remove(dir_path) 
+        except:
+            pass
+
+def copyFile(src, dst):
+    try:
+        shutil.copyfile(src = src, dst = dst)
+    except:
+        pass
