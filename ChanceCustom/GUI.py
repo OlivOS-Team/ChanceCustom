@@ -27,6 +27,7 @@ import os
 import shutil
 import json
 import zipfile
+import configparser
 
 dictColorContext = {
     'color_001': '#00A0EA',
@@ -462,25 +463,81 @@ class ConfigUI(object):
         tmp_hashSelection = self.UIData['hash_now']
         ccpk_load_path_list = []
         try:
-            ccpk_load_path_list = filedialog.askopenfilenames(title = '导入...', filetypes=[("程心包", "*.ccpk")])
+            ccpk_load_path_list = filedialog.askopenfilenames(
+                title = '导入...',
+                filetypes = [
+                    ("程心包", "*.ccpk"),
+                    ("铃心包", "*.epk")
+                ]
+            )
         except:
             tkinter.messagebox.showwarning('运行失败', '你需要使用最新版OlivOS才能使用此功能')
         for ccpk_load_path in ccpk_load_path_list:
             try:
-                with zipfile.ZipFile(ccpk_load_path, 'r', zipfile.ZIP_DEFLATED) as z:
-                    releaseDir('./plugin')
-                    releaseDir('./plugin/data')
-                    releaseDir('./plugin/data/ChanceCustom')
-                    removeDir('./plugin/data/ChanceCustom/tmp')
-                    releaseDir('./plugin/data/ChanceCustom/tmp')
-                    z.extractall('./plugin/data/ChanceCustom/tmp')
-                    with open('./plugin/data/ChanceCustom/tmp/data.json', 'r', encoding = 'utf-8') as f:
-                        ccpk_data = json.loads(f.read())
-                        if 'type' in ccpk_data and ccpk_data['type'] == 'ccpk':
-                            if 'dataVersion' in ccpk_data and ccpk_data['dataVersion'] == 2:
-                                for key_this in ccpk_data['data']:
-                                    tmp_dictCustomData['data'][tmp_hashSelection][key_this] = ccpk_data['data'][key_this]
-                                tmp_dictCustomData['ccpkList'][tmp_hashSelection][ccpk_data['info']['name']] = ccpk_data
+                releaseDir('./plugin')
+                releaseDir('./plugin/data')
+                releaseDir('./plugin/data/ChanceCustom')
+                removeDir('./plugin/data/ChanceCustom/tmp')
+                releaseDir('./plugin/data/ChanceCustom/tmp')
+                if ccpk_load_path.endswith('.ccpk'):
+                    with zipfile.ZipFile(ccpk_load_path, 'r', zipfile.ZIP_DEFLATED) as z:
+                        z.extractall('./plugin/data/ChanceCustom/tmp')
+                        with open('./plugin/data/ChanceCustom/tmp/data.json', 'r', encoding = 'utf-8') as f:
+                            ccpk_data = json.loads(f.read())
+                            if 'type' in ccpk_data and ccpk_data['type'] == 'ccpk':
+                                if 'dataVersion' in ccpk_data and ccpk_data['dataVersion'] == 2:
+                                    for key_this in ccpk_data['data']:
+                                        tmp_dictCustomData['data'][tmp_hashSelection][key_this] = ccpk_data['data'][key_this]
+                                    tmp_dictCustomData['ccpkList'][tmp_hashSelection][ccpk_data['info']['name']] = ccpk_data
+                elif ccpk_load_path.endswith('.epk'):
+                    with support_gbk(zipfile.ZipFile(ccpk_load_path, 'r', zipfile.ZIP_DEFLATED)) as z:
+                        z.extractall('./plugin/data/ChanceCustom/tmp')
+                        ini = configparser.ConfigParser()
+                        ini.read('./plugin/data/ChanceCustom/tmp/配置.ini', encoding = 'gbk')
+                        dataAll = {
+                            'type': 'ccpk',
+                            'dataVersion' : ChanceCustom.load.dataVersion,
+                            'info': {
+                                'name': ccpk_load_path.rstrip('.epk').split('/')[-1],
+                                'author': '铃心自定义',
+                                'version': '0',
+                                'info': ''
+                            },
+                            'data': {}
+                        }
+                        for key_this in ini:
+                            data_this = {
+                                "key": key_this,
+                                "matchType": "full",
+                                "matchPlace": "1",
+                                "priority": 0,
+                                "value": ""
+                            }
+                            if key_this not in ['DEFAULT']:
+                                if '回复' in ini[key_this]:
+                                    data_this['value'] = ini[key_this]['回复'].replace('【分隔】', '\n')
+                                if '优先级' in ini[key_this]:
+                                    data_this['priority'] = int(ini[key_this]['优先级'])
+                                if '匹配方式' in ini[key_this]:
+                                    if ini[key_this]['匹配方式'] == '完全匹配':
+                                        data_this['matchType'] = 'full'
+                                    elif ini[key_this]['匹配方式'] == '前缀匹配':
+                                        data_this['matchType'] = 'perfix'
+                                    elif ini[key_this]['匹配方式'] == '正则匹配':
+                                        data_this['matchType'] = 'reg'
+                                    else:
+                                        continue
+                                if '触发方式' in ini[key_this]:
+                                    if ini[key_this]['触发方式'] == '群聊触发':
+                                        data_this['matchPlace'] = '1'
+                                    elif ini[key_this]['触发方式'] == '私聊触发':
+                                        data_this['matchPlace'] = '2'
+                                    else:
+                                        data_this['matchPlace'] = '3'
+                                dataAll['data'][key_this] = data_this
+                        for key_this in dataAll['data']:
+                            tmp_dictCustomData['data'][tmp_hashSelection][key_this] = dataAll['data'][key_this]
+                        tmp_dictCustomData['ccpkList'][tmp_hashSelection][dataAll['info']['name']] = dataAll
                     removeDir('./plugin/data/ChanceCustom/tmp')
             except:
                 tkinter.messagebox.showwarning('导入失败', '导入 %s 时失败' % ccpk_load_path)
@@ -564,6 +621,19 @@ class ConfigUI(object):
                     root = self
                 )
                 edit_action.start()
+
+
+def support_gbk(zip_file: zipfile.ZipFile):
+    name_to_info = zip_file.NameToInfo
+    # copy map first
+    for name, info in name_to_info.copy().items():
+        real_name = name.encode('cp437').decode('gbk')
+        if real_name != name:
+            info.filename = real_name
+            del name_to_info[name]
+            name_to_info[real_name] = info
+    return zip_file
+
 
 class TreeEditUI(object):
     def __init__(self, action, key = None, bot_hash = 'unity', edit_commit_callback = None, root = None):
