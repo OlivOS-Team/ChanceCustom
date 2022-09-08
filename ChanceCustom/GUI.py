@@ -505,6 +505,8 @@ class ConfigUI(object):
                             },
                             'data': {}
                         }
+                        with open('./plugin/data/ChanceCustom/tmp/说明.txt', encoding = 'gbk') as f:
+                            dataAll['info']['info'] = f.read()
                         for key_this in ini:
                             data_this = {
                                 "key": key_this,
