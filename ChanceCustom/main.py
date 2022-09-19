@@ -18,8 +18,8 @@ import ChanceCustom
 
 import platform
 
-version = '0.2.0'
-svn = 15
+version = '0.2.1'
+svn = 16
 
 version_full = '%s(%d)' % (version, svn)
 
@@ -61,7 +61,7 @@ class Event(object):
         if(platform.system() == 'Windows'):
             if plugin_event.data.namespace == 'ChanceCustom':
                 if plugin_event.data.event == 'ChanceCustom_001':
-                    if not ChanceCustom.load.flag_open:
+                    if not ChanceCustom.load.flag_open or True:
                         ChanceCustom.load.flag_open = True
                         ChanceCustom.GUI.ConfigUI(
                             Model_name = 'shallow_menu_plugin_manage',

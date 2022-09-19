@@ -83,7 +83,7 @@ class ConfigUI(object):
         self.UIConfig.update(dictColorContext)
 
     def start(self):
-        self.UIObject['root'] = tkinter.Tk()
+        self.UIObject['root'] = tkinter.Toplevel()
         self.UIObject['root'].title('程心自定义')
         self.UIObject['root'].geometry('518x400')
         self.UIObject['root'].resizable(
@@ -160,12 +160,15 @@ class ConfigUI(object):
 
         self.UIObject['root'].iconbitmap('./resource/tmp_favoricon.ico')
         self.UIObject['root'].mainloop()
-        ChanceCustom.load.flag_open = False
+        #ChanceCustom.load.flag_open = False
 
 
     def init_notebook(self):
-        self.UIData['style'] = ttk.Style()
-        self.UIData['style'].element_create('Plain.Notebook.tab', "from", 'default')
+        self.UIData['style'] = ttk.Style(self.UIObject['root'])
+        try:
+            self.UIData['style'].element_create('Plain.Notebook.tab', "from", 'default')
+        except:
+            pass
         self.UIData['style'].layout(
             "TNotebook.Tab",
             [('Plain.Notebook.tab', {'children':
