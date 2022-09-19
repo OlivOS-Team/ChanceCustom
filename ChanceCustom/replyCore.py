@@ -140,6 +140,14 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
     getValDictUnity(valDict)
     getValDict(valDict, plugin_event, Proc, event_name)
 
+    if not ChanceCustom.replyContent.contextRegTryHit(
+        message = tmp_message,
+        event_name = event_name,
+        valDict = valDict,
+        bot_hash = plugin_event.bot_info.hash
+    ):
+        return
+
     for tmp_hash_list_this in tmp_hash_list:
         valDict['innerVal']['bot_hash'] = tmp_hash_list_this
         valDict['innerVal']['bot_hash_self'] = plugin_event.bot_info.hash

@@ -13,10 +13,134 @@ _________ ___________________ ____  __.
 @Desc      :   None
 '''
 
+import OlivOS
 import ChanceCustom
 
 import re
 import time
+import hashlib
+
+contextReg = {}
+
+def flowInputFunTemp():
+    def flowInputFun(valDict):
+        def flowInput_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            ChanceCustom.replyBase.getNumRegTatol(resDict, '标识类型', '2', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTatol(resDict, '最大时间', '30', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTatol(resDict, '最大次数', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTatol(resDict, '单Q次数', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTatol(resDict, '是否继续匹配', '假', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTatol(resDict, '回调函数', '', groupDict, valDict)
+            contextRegName = None
+            if resDict['标识类型'] == 1:
+                if 'group_id' in valDict['innerVal'] and 'group_id' in valDict['innerVal']:
+                    contextRegName =  contextRegHash([
+                        str(valDict['innerVal']['host_id']),
+                        str(valDict['innerVal']['group_id']),
+                        str(None)
+                    ])
+                else:
+                    contextRegName = None
+            elif resDict['标识类型'] == 2:
+                contextRegName = contextRegHash([
+                    str(None),
+                    str(None),
+                    str(valDict['innerVal']['user_id'])
+                ])
+            elif resDict['标识类型'] == 3:
+                if 'group_id' in valDict['innerVal'] and 'group_id' in valDict['innerVal']:
+                    contextRegName =  contextRegHash([
+                        str(valDict['innerVal']['host_id']),
+                        str(valDict['innerVal']['group_id']),
+                        str(valDict['innerVal']['user_id'])
+                    ])
+                else:
+                    contextRegName = None
+            bot_hash = None
+            try:
+                bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
+            except:
+                bot_hash = None
+            if bot_hash != None and contextRegName != None:
+                if bot_hash not in ChanceCustom.replyContent.contextReg:
+                    ChanceCustom.replyContent.contextReg[bot_hash] = {}
+                ChanceCustom.replyContent.contextReg[bot_hash][contextRegName] = {
+                    'data': None
+                }
+            count = resDict['最大时间'] * 2
+            while count > 0:
+                count -= 1
+                if (
+                    bot_hash in ChanceCustom.replyContent.contextReg
+                ) and (
+                    contextRegName in ChanceCustom.replyContent.contextReg[bot_hash]
+                ):
+                    time.sleep(0.5)
+                    if (
+                        'data' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
+                    ) and (
+                        ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] != None
+                    ):
+                        res = str(ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'])
+                        break
+                else:
+                    break
+            return res
+        return flowInput_f
+    return flowInputFun
+
+def contextRegHash(data:list):
+    res = None
+    hash_tmp = hashlib.new('md5')
+    for data_this in data:
+        if type(data_this) == str:
+            hash_tmp.update(str(data_this).encode(encoding='UTF-8'))
+    res = hash_tmp.hexdigest()
+    return res
+
+def contextRegTryHit(message:str, event_name:str, valDict:dict, bot_hash:str):
+    res = True
+    contextRegName_list = []
+    if event_name == 'group_message':
+        contextRegName_list.append(contextRegHash([
+            str(valDict['innerVal']['host_id']),
+            str(valDict['innerVal']['group_id']),
+            str(valDict['innerVal']['user_id'])
+        ]))
+        contextRegName_list.append(contextRegHash([
+            str(None),
+            str(None),
+            str(valDict['innerVal']['user_id'])
+        ]))
+        contextRegName_list.append(contextRegHash([
+            str(valDict['innerVal']['host_id']),
+            str(valDict['innerVal']['group_id']),
+            str(None)
+        ]))
+    elif event_name == 'private_message':
+        contextRegName_list.append(contextRegHash([
+            str(None),
+            str(None),
+            str(valDict['innerVal']['user_id'])
+        ]))
+    for contextRegName in contextRegName_list:
+        if (
+            contextRegName != None
+        ) and (
+            bot_hash in ChanceCustom.replyContent.contextReg
+        ) and (
+            contextRegName in ChanceCustom.replyContent.contextReg[bot_hash]
+        ) and (
+            'data' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
+        ) and (
+            None == ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data']
+        ):
+            ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] = message
+            res = False
+    return res
 
 def flowOutputFunTemp():
     def flowOutputFun(valDict):

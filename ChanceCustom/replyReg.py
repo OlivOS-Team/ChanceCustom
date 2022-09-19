@@ -92,6 +92,8 @@ listRegTotalFun = [
     ['补位随机数', ['X', 'Y'], ChanceCustom.replyRandom.RangeNumFunTemp(flagPadding = True)],
     ['随机字符', [], ChanceCustom.replyRandom.RangeCharFunTemp()],
 
+    ['随取', ['...'], ChanceCustom.replyRandom.ChoiceOneSTRFunTemp()],
+
     ['运行目录', [], ChanceCustom.replyBase.RunDirectoryFunTemp()],
     ['应用目录', [], ChanceCustom.replyBase.AppDirectoryFunTemp()],
 
@@ -107,6 +109,7 @@ listRegTotalFun = [
     ['继续', [], '[继续]'],
 
     # >IO流<
+    ['输入流', ['标识类型', '最大时间', '最大次数', '单Q次数', '是否继续匹配', '回调函数'], ChanceCustom.replyContent.flowInputFunTemp()],
     ['输出流', ['加入文本', '标识类型', '输出类型', '返回msgID'], ChanceCustom.replyContent.flowOutputFunTemp()],
 
     # >比较判断<

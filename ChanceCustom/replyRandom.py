@@ -71,3 +71,20 @@ def RangeCharFunTemp():
             return res
         return RangeChar_f
     return RangeCharFun
+
+def ChoiceOneSTRFunTemp():
+    def ChoiceOneSTRFun(valDict):
+        def ChoiceOneSTR_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
+            if None != resDict['...'] and len(resDict['...']) > 0:
+                resData_this = random.choice(resDict['...'])
+                res = ChanceCustom.replyReg.replyValueRegTotal(
+                    resData_this,
+                    valDict = valDict
+                )
+            return res
+        return ChoiceOneSTR_f
+    return ChoiceOneSTRFun

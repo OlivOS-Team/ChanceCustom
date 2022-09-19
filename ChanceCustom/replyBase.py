@@ -44,7 +44,10 @@ def getNumRegTatol(resDict, calKey, default, groupDict, valDict):
     try:
         resDict[calKey] = int(resDict[calKey])
     except:
-        resDict[calKey] = 0
+        try:
+            resDict[calKey] = int(default)
+        except:
+            resDict[calKey] = 0
 
 def getBoolRegTatol(resDict, calKey, default, groupDict, valDict, defaultBool = ['真', True]):
     getCharRegTatol(resDict, calKey, default, groupDict, valDict)
