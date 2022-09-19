@@ -19,6 +19,7 @@ import ChanceCustom
 import re
 import time
 import hashlib
+import uuid
 
 contextReg = {}
 
@@ -32,7 +33,7 @@ def flowInputFunTemp():
             ChanceCustom.replyBase.getNumRegTatol(resDict, '最大时间', '30', groupDict, valDict)
             ChanceCustom.replyBase.getNumRegTatol(resDict, '最大次数', '1', groupDict, valDict)
             ChanceCustom.replyBase.getNumRegTatol(resDict, '单Q次数', '0', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '是否继续匹配', '假', groupDict, valDict)
+            ChanceCustom.replyBase.getBoolRegTatol(resDict, '是否继续匹配', '假', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTatol(resDict, '回调函数', '', groupDict, valDict)
             contextRegName = None
             if resDict['标识类型'] == 1:
@@ -64,30 +65,54 @@ def flowInputFunTemp():
                 bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
             except:
                 bot_hash = None
+            count = resDict['最大时间'] * 2
+            matchCount = resDict['最大次数']
+            matchCountOne = resDict['单Q次数']
+            matchContinue = resDict['是否继续匹配']
+            token = str(uuid.uuid4())
             if bot_hash != None and contextRegName != None:
                 if bot_hash not in ChanceCustom.replyContent.contextReg:
                     ChanceCustom.replyContent.contextReg[bot_hash] = {}
                 ChanceCustom.replyContent.contextReg[bot_hash][contextRegName] = {
-                    'data': None
+                    'data': None,
+                    'type': resDict['标识类型'],
+                    'count': count,
+                    'matchCount': matchCount,
+                    'matchCountOne': matchCountOne,
+                    'matchContinue': matchContinue,
+                    'token': token
                 }
-            count = resDict['最大时间'] * 2
-            while count > 0:
-                count -= 1
-                if (
-                    bot_hash in ChanceCustom.replyContent.contextReg
-                ) and (
-                    contextRegName in ChanceCustom.replyContent.contextReg[bot_hash]
-                ):
-                    time.sleep(0.5)
+            try:
+                flagPop = True
+                while count > 0:
+                    count -= 1
                     if (
-                        'data' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
+                        bot_hash in ChanceCustom.replyContent.contextReg
                     ) and (
-                        ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] != None
+                        contextRegName in ChanceCustom.replyContent.contextReg[bot_hash]
+                    ) and (
+                        'data' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
                     ):
-                        res = str(ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'])
+                        time.sleep(0.5)
+                        if (
+                            'token' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
+                        ) and (
+                            ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['token'] != token
+                        ):
+                            flagPop = False
+                            break
+                        elif ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] != None:
+                            res = str(ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'])
+                            break
+                        else:
+                            ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['count'] = count
+                    else:
                         break
-                else:
-                    break
+                if flagPop and bot_hash != None and contextRegName != None:
+                    if bot_hash in ChanceCustom.replyContent.contextReg and contextRegName in ChanceCustom.replyContent.contextReg[bot_hash]:
+                        ChanceCustom.replyContent.contextReg[bot_hash].pop(contextRegName)
+            except:
+                res = ''
             return res
         return flowInput_f
     return flowInputFun
@@ -127,6 +152,7 @@ def contextRegTryHit(message:str, event_name:str, valDict:dict, bot_hash:str):
             str(valDict['innerVal']['user_id'])
         ]))
     for contextRegName in contextRegName_list:
+        flagMatch = False
         if (
             contextRegName != None
         ) and (
@@ -137,9 +163,47 @@ def contextRegTryHit(message:str, event_name:str, valDict:dict, bot_hash:str):
             'data' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
         ) and (
             None == ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data']
+        ) and (
+            'count' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
+        ) and (
+            ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['count'] > 0
         ):
-            ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] = message
-            res = False
+            if 'matchCount' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]:
+                if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCount'] > 0:
+                    if 'matchCount_count' not in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]:
+                        ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCount_count'] = 0
+                    ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCount_count'] += 1
+                    if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCount_count'] == ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCount']:
+                        flagMatch = True
+                    elif 'matchCount_count' not in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]:
+                        ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCount_count'] = 1
+                else:
+                    flagMatch = True
+            if (
+                'type' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]
+            ) and (
+                ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['type'] == 1
+            ):
+                if 'matchCountOne' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]:
+                    if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCountOne'] > 0:
+                        if 'matchCountOne_count' not in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]:
+                            ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCountOne_count'] = {}
+                        contextRegNameOne = contextRegHash([
+                            str(None),
+                            str(None),
+                            str(valDict['innerVal']['user_id'])
+                        ])
+                        if contextRegNameOne not in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCountOne_count']:
+                            ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCountOne_count'][contextRegNameOne] = 0
+                        ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCountOne_count'][contextRegNameOne] += 1
+                        if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCountOne_count'][contextRegNameOne] == ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchCountOne']:
+                            flagMatch = True
+            if flagMatch:
+                ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] = message
+                res = False
+                if 'matchContinue' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]:
+                    if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchContinue'] == True:
+                        res = True
     return res
 
 def flowOutputFunTemp():
