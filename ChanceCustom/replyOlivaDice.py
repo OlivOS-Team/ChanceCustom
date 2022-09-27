@@ -35,11 +35,15 @@ def drawFunTemp():
                 ChanceCustom.replyBase.getBoolRegTatol(resDict, '是否放回', '真', groupDict, valDict)
                 ChanceCustom.replyBase.getCharRegTatol(resDict, '分隔符', '\n', groupDict, valDict)
                 res_list = []
+                plugin_event = None
+                if 'plugin_event' in valDict['innerVal']:
+                    plugin_event = valDict['innerVal']['plugin_event']
                 for i in range(resDict['牌数']):
                     res_draw = OlivaDiceCore.drawCard.draw(
                         key_str = resDict['牌堆名'],
                         bot_hash = valDict['innerVal']['bot_hash_self'],
-                        flag_need_give_back = resDict['是否放回']
+                        flag_need_give_back = resDict['是否放回'],
+                        plugin_event = plugin_event
                     )
                     if res_draw != None:
                         res_list.append(res_draw)
