@@ -46,6 +46,8 @@ def drawFunTemp():
                         plugin_event = plugin_event
                     )
                     if res_draw != None:
+                        for key_this in ChanceCustom.replyReg.listRegTotalEscape:
+                            res_draw = res_draw.replace(key_this[0], key_this[1])
                         res_list.append(res_draw)
                 if len(res_list):
                     res = resDict['分隔符'].join(res_list)

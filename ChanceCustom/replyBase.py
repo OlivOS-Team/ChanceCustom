@@ -64,6 +64,14 @@ def getGroupDictInit(matched:'re.Match|dict'):
         res = matched
     return res
 
+def setLFFunTemp():
+    def setLFFun(valDict):
+        def setLF_f(matched:'re.Match|dict'):
+            res = '\n'
+            return res
+        return setLF_f
+    return setLFFun
+
 def ifFunTemp():
     def ifFun(valDict):
         def if_f(matched:'re.Match|dict'):
