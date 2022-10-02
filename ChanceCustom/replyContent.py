@@ -36,7 +36,6 @@ def flowInputFunTemp():
             ChanceCustom.replyBase.getBoolRegTatol(resDict, '是否继续匹配', '假', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTatol(resDict, '回调函数', '', groupDict, valDict)
             contextRegName = None
-            print(resDict)
             if resDict['标识类型'] == 1:
                 if 'group_id' in valDict['innerVal'] and 'group_id' in valDict['innerVal']:
                     contextRegName =  contextRegHash([
