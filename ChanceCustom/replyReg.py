@@ -125,7 +125,8 @@ listRegTotalFun = [
 
     # >算法计算<
     ['计算', ['计算公式'], ChanceCustom.replyEval.evalExprFunTemp()],
-    ['分割排序', ['排序文本', '分割符号', '依据序号', '排序正逆'], ChanceCustom.replyEval.splitSortFunTemp(type="sort")],
+    ['排序', ['排序文本', '分割符号', '排序正逆'], ChanceCustom.replyEval.splitSortFunTemp(type="sort")],
+    ['分割排序', ['排序文本', '分割符号', '依据序号', '排序正逆'], ChanceCustom.replyEval.splitSortFunTemp(type="split")],
     ['随机排序', ['排序文本', '分割符号'], ChanceCustom.replyEval.splitSortFunTemp(type="shuffle")],
     ['统计', ['被统计文本', '统计出现的文本'], ChanceCustom.replyEval.wordCountFunTemp()],
     ['取MD5', ['被取目标', 'MD5位数'], ChanceCustom.replyEval.getMD5FunTemp()],
