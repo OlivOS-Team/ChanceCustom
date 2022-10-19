@@ -251,17 +251,53 @@ def splitSortFunTemp(type="sort"):
             ChanceCustom.replyBase.getCharRegTatol(resDict, '排序文本', '', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTatol(resDict, '分割符号', '\n', groupDict, valDict)
             delimiter = resDict['分割符号']
-            splited_text = resDict['排序文本'].split(delimiter)
             if type == 'shuffle':
+                splited_text = resDict['排序文本'].split(delimiter)
                 random.shuffle(splited_text)
                 res = ' '.join(splited_text)
             elif type == 'sort':
-                ChanceCustom.replyBase.getNumRegTatol(resDict, '依据序号', 1, groupDict, valDict)
+                text = resDict['排序文本']
+                if text.startswith('-数字'):
+                    try:
+                        splited_text = map(int, text[3:].split(delimiter))
+                    except:
+                        splited_text = text[3:].split(delimiter)
+                else:
+                    splited_text = text.split(delimiter)
                 ChanceCustom.replyBase.getCharRegTatol(resDict, '排序正逆', '正序', groupDict, valDict)
                 if resDict['排序正逆'] == '正序':
-                    res = ' '.join(sorted(splited_text))
+                    res = ' '.join(map(str, sorted(splited_text)))
                 else:
-                    res = ' '.join(sorted(splited_text, reverse=True))
+                    res = ' '.join(map(str, sorted(splited_text, reverse=True)))
+            elif type == 'split':
+                ChanceCustom.replyBase.getCharRegTatol(resDict, '依据序号', '1', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTatol(resDict, '排序正逆', '正序', groupDict, valDict)
+                if resDict['排序文本'].startswith('-数字'):
+                    sortByValFlag = True
+                    lines = resDict['排序文本'][3:].split('\n')
+                    dataTable = [line.split(delimiter) for line in lines]
+                else:
+                    sortByValFlag = False
+                    lines = resDict['排序文本'].split('\n')
+                    dataTable = [line.split(delimiter) for line in lines]
+                length = len(dataTable[0])
+                indexNum = int(resDict['依据序号']) if resDict['依据序号'].isdigit() else 1
+                reverseFlag = True if resDict['排序正逆'] == '逆序' else False
+
+                if length < indexNum:
+                    res = '依据序号大于数据个数'
+                elif any(length != len(row) for row in dataTable):
+                    res = '每行数据个数不一致'
+                else:
+                    dataMap = {row[indexNum - 1]: line for row, line in zip(dataTable, lines)}
+                    if sortByValFlag:
+                        try:
+                            sortedDataList = sorted(dataMap.items(), key=lambda x: int(x[0]), reverse=reverseFlag)
+                        except:
+                            sortedDataList = sorted(dataMap.items(), key=lambda x: x[0], reverse=reverseFlag)
+                    else:
+                        sortedDataList = sorted(dataMap.items(), key=lambda x: x[0], reverse=reverseFlag)
+                    res = '\n'.join(map(lambda x: x[1], sortedDataList))
             return res
         return splitSort_f
     return splitSortFun
