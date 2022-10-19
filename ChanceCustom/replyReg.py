@@ -133,18 +133,18 @@ listRegTotalFun = [
     ['进制', ['待转化数值', '原数值进制', '目标进制'], ChanceCustom.replyEval.baseConvFunTmp()],
     ['补位', ['待补位文本', '结果长度', '补位字符', '结尾/开头'], ChanceCustom.replyEval.charPaddingFunTemp()],
 
-    # >自定义函数<
-    ['函数全局', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
-    ['函数', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
-    ['', ['...'], ChanceCustom.replyBase.getFuncValFunTemp()],
-
     # >时间类<
     ['时间戳转文本', ['时间戳'], ChanceCustom.replyTime.time2TextFunTemp()],
     ['现行日期', ['类型'], ChanceCustom.replyTime.getTimeOrDateFunTemp(type="date")],
     ['现行时间', ['类型'], ChanceCustom.replyTime.getTimeOrDateFunTemp(type="time")],
     ['13位时间', [], ChanceCustom.replyTime.getTimestampFunTemp(length=13)],
     ['10位时间', [], ChanceCustom.replyTime.getTimestampFunTemp(length=10)],
-    ['时间间隔', ['时间文本1', '时间文本2'], ChanceCustom.replyTime.getTimeIntervalFunTemp()]
+    ['时间间隔', ['时间文本1', '时间文本2'], ChanceCustom.replyTime.getTimeIntervalFunTemp()],
+
+    # >自定义函数<
+    ['函数全局', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
+    ['函数', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
+    ['', ['...'], ChanceCustom.replyBase.getFuncValFunTemp()]
 ]
 
 listRegTotal = [
