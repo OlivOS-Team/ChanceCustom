@@ -141,6 +141,23 @@ listRegTotalFun = [
     ['10位时间', [], ChanceCustom.replyTime.getTimestampFunTemp(length=10)],
     ['时间间隔', ['时间文本1', '时间文本2'], ChanceCustom.replyTime.getTimeIntervalFunTemp()],
 
+    # >文本操作<
+    ['文本-取出中间', ['被取文本', '开始位置', '取出长度'], ChanceCustom.replyText.extractCharFunTemp(type="order")],
+    ['文本-倒取中间', ['被取文本', '右边文本', '左边文本'], ChanceCustom.replyText.extractCharFunTemp(type="reverse")],
+    ['文本-取出左边', ['被取文本', '取出长度'], ChanceCustom.replyText.extractCharFunTemp(type="left")],
+    ['文本-取出右边', ['被取文本', '取出长度'], ChanceCustom.replyText.extractCharFunTemp(type="right")],
+    ['文本-取出长度', ['被取文本'], ChanceCustom.replyText.extractCharFunTemp(type="len")],
+    ['文本-寻找文本', ['被寻文本', '欲寻内容', '开始位置'], ChanceCustom.replyText.searchTextFunTemp()],
+    ['文本-倒找文本', ['被寻文本', '欲寻内容', '开始位置'], ChanceCustom.replyText.searchTextFunTemp(reversed=True)],
+    ['文本-反转文本', ['反转文本'], ChanceCustom.replyText.reverseTextFunTemp()],
+    ['文本-替换文本', ['被替文本', '开始位置', '替换长度', '替换文本'], ChanceCustom.replyText.replaceTextFunTemp()],
+    ['文本-转为大写', ['转换文本'], ChanceCustom.replyText.toggleCaseFunTemp(type="upper")],
+    ['文本-转为小写', ['转换文本'], ChanceCustom.replyText.toggleCaseFunTemp(type="lower")],
+    ['文本-取文本左', ['被取文本', '被寻内容'], ChanceCustom.replyText.extractCharFunTemp(type="searchL")],
+    ['文本-取文本右', ['被取文本', '被寻内容'], ChanceCustom.replyText.extractCharFunTemp(type="searchR")],
+    ['文本-中间替换', ['被取文本', '左边文本', '右边文本', '替换文本'], ChanceCustom.replyText.extractCharFunTemp(type="replace")],
+    ['文本-删首尾空', ['被删文本'], ChanceCustom.replyText.textStripFunTemp()],
+
     # >自定义函数<
     ['函数全局', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
     ['函数', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
