@@ -158,6 +158,23 @@ listRegTotalFun = [
     ['文本-中间替换', ['被取文本', '左边文本', '右边文本', '替换文本'], ChanceCustom.replyText.extractCharFunTemp(type="replace")],
     ['文本-删首尾空', ['被删文本'], ChanceCustom.replyText.textStripFunTemp()],
 
+    # >文本行操作<
+    ['行操作-删空白行', ['被删文本'], ChanceCustom.replyText.deleteLineFunTemp(type="blank")],
+    ['行操作-删重复行', ['被删文本'], ChanceCustom.replyText.deleteLineFunTemp(type="repeat")],
+    ['行操作-删首尾空', ['被删文本'], ChanceCustom.replyText.lineStripFunTemp()],
+    ['行操作-删指定行', ['被删文本', '开头行序', '结尾行序'], ChanceCustom.replyText.deleteLineFunTemp(type="fix")],
+    ['行操作-替换指定', ['被替文本', '开头行序', '结尾行序', '替换文本'], ChanceCustom.replyText.replaceLineFunTemp()],
+    ['行操作-插入文本', ['被插文本', '插入内容', '行数'], ChanceCustom.replyText.insertTextFunTemp()],
+    ['行操作-按字拆行', ['被拆文本', '每行字数'], ChanceCustom.replyText.splitTextByLengthFunTemp()],
+    ['行操作-每行相连', ['被连文本1', '被连文本2', '连接字符'], ChanceCustom.replyText.concatTextFunTemp()],
+    ['行操作-每行排序', ['被排文本', '排序顺逆'], ChanceCustom.replyText.sortByFirstLetterFunTemp()],
+    ['行操作-每行反转', ['被转文本'], ChanceCustom.replyText.reverseContentFunTemp(type="char")],
+    ['行操作-前后反转', ['被转文本'], ChanceCustom.replyText.reverseContentFunTemp(type="line")],
+    ['行操作-按行分页', ['被分页文本', '每页行数'], ChanceCustom.replyText.splitTextByLinesFunTemp()],
+    ['行操作-取出指定', ['被取文本', '开头行序', '结尾行序', '取出类型'], ChanceCustom.replyText.retrieveTextByLineIndexFunTemp()],
+    ['行操作-添加文本', ['被添文本', '添加类型', '添加参数', '添加文本'], ChanceCustom.replyText.addTextForEachLineFunTemp()],
+    ['行操作-替换文本', ['被替文本', '替换类型', '替换参数1', '替换参数2', '替换文本'], ChanceCustom.replyText.replaceTextForEachLineFunTemp()],
+
     # >自定义函数<
     ['函数全局', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
     ['函数', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
