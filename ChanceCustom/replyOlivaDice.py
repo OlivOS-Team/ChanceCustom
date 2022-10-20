@@ -26,14 +26,14 @@ def drawFunTemp():
             if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                 import OlivaDiceCore
                 resDict = {}
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '牌堆名', '', groupDict, valDict)
-                ChanceCustom.replyBase.getNumRegTatol(resDict, '牌数', '1', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '牌堆名', '', groupDict, valDict)
+                ChanceCustom.replyBase.getNumRegTotal(resDict, '牌数', '1', groupDict, valDict)
                 if resDict['牌数'] > 10:
                     resDict['牌数'] = 10
                 if resDict['牌数'] < 1:
                     resDict['牌数'] = 1
-                ChanceCustom.replyBase.getBoolRegTatol(resDict, '是否放回', '真', groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '分隔符', '\n', groupDict, valDict)
+                ChanceCustom.replyBase.getBoolRegTotal(resDict, '是否放回', '真', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '分隔符', '\n', groupDict, valDict)
                 res_list = []
                 plugin_event = None
                 if 'plugin_event' in valDict['innerVal']:
@@ -63,7 +63,7 @@ def RDFunTemp():
             if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                 import OlivaDiceCore
                 resDict = {}
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '表达式', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '表达式', '', groupDict, valDict)
 
                 rd_para_str = resDict['表达式']
                 tmp_template_customDefault = None

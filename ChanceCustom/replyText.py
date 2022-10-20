@@ -17,24 +17,24 @@ def extractCharFunTemp(type):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被取文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被取文本', '', groupDict, valDict)
             if type == 'order':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '开始位置', '1', groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '取出长度', '0', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '开始位置', '1', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '取出长度', '0', groupDict, valDict)
                 beginIdex = max(str2int(resDict['开始位置']) - 1, 0)
                 endIndex = beginIdex + str2int(resDict['取出长度'])
                 res = resDict['被取文本'][beginIdex:endIndex]
             elif type == 'replace':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '右边文本', '', groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '左边文本', '', groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '替换文本', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '右边文本', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '左边文本', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '替换文本', '', groupDict, valDict)
                 text = resDict['被取文本']
                 leftIndex = text.find(resDict['左边文本'])
                 rightIndex = text.find(resDict['右边文本']) + len(resDict['右边文本'])
                 res = text[:leftIndex] + resDict['替换文本'] + text[rightIndex:]
             elif type == 'reverse':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '右边文本', '', groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '左边文本', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '右边文本', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '左边文本', '', groupDict, valDict)
                 text = resDict['被取文本']
                 leftIndex = text.find(resDict['左边文本'])
                 rightIndex = text.find(resDict['右边文本']) + len(resDict['右边文本'])
@@ -42,13 +42,13 @@ def extractCharFunTemp(type):
             elif type == 'len':
                 res = str(len(resDict['被取文本']))
             elif type == 'left':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '取出长度', '0', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '取出长度', '0', groupDict, valDict)
                 res = resDict['被取文本'][:str2int(resDict['取出长度'])]
             elif type == 'right':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '取出长度', '0', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '取出长度', '0', groupDict, valDict)
                 res = resDict['被取文本'][-str2int(resDict['取出长度']):]
             elif type == 'searchL':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '被寻内容', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '被寻内容', '', groupDict, valDict)
                 text = resDict['被取文本']
                 index = text.find(resDict['被寻内容'])
                 if index == -1:
@@ -56,7 +56,7 @@ def extractCharFunTemp(type):
                 else:
                     res = text[:index]
             elif type == 'searchR':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '被寻内容', '', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '被寻内容', '', groupDict, valDict)
                 text = resDict['被取文本']
                 index = text.find(resDict['被寻内容']) + len(resDict['被寻内容'])
                 if text.find(resDict['被寻内容']) == -1:
@@ -73,7 +73,7 @@ def toggleCaseFunTemp(type):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '转换文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '转换文本', '', groupDict, valDict)
             if type == 'upper':
                 res = resDict['转换文本'].upper()
             elif type == 'lower':
@@ -88,9 +88,9 @@ def searchTextFunTemp(reversed=False):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被寻文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '欲寻内容', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '开始位置', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被寻文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '欲寻内容', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '开始位置', '1', groupDict, valDict)
             text = resDict['被寻文本']
             if not reversed:
                 res = str(text[str2int(resDict['开始位置']) - 1:].find(resDict['欲寻内容']) + 1)
@@ -108,7 +108,7 @@ def reverseTextFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '反转文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '反转文本', '', groupDict, valDict)
             res = resDict['反转文本'][::-1]
             return res
         return reverseText_f
@@ -120,10 +120,10 @@ def replaceTextFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被替文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '开始位置', '1', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '替换长度', '0', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '替换文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被替文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '开始位置', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '替换长度', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '替换文本', '', groupDict, valDict)
             text = resDict['被替文本']
             startIndex = max(str2int(resDict['开始位置']) - 1, 0)
             endIndex = startIndex + str2int(resDict['替换长度'])
@@ -139,7 +139,7 @@ def textStripFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被删文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被删文本', '', groupDict, valDict)
             text = resDict['被删文本']
             if text.startswith('-'):
                 type = resDict['被删文本'][1]
@@ -160,7 +160,7 @@ def deleteLineFunTemp(type):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被删文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被删文本', '', groupDict, valDict)
             
             if type == 'blank':
                 str.isspace()
@@ -175,8 +175,8 @@ def deleteLineFunTemp(type):
                     visitedLines.append(line)
                 res = '\n'.join(visitedLines)
             elif type == 'fix':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '开头行序', '-1', groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '结尾行序', '-1', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '开头行序', '-1', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '结尾行序', '-1', groupDict, valDict)
                 lines = resDict['被删文本'].split('\n')
                 startIndex = max(str2int(resDict['开头行序'], 1) - 1, 0)
                 endIndex = min(str2int(resDict['结尾行序'], 1) - 1, len(lines) - 1)
@@ -192,7 +192,7 @@ def lineStripFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被删文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被删文本', '', groupDict, valDict)
             text = resDict['被删文本']
             if text.startswith('-'):
                 type = resDict['被删文本'][1]
@@ -213,10 +213,10 @@ def replaceLineFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被替文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '开头行序', '1', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '结尾行序', '1', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '替换文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被替文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '开头行序', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '结尾行序', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '替换文本', '', groupDict, valDict)
             
             lines = resDict['被替文本'].split('\n')
             startIndex = max(str2int(resDict['开头行序'], 1) - 1, 0)
@@ -233,9 +233,9 @@ def insertTextFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被插文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '插入内容', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '行数', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被插文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '插入内容', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '行数', '1', groupDict, valDict)
             if resDict['行数'].isdigit():
                 pos = int(resDict['行数']) - 1
                 lines = resDict['被插文本'].split('\n')
@@ -253,8 +253,8 @@ def splitTextByLengthFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被拆文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '每行字数', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被拆文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '每行字数', '1', groupDict, valDict)
             if resDict['每行字数'].isdigit():
                 lines = []
                 limit = int(resDict['每行字数'])
@@ -274,9 +274,9 @@ def concatTextFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被连文本1', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被连文本2', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '连接字符', ' ', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被连文本1', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被连文本2', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '连接字符', ' ', groupDict, valDict)
             symbol = resDict['连接字符']
             lines1 = resDict['被连文本1'].split('\n')
             lines2 = resDict['被连文本2'].split('\n')
@@ -297,8 +297,8 @@ def sortByFirstLetterFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被排文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '排序顺逆', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被排文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '排序顺逆', '', groupDict, valDict)
             lines = resDict['被排文本'].split('\n')
             if resDict['排序顺逆'] == '逆序':
                 lines.sort(reverse=True)
@@ -315,7 +315,7 @@ def reverseContentFunTemp(type):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被转文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被转文本', '', groupDict, valDict)
             lines = resDict['被转文本'].split('\n')
             if type == 'char':
                 lines = list(map(''.join, map(reversed, lines)))
@@ -332,9 +332,9 @@ def splitTextByLinesFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被分页文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '每页行数', '1', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '分页', '[分页]', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被分页文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '每页行数', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '分页', '[分页]', groupDict, valDict)
             lines = resDict['被分页文本'].split('\n')
             lineNumPerPage = int(resDict['每页行数']) if resDict['每页行数'].isdigit() else 1
             page = []
@@ -357,10 +357,10 @@ def retrieveTextByLineIndexFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被取文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '开头行序', '1', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '结尾行序', '1', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '取出类型', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被取文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '开头行序', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '结尾行序', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '取出类型', '', groupDict, valDict)
             
             lines = resDict['被取文本'].split('\n')
             startIndex = max(str2int(resDict['开头行序'], 1) - 1, 0)
@@ -403,10 +403,10 @@ def addTextForEachLineFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被添文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '添加类型', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '添加参数', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '添加文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被添文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '添加类型', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '添加参数', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '添加文本', '', groupDict, valDict)
             lines = resDict['被添文本'].split('\n')
             addType = resDict['添加类型']
 
@@ -452,11 +452,11 @@ def replaceTextForEachLineFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被替文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '替换类型', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '替换参数1', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '替换参数2', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '替换文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被替文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '替换类型', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '替换参数1', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '替换参数2', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '替换文本', '', groupDict, valDict)
             lines = resDict['被替文本'].split('\n')
             addType = resDict['替换类型']
             patternLeft = resDict['替换参数1']

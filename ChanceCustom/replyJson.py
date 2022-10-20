@@ -62,8 +62,8 @@ def jsonSetFunTemp(flagValType:str = 'default'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '写入值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '写入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
             if None != resDict['...']:
                 resDict['...'] = [
@@ -95,8 +95,8 @@ def jsonSetStrFunTemp(flagValType:str = 'default'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '来源', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '写入值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '写入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
             if None != resDict['...']:
                 resDict['...'] = [
@@ -155,8 +155,8 @@ def jsonGetFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '默认值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '默认值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
             resDict['...'] = [
                 ChanceCustom.replyReg.replyValueRegTotal(
@@ -182,8 +182,8 @@ def jsonGetStrFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '来源', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '默认值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '默认值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
             resDict['...'] = [
                 ChanceCustom.replyReg.replyValueRegTotal(
@@ -241,7 +241,7 @@ def jsonDelFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
             if None != resDict['...']:
                 resDict['...'] = [
@@ -272,7 +272,7 @@ def jsonDelStrFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '来源', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', None, groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
             if None != resDict['...']:
                 resDict['...'] = [
@@ -347,8 +347,8 @@ def jsonAppendFunTemp(flagValType:str = 'default'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '插入值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '插入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
             if None != resDict['...']:
                 resDict['...'] = [
@@ -380,8 +380,8 @@ def jsonAppendStrFunTemp(flagValType:str = 'default'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '来源', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '插入值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '插入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
             if None != resDict['...']:
                 resDict['...'] = [
@@ -453,8 +453,8 @@ def jsonGetListFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '分隔符', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '分隔符', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
             resDict['...'] = [
                 ChanceCustom.replyReg.replyValueRegTotal(
@@ -479,8 +479,8 @@ def jsonGetListStrFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '来源', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '分隔符', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '分隔符', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
             resDict['...'] = [
                 ChanceCustom.replyReg.replyValueRegTotal(

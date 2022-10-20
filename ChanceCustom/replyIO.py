@@ -40,11 +40,11 @@ def iniSetFunTemp():
             res = ''
             resDict = {}
             ini = configparser.ConfigParser()
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '配置节', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '配置节', None, groupDict, valDict)
             if None != resDict['配置节']:
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '配置项', None, groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '写入值', None, groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '配置项', None, groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '写入值', None, groupDict, valDict)
                 try:
                     releasePath(resDict['文件路径'])
                     ini.read(resDict['文件路径'], encoding = 'utf-8')
@@ -72,10 +72,10 @@ def iniGetFunTemp():
             res = ''
             resDict = {}
             ini = configparser.ConfigParser()
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '配置节', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '配置项', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '默认值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '配置节', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '配置项', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '默认值', '', groupDict, valDict)
             try:
                 ini.read(resDict['文件路径'], encoding = 'utf-8')
                 res = ini.get(resDict['配置节'], resDict['配置项'], fallback = resDict['默认值'])
@@ -92,8 +92,8 @@ def iniGetOptionsFunTemp():
             res = ''
             resDict = {}
             ini = configparser.ConfigParser()
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '配置节', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '配置节', None, groupDict, valDict)
             try:
                 ini.read(resDict['文件路径'], encoding = 'utf-8')
                 if None != resDict['配置节']:
@@ -112,7 +112,7 @@ def iniGetSectionFunTemp():
             res = ''
             resDict = {}
             ini = configparser.ConfigParser()
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             try:
                 ini.read(resDict['文件路径'], encoding = 'utf-8')
                 res = '\n'.join(ini.sections())
@@ -128,7 +128,7 @@ def fileReadFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             try:
                 with open(resDict['文件路径'], 'r', encoding = 'utf-8') as file_f:
                     res = file_f.read()
@@ -144,8 +144,8 @@ def fileWriteFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '欲写内容', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '欲写内容', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             try:
                 releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'w', encoding = 'utf-8') as file_f:

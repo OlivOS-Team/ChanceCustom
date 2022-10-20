@@ -12,7 +12,7 @@ def time2TextFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '时间戳', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '时间戳', '0', groupDict, valDict)
             try:
                 date = datetime.fromtimestamp(int(resDict['时间戳'][:10]))
                 res = date.strftime('%Y-%m-%d %H:%M:%S')
@@ -53,8 +53,8 @@ def getTimeIntervalFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '时间文本1', '0', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '时间文本2', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '时间文本1', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '时间文本2', '0', groupDict, valDict)
             try:
                 interval = str2timestamp(resDict['时间文本1']) - str2timestamp(resDict['时间文本2'])
                 res = str(round(interval))
@@ -75,7 +75,7 @@ def getTimeOrDateFunTemp(type):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '类型', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '类型', '', groupDict, valDict)
             key = typeDict.get(resDict['类型'].lstrip('-'), '')
             date = datetime.fromtimestamp(time.time())
             if key == '':

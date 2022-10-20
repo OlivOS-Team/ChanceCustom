@@ -30,7 +30,7 @@ def getCharRaw(resDict, calKey, default, groupDict):
     if calKey in groupDict:
         resDict[calKey] = groupDict[calKey]
 
-def getCharRegTatol(resDict, calKey, default, groupDict, valDict):
+def getCharRegTotal(resDict, calKey, default, groupDict, valDict):
     resDict[calKey] = default
     if calKey in groupDict:
         if len(groupDict[calKey]):
@@ -39,8 +39,8 @@ def getCharRegTatol(resDict, calKey, default, groupDict, valDict):
                 valDict = valDict
             )
 
-def getNumRegTatol(resDict, calKey, default, groupDict, valDict):
-    getCharRegTatol(resDict, calKey, default, groupDict, valDict)
+def getNumRegTotal(resDict, calKey, default, groupDict, valDict):
+    getCharRegTotal(resDict, calKey, default, groupDict, valDict)
     try:
         resDict[calKey] = int(resDict[calKey])
     except:
@@ -49,8 +49,8 @@ def getNumRegTatol(resDict, calKey, default, groupDict, valDict):
         except:
             resDict[calKey] = 0
 
-def getBoolRegTatol(resDict, calKey, default, groupDict, valDict, defaultBool = ['真', True]):
-    getCharRegTatol(resDict, calKey, default, groupDict, valDict)
+def getBoolRegTotal(resDict, calKey, default, groupDict, valDict, defaultBool = ['真', True]):
+    getCharRegTotal(resDict, calKey, default, groupDict, valDict)
     if resDict[calKey] == defaultBool[0]:
         resDict[calKey] = defaultBool[1]
     else:
@@ -78,12 +78,12 @@ def ifFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getBoolRegTatol(resDict, '逻辑值', '真', groupDict, valDict)
+            getBoolRegTotal(resDict, '逻辑值', '真', groupDict, valDict)
             if resDict['逻辑值']:
-                getCharRegTatol(resDict, '为真返回', '', groupDict, valDict)
+                getCharRegTotal(resDict, '为真返回', '', groupDict, valDict)
                 res = resDict['为真返回']
             else:
-                getCharRegTatol(resDict, '否则返回', '', groupDict, valDict)
+                getCharRegTotal(resDict, '否则返回', '', groupDict, valDict)
                 res = resDict['否则返回']
             return res
         return if_f
@@ -95,9 +95,9 @@ def ifEmptyFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '被判断文本', '', groupDict, valDict)
+            getCharRegTotal(resDict, '被判断文本', '', groupDict, valDict)
             if resDict['被判断文本'] == '':
-                getCharRegTatol(resDict, '为空替换文本', '', groupDict, valDict)
+                getCharRegTotal(resDict, '为空替换文本', '', groupDict, valDict)
                 res = resDict['为空替换文本']
             else:
                 res = resDict['被判断文本']
@@ -111,13 +111,13 @@ def ifIsFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '被比较文本', '', groupDict, valDict)
-            getCharRegTatol(resDict, '比较文本', '', groupDict, valDict)
+            getCharRegTotal(resDict, '被比较文本', '', groupDict, valDict)
+            getCharRegTotal(resDict, '比较文本', '', groupDict, valDict)
             if resDict['被比较文本'] == resDict['比较文本']:
-                getCharRegTatol(resDict, '相同返回文本', '', groupDict, valDict)
+                getCharRegTotal(resDict, '相同返回文本', '', groupDict, valDict)
                 res = resDict['相同返回文本']
             else:
-                getCharRegTatol(resDict, '不相同返回文本', '', groupDict, valDict)
+                getCharRegTotal(resDict, '不相同返回文本', '', groupDict, valDict)
                 res = resDict['不相同返回文本']
             return res
         return ifIs_f
@@ -129,13 +129,13 @@ def ifMoreFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getNumRegTatol(resDict, '被比较数值', '0', groupDict, valDict)
-            getNumRegTatol(resDict, '比较数值', '0', groupDict, valDict)
+            getNumRegTotal(resDict, '被比较数值', '0', groupDict, valDict)
+            getNumRegTotal(resDict, '比较数值', '0', groupDict, valDict)
             if resDict['被比较数值'] > resDict['比较数值']:
-                getCharRegTatol(resDict, '前者大返回', '', groupDict, valDict)
+                getCharRegTotal(resDict, '前者大返回', '', groupDict, valDict)
                 res = resDict['前者大返回']
             else:
-                getCharRegTatol(resDict, '否则返回', '', groupDict, valDict)
+                getCharRegTotal(resDict, '否则返回', '', groupDict, valDict)
                 res = resDict['否则返回']
             return res
         return ifMore_f
@@ -147,13 +147,13 @@ def ifInFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '被判断文本', '', groupDict, valDict)
-            getCharRegTatol(resDict, '被包含文本', '', groupDict, valDict)
+            getCharRegTotal(resDict, '被判断文本', '', groupDict, valDict)
+            getCharRegTotal(resDict, '被包含文本', '', groupDict, valDict)
             if resDict['被包含文本'] in resDict['被判断文本']:
-                getCharRegTatol(resDict, '包含返回', '', groupDict, valDict)
+                getCharRegTotal(resDict, '包含返回', '', groupDict, valDict)
                 res = resDict['包含返回']
             else:
-                getCharRegTatol(resDict, '不包含返回', '', groupDict, valDict)
+                getCharRegTotal(resDict, '不包含返回', '', groupDict, valDict)
                 res = resDict['不包含返回']
             return res
         return ifIn_f
@@ -165,7 +165,7 @@ def forRangeFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getNumRegTatol(resDict, '循环次数', '0', groupDict, valDict)
+            getNumRegTotal(resDict, '循环次数', '0', groupDict, valDict)
             getCharRaw(resDict, '循环体', '', groupDict)
             count = 0
             while count < resDict['循环次数']:
@@ -201,8 +201,8 @@ def forEachFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '遍历文本', '', groupDict, valDict)
-            getCharRegTatol(resDict, '分隔符', '|', groupDict, valDict)
+            getCharRegTotal(resDict, '遍历文本', '', groupDict, valDict)
+            getCharRegTotal(resDict, '分隔符', '|', groupDict, valDict)
             getCharRaw(resDict, '遍历体', '', groupDict)
             resList = resDict['遍历文本'].split(resDict['分隔符'])
             count = 0
@@ -240,7 +240,7 @@ def getContextFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getNumRegTatol(resDict, 'x', '1', groupDict, valDict)
+            getNumRegTotal(resDict, 'x', '1', groupDict, valDict)
             key = '内容%s' % str(resDict['x'])
             if key in valDict:
                 res = valDict[key]
@@ -333,7 +333,7 @@ def getValFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '自定义名称', '', groupDict, valDict)
+            getCharRegTotal(resDict, '自定义名称', '', groupDict, valDict)
             key = resDict['自定义名称']
             if key in valDict:
                 if type(valDict[key]) == str:
@@ -348,8 +348,8 @@ def setValFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '自定义名称', '', groupDict, valDict)
-            getCharRegTatol(resDict, '赋值内容', '', groupDict, valDict)
+            getCharRegTotal(resDict, '自定义名称', '', groupDict, valDict)
+            getCharRegTotal(resDict, '赋值内容', '', groupDict, valDict)
             key = resDict['自定义名称']
             if 'valRawData' not in valDict:
                 valDict['valRawData'] = {}
@@ -366,7 +366,7 @@ def updateValFunTemp():
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '自定义名称', '', groupDict, valDict)
+            getCharRegTotal(resDict, '自定义名称', '', groupDict, valDict)
             key = resDict['自定义名称']
             if 'valRawData' not in valDict:
                 valDict['valRawData'] = {}
@@ -443,7 +443,7 @@ def setFuncValFunTemp(flagGlobal = False):
             groupDict = getGroupDictInit(matched)
             res = ''
             resDict = {}
-            getCharRegTatol(resDict, '函数名称', '', groupDict, valDict)
+            getCharRegTotal(resDict, '函数名称', '', groupDict, valDict)
             getDataRaw(resDict, '代码体', None, groupDict)
             key = resDict['函数名称']
             if key != None:
