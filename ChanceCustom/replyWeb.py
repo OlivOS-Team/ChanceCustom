@@ -29,7 +29,7 @@ def httpGetPageFunTemp(type = 'UTF'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '网址', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '网址', None, groupDict, valDict)
             try:
                 if None != resDict['网址']:
                     request_res = requests.request("GET", resDict['网址'], headers = WebHeader)

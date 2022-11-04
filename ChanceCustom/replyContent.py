@@ -29,12 +29,12 @@ def flowInputFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getNumRegTatol(resDict, '标识类型', '2', groupDict, valDict)
-            ChanceCustom.replyBase.getNumRegTatol(resDict, '最大时间', '30', groupDict, valDict)
-            ChanceCustom.replyBase.getNumRegTatol(resDict, '最大次数', '1', groupDict, valDict)
-            ChanceCustom.replyBase.getNumRegTatol(resDict, '单Q次数', '0', groupDict, valDict)
-            ChanceCustom.replyBase.getBoolRegTatol(resDict, '是否继续匹配', '假', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '回调函数', '', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTotal(resDict, '标识类型', '2', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTotal(resDict, '最大时间', '30', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTotal(resDict, '最大次数', '1', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTotal(resDict, '单Q次数', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getBoolRegTotal(resDict, '是否继续匹配', '假', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '回调函数', '', groupDict, valDict)
             contextRegName = None
             if resDict['标识类型'] == 1:
                 if 'group_id' in valDict['innerVal'] and 'group_id' in valDict['innerVal']:
@@ -256,7 +256,7 @@ def flowOutputFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '加入文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '加入文本', '', groupDict, valDict)
             msg = resDict['加入文本']
             valDict['innerVal']['plugin_event'].reply(
                 message = msg
@@ -271,7 +271,7 @@ def flowSleepFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getNumRegTatol(resDict, '秒', 0, groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTotal(resDict, '秒', 0, groupDict, valDict)
             time.sleep(resDict['秒'])
             return res
         return flowSleep_f

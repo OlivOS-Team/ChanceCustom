@@ -187,7 +187,7 @@ def evalExprFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '计算公式', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '计算公式', '0', groupDict, valDict)
             expr = resDict['计算公式']
             try:
                 res = str(customEval(Lexer(expr).tokenGenerator()))
@@ -228,9 +228,9 @@ def baseConvFunTmp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '待转化数值', '0', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '原数值进制', '10', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '目标进制', '10', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '待转化数值', '0', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '原数值进制', '10', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '目标进制', '10', groupDict, valDict)
             table = {'二': 2, '四': 4, '八': 8, '十': 10, '十六': 16, '三十二': 32, '六十四': 64}
             src_base = resDict['原数值进制']
             dst_base = resDict['目标进制']
@@ -248,8 +248,8 @@ def splitSortFunTemp(type="sort"):
             res = ''
             resDict = {}
             splited_text = []
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '排序文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '分割符号', '\n', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '排序文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '分割符号', '\n', groupDict, valDict)
             delimiter = resDict['分割符号']
             if type == 'shuffle':
                 splited_text = resDict['排序文本'].split(delimiter)
@@ -264,14 +264,14 @@ def splitSortFunTemp(type="sort"):
                         splited_text = text[3:].split(delimiter)
                 else:
                     splited_text = text.split(delimiter)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '排序正逆', '正序', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '排序正逆', '正序', groupDict, valDict)
                 if resDict['排序正逆'] == '正序':
                     res = ' '.join(map(str, sorted(splited_text)))
                 else:
                     res = ' '.join(map(str, sorted(splited_text, reverse=True)))
             elif type == 'split':
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '依据序号', '1', groupDict, valDict)
-                ChanceCustom.replyBase.getCharRegTatol(resDict, '排序正逆', '正序', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '依据序号', '1', groupDict, valDict)
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '排序正逆', '正序', groupDict, valDict)
                 if resDict['排序文本'].startswith('-数字'):
                     sortByValFlag = True
                     lines = resDict['排序文本'][3:].split('\n')
@@ -308,8 +308,8 @@ def wordCountFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被统计文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '统计出现的文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被统计文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '统计出现的文本', '', groupDict, valDict)
             pattern = resDict['统计出现的文本']
             if not pattern:
                 res = '0'
@@ -340,8 +340,8 @@ def getMD5FunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '被取目标', '', groupDict, valDict)
-            ChanceCustom.replyBase.getNumRegTatol(resDict, 'MD5位数', 32, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '被取目标', '', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTotal(resDict, 'MD5位数', 32, groupDict, valDict)
             CQ_code_pattern = r'^\[CQ:[a-z]+(?P<file>,file=.*?)?(?P<url>,url=.*?)?(,.*)?\]$'
             url_pattern = r'^(https?:\/\/)?(\w+\.)+\w{3}(:\d+)?(\/\w+)*(\.\w+)?$'
             file_pattern = r'^([A-Z]:)?\.?((\/|\\)\w+)+(\.\w+)?$'
@@ -385,9 +385,9 @@ def charPaddingFunTemp():
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '待补位文本', '', groupDict, valDict)
-            ChanceCustom.replyBase.getCharRegTatol(resDict, '结尾/开头', '', groupDict, valDict)
-            ChanceCustom.replyBase.getNumRegTatol(resDict, '结果长度', 0, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '待补位文本', '', groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '结尾/开头', '', groupDict, valDict)
+            ChanceCustom.replyBase.getNumRegTotal(resDict, '结果长度', 0, groupDict, valDict)
             ChanceCustom.replyBase.getCharRaw(resDict, '补位字符', ' ', groupDict)
             text = resDict['待补位文本']
             dst_text_length = resDict['结果长度']
