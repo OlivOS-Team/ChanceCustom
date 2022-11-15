@@ -343,6 +343,10 @@ def getValFunTemp(valLife = 'local'):
                 if 'valGData' in valDict and key in valDict['valGData']:
                     if type(valDict['valGData'][key]) == str:
                         res = valDict['valGData'][key]
+            elif valLife == 'globalOwned':
+                if 'valGOData' in valDict and key in valDict['valGOData']:
+                    if type(valDict['valGOData'][key]) == str:
+                        res = valDict['valGOData'][key]
             return res
         return getVal_f
     return getValFun
@@ -370,6 +374,14 @@ def setValFunTemp(valLife = 'local'):
                     valDict['valGData'] = {}
                 if key not in valDict['valGData'] or type(valDict['valGData'][key]) == str:
                     valDict['valGData'][key] = valDict['valRawGData'][key]
+            elif valLife == 'globalOwned':
+                if 'valRawGOData' not in valDict:
+                    valDict['valRawGOData'] = {}
+                valDict['valRawGOData'][key] = resDict['赋值内容']
+                if 'valGOData' not in valDict:
+                    valDict['valGOData'] = {}
+                if key not in valDict['valGOData'] or type(valDict['valGOData'][key]) == str:
+                    valDict['valGOData'][key] = valDict['valRawGOData'][key]
             return res
         return setVal_f
     return setValFun
@@ -394,6 +406,12 @@ def updateValFunTemp(valLife = 'local'):
                 if key in valDict['valRawGData']:
                     if key not in valDict['valGData'] or type(valDict['valGData'][key]) == str:
                         valDict['valGData'][key] = valDict['valRawGData'][key]
+            elif valLife == 'globalOwned':
+                if 'valRawGOData' not in valDict:
+                    valDict['valRawGOData'] = {}
+                if key in valDict['valRawGOData']:
+                    if key not in valDict['valGOData'] or type(valDict['valGOData'][key]) == str:
+                        valDict['valGOData'][key] = valDict['valRawGOData'][key]
             return res
         return updateVal_f
     return updateValFun

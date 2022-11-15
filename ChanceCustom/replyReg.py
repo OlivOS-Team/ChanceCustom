@@ -55,8 +55,11 @@ listRegTotalFun = [
 
     # >自定义常量<
     ['常量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp(valLife = 'global')],
+    ['局部常量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp(valLife = 'globalOwned')],
     ['更新常量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp(valLife = 'global')],
+    ['更新局部常量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp(valLife = 'globalOwned')],
     ['赋值常量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp(valLife = 'global')],
+    ['赋值局部常量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp(valLife = 'globalOwned')],
 
     # >Json解析<
     ['Json读', ['来源', '默认值', '...'], ChanceCustom.replyJson.jsonGetStrFunTemp()],

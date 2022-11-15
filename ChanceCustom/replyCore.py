@@ -36,6 +36,12 @@ def getValDictUnity(valDict:dict):
         valDict['valRawGData'] = globalValDict['valRawGData'].copy()
     if 'valGData' in globalValDict:
         valDict['valGData'] = globalValDict['valGData'].copy()
+    if 'innerVal' in valDict and 'bot_hash' in valDict['innerVal']:
+        bot_hash = valDict['innerVal']['bot_hash']
+        if 'valRawGOData' in globalValDict and bot_hash in globalValDict['valRawGOData']:
+            valDict['valRawGOData'] = globalValDict['valRawGOData'][bot_hash].copy()
+        if 'valGOData' in globalValDict and bot_hash in globalValDict['valGOData']:
+            valDict['valGOData'] = globalValDict['valGOData'][bot_hash].copy()
 
 def setValDictUnity(valDict:dict):
     global globalValDict
@@ -45,6 +51,16 @@ def setValDictUnity(valDict:dict):
         globalValDict['valRawGData'] = valDict['valRawGData'].copy()
     if 'valGData' in valDict:
         globalValDict['valGData'] = valDict['valGData'].copy()
+    if 'innerVal' in valDict and 'bot_hash' in valDict['innerVal']:
+        bot_hash = valDict['innerVal']['bot_hash']
+        if 'valRawGOData' not in valDict:
+            globalValDict['valRawGOData'] = {}
+        if 'valRawGOData' in valDict:
+            globalValDict['valRawGOData'][bot_hash] = valDict['valRawGOData'].copy()
+        if 'valGOData' not in valDict:
+            globalValDict['valGOData'] = {}
+        if 'valGOData' in valDict:
+            globalValDict['valGOData'][bot_hash] = valDict['valGOData'].copy()
 
 def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     #内置变量，用于内部调用
@@ -53,7 +69,9 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
     valDict['innerVal']['Proc'] = Proc
     valDict['innerVal']['platform'] = plugin_event.platform
     valDict['innerVal']['event_name'] = event_name
+    valDict['innerVal']['bot_hash'] = 'unity'
     if 'group_message' == event_name:
+        valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['host_id'] = plugin_event.data.host_id
         valDict['innerVal']['group_id'] = plugin_event.data.group_id
         valDict['innerVal']['hag_id'] = plugin_event.data.group_id
@@ -61,11 +79,14 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
             valDict['innerVal']['hag_id'] = '%s|%s' % (str(plugin_event.data.host_id), str(plugin_event.data.group_id))
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
     elif 'private_message' == event_name:
+        valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
     elif 'poke_private' == event_name:
+        valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['user_id'] = str(plugin_event.data.target_id)
         valDict['innerVal']['event_name'] = 'private_message'
     elif 'poke_group' == event_name:
+        valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['user_id'] = str(plugin_event.data.target_id)
         valDict['innerVal']['event_name'] = 'group_message'
         valDict['innerVal']['host_id'] = None
