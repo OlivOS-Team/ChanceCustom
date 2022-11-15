@@ -311,6 +311,11 @@ def jsonAppendDataHandler(data:str, pathList:list, setVal:str, flagValType:str):
                         json_data_this[key_this] = []
                     else:
                         json_data_this[key_this] = {}
+                else:
+                    if count == len(pathList) - 1 and type(json_data_this[key_this]) != list:
+                        json_data_this[key_this] = []
+                    elif type(json_data_this[key_this]) != dict:
+                        json_data_this[key_this] = {}
                 if type(json_data_this) == dict and key_this in json_data_this:
                     json_data_this = json_data_this[key_this]
                 elif type(json_data_this) == list and (
