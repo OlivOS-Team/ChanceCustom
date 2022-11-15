@@ -327,7 +327,7 @@ def getDefaultValWithAPIFunTemp(key):
         return getDefaultValWithAPI_f
     return getDefaultValWithAPIFun
 
-def getValFunTemp():
+def getValFunTemp(valLife = 'local'):
     def getValFun(valDict):
         def getVal_f(matched:'re.Match|dict'):
             groupDict = getGroupDictInit(matched)
@@ -335,14 +335,19 @@ def getValFunTemp():
             resDict = {}
             getCharRegTotal(resDict, '自定义名称', '', groupDict, valDict)
             key = resDict['自定义名称']
-            if key in valDict:
-                if type(valDict[key]) == str:
-                    res = valDict[key]
+            if valLife == 'local':
+                if key in valDict:
+                    if type(valDict[key]) == str:
+                        res = valDict[key]
+            elif valLife == 'global':
+                if 'valGData' in valDict and key in valDict['valGData']:
+                    if type(valDict['valGData'][key]) == str:
+                        res = valDict['valGData'][key]
             return res
         return getVal_f
     return getValFun
 
-def setValFunTemp():
+def setValFunTemp(valLife = 'local'):
     def setValFun(valDict):
         def setVal_f(matched:'re.Match|dict'):
             groupDict = getGroupDictInit(matched)
@@ -351,16 +356,25 @@ def setValFunTemp():
             getCharRegTotal(resDict, '自定义名称', '', groupDict, valDict)
             getCharRegTotal(resDict, '赋值内容', '', groupDict, valDict)
             key = resDict['自定义名称']
-            if 'valRawData' not in valDict:
-                valDict['valRawData'] = {}
-            valDict['valRawData'][key] = resDict['赋值内容']
-            if key not in valDict or type(valDict[key]) == str:
-                valDict[key] = valDict['valRawData'][key]
+            if valLife == 'local':
+                if 'valRawData' not in valDict:
+                    valDict['valRawData'] = {}
+                valDict['valRawData'][key] = resDict['赋值内容']
+                if key not in valDict or type(valDict[key]) == str:
+                    valDict[key] = valDict['valRawData'][key]
+            elif valLife == 'global':
+                if 'valRawGData' not in valDict:
+                    valDict['valRawGData'] = {}
+                valDict['valRawGData'][key] = resDict['赋值内容']
+                if 'valGData' not in valDict:
+                    valDict['valGData'] = {}
+                if key not in valDict['valGData'] or type(valDict['valGData'][key]) == str:
+                    valDict['valGData'][key] = valDict['valRawGData'][key]
             return res
         return setVal_f
     return setValFun
 
-def updateValFunTemp():
+def updateValFunTemp(valLife = 'local'):
     def updateValFun(valDict):
         def updateVal_f(matched:'re.Match|dict'):
             groupDict = getGroupDictInit(matched)
@@ -368,11 +382,18 @@ def updateValFunTemp():
             resDict = {}
             getCharRegTotal(resDict, '自定义名称', '', groupDict, valDict)
             key = resDict['自定义名称']
-            if 'valRawData' not in valDict:
-                valDict['valRawData'] = {}
-            if key in valDict['valRawData']:
-                if key not in valDict or type(valDict[key]) == str:
-                    valDict[key] = valDict['valRawData'][key]
+            if valLife == 'local':
+                if 'valRawData' not in valDict:
+                    valDict['valRawData'] = {}
+                if key in valDict['valRawData']:
+                    if key not in valDict or type(valDict[key]) == str:
+                        valDict[key] = valDict['valRawData'][key]
+            elif valLife == 'global':
+                if 'valRawGData' not in valDict:
+                    valDict['valRawGData'] = {}
+                if key in valDict['valRawGData']:
+                    if key not in valDict['valGData'] or type(valDict['valGData'][key]) == str:
+                        valDict['valGData'][key] = valDict['valRawGData'][key]
             return res
         return updateVal_f
     return updateValFun

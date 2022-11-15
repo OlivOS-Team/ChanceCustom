@@ -32,11 +32,19 @@ def getValDictUnity(valDict:dict):
     global globalValDict
     if 'funcValRawGData' in globalValDict:
         valDict['funcValRawGData'] = globalValDict['funcValRawGData'].copy()
+    if 'valRawGData' in globalValDict:
+        valDict['valRawGData'] = globalValDict['valRawGData'].copy()
+    if 'valGData' in globalValDict:
+        valDict['valGData'] = globalValDict['valGData'].copy()
 
 def setValDictUnity(valDict:dict):
     global globalValDict
     if 'funcValRawGData' in valDict:
         globalValDict['funcValRawGData'] = valDict['funcValRawGData'].copy()
+    if 'valRawGData' in valDict:
+        globalValDict['valRawGData'] = valDict['valRawGData'].copy()
+    if 'valGData' in valDict:
+        globalValDict['valGData'] = valDict['valGData'].copy()
 
 def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     #内置变量，用于内部调用
@@ -116,7 +124,6 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         tmp_message = plugin_event.data.message
     falg_matchPlace_target = 0
     valDict = {}
-    valDict.update(globalValDict)
 
     flag_fetch = False
     if 'group_message' == event_name:
@@ -137,8 +144,8 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         falg_matchPlace_target |= 1
         flag_fetch = True
 
-    getValDictUnity(valDict)
     getValDict(valDict, plugin_event, Proc, event_name)
+    getValDictUnity(valDict)
 
     if not ChanceCustom.replyContent.contextRegTryHit(
         message = tmp_message,

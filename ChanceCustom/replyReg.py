@@ -49,14 +49,14 @@ listRegTotalFun = [
     ['延迟', ['秒'], ChanceCustom.replyContent.flowSleepFunTemp()],
 
     # >自定义变量<
-    ['变量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp()],
-    ['更新变量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp()],
-    ['赋值变量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp()],
+    ['变量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp(valLife = 'local')],
+    ['更新变量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp(valLife = 'local')],
+    ['赋值变量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp(valLife = 'local')],
 
     # >自定义常量<
-    ['常量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp()],
-    ['更新常量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp()],
-    ['赋值常量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp()],
+    ['常量', ['自定义名称'], ChanceCustom.replyBase.getValFunTemp(valLife = 'global')],
+    ['更新常量', ['自定义名称'], ChanceCustom.replyBase.updateValFunTemp(valLife = 'global')],
+    ['赋值常量', ['自定义名称', '赋值内容'], ChanceCustom.replyBase.setValFunTemp(valLife = 'global')],
 
     # >Json解析<
     ['Json读', ['来源', '默认值', '...'], ChanceCustom.replyJson.jsonGetStrFunTemp()],
