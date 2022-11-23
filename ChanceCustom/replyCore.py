@@ -217,6 +217,30 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                     msg
                                 )
                             break
+                    elif 'contain' == tmp_dictCustomData_this[key_this]['matchType']:
+                        if tmp_dictCustomData_this[key_this]['key'] != '' and tmp_dictCustomData_this[key_this]['key'] in tmp_message:
+                            res_re_list = tmp_message.split(tmp_dictCustomData_this[key_this]['key'])
+                            count = 1
+                            for res_re_list_this in res_re_list:
+                                key = '内容%s' % str(count)
+                                value = ''
+                                if type(res_re_list_this) == str:
+                                    value = res_re_list_this
+                                elif res_re_list_this != None:
+                                    value = ''
+                                valDict[key] = codeEscape(value)
+                                count += 1
+                            tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
+                            msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                tmp_value,
+                                valDict
+                            )
+                            if len(msg) > 0:
+                                reply(
+                                    plugin_event,
+                                    msg
+                                )
+                            break
                     elif 'perfix' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message.startswith(tmp_dictCustomData_this[key_this]['key']):
                             valDict['内容1'] = codeEscape(tmp_message[len(tmp_dictCustomData_this[key_this]['key']):])

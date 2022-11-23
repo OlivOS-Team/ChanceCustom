@@ -41,16 +41,19 @@ dictColorContext = {
 dictSLMap = {
     'matchTypeList': [
         '完全匹配',
+        '模糊匹配',
         '前缀匹配',
         '正则匹配'
     ],
     'matchTypeList_loadMap': {
         'full': '完全匹配',
+        'contain': '模糊匹配',
         'perfix': '前缀匹配',
         'reg': '正则匹配'
     },
     'matchTypeList_saveMap': {
         '完全匹配': 'full',
+        '模糊匹配': 'contain',
         '前缀匹配': 'perfix',
         '正则匹配': 'reg'
     },
@@ -526,6 +529,8 @@ class ConfigUI(object):
                                 if '匹配方式' in ini[key_this]:
                                     if ini[key_this]['匹配方式'] == '完全匹配':
                                         data_this['matchType'] = 'full'
+                                    elif ini[key_this]['匹配方式'] == '模糊匹配':
+                                        data_this['matchType'] = 'contain'
                                     elif ini[key_this]['匹配方式'] == '前缀匹配':
                                         data_this['matchType'] = 'perfix'
                                     elif ini[key_this]['匹配方式'] == '正则匹配':
