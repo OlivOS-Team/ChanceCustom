@@ -125,6 +125,9 @@ listRegTotalFun = [
     # >OlivaDice联动<
     ['牌堆', ['牌堆名', '牌数', '是否放回', '分隔符'], ChanceCustom.replyOlivaDice.drawFunTemp()],
     ['RD', ['表达式'], ChanceCustom.replyOlivaDice.RDFunTemp()],
+    ['今日人品', [], ChanceCustom.replyOlivaDice.JRRPFunTemp(mode = 'jrrp')],
+    ['昨日人品', [], ChanceCustom.replyOlivaDice.JRRPFunTemp(mode = 'zrrp')],
+    ['明日人品', [], ChanceCustom.replyOlivaDice.JRRPFunTemp(mode = 'mrrp')],
 
     # >算法计算<
     ['计算', ['计算公式'], ChanceCustom.replyEval.evalExprFunTemp()],

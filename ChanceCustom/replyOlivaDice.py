@@ -17,6 +17,8 @@ import OlivOS
 import ChanceCustom
 
 import re
+import hashlib
+import time
 
 def drawFunTemp():
     def drawFun(valDict):
@@ -91,3 +93,23 @@ def RDFunTemp():
             return res
         return RD_f
     return RDFun
+
+def JRRPFunTemp(mode = 'jrrp'):
+    def JRRPFun(valDict):
+        def JRRP_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            if 'OlivaDiceJoy' in ChanceCustom.load.listPlugin:
+                hash_tmp = hashlib.new('md5')
+                if mode == 'jrrp':
+                    hash_tmp.update(str(time.strftime('%Y-%m-%d', time.localtime())).encode(encoding='UTF-8'))
+                elif mode == 'zrrp':
+                    hash_tmp.update(str(time.strftime('%Y-%m-%d', time.localtime(int(time.mktime(time.localtime())) - 24 * 60 * 60))).encode(encoding='UTF-8'))
+                elif mode == 'mrrp':
+                    hash_tmp.update(str(time.strftime('%Y-%m-%d', time.localtime(int(time.mktime(time.localtime())) + 24 * 60 * 60))).encode(encoding='UTF-8'))
+                hash_tmp.update(str(valDict['innerVal']['user_id']).encode(encoding='UTF-8'))
+                tmp_jrrp_int = int(int(hash_tmp.hexdigest(), 16) % 100) + 1
+                res = str(tmp_jrrp_int)
+            return res
+        return JRRP_f
+    return JRRPFun
