@@ -113,3 +113,86 @@ def JRRPFunTemp(mode = 'jrrp'):
             return res
         return JRRP_f
     return JRRPFun
+
+def PcNameGetFunTemp():
+    def PcNameGetFun(valDict):
+        def PcNameGet_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+                import OlivaDiceCore
+
+                tmp_hagID = None
+                if 'hag_id' in valDict:
+                    tmp_hagID = valDict['innerVal']['hag_id']
+                tmp_pc_id = valDict['innerVal']['user_id']
+                tmp_pc_platform = valDict['innerVal']['platform']['platform']
+                tmp_pcHash = OlivaDiceCore.pcCard.getPcHash(
+                    tmp_pc_id,
+                    tmp_pc_platform
+                )
+                defaultName = ChanceCustom.replyBase.getDefaultValFunTemp('发送者昵称')(valDict)({})
+                if defaultName == '':
+                    defaultName = '人物卡'
+                res = OlivaDiceCore.pcCard.getPcNameAPI(
+                    pcHash = tmp_pcHash,
+                    hagId = tmp_hagID,
+                    defaultName = defaultName
+                )
+                if res == None:
+                    res = ''
+
+            return res
+        return PcNameGet_f
+    return PcNameGetFun
+
+def PcSkillGetFunTemp(action = 'get'):
+    def PcSkillGetFun(valDict):
+        def PcSkillGet_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+                import OlivaDiceCore
+                resDict = {}
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '技能名', '', groupDict, valDict)
+                skillName = resDict['技能名']
+                skillValue = None
+
+                tmp_hagID = None
+                if 'hag_id' in valDict:
+                    tmp_hagID = valDict['innerVal']['hag_id']
+                tmp_pc_id = valDict['innerVal']['user_id']
+                tmp_pc_platform = valDict['innerVal']['platform']['platform']
+                tmp_pcHash = OlivaDiceCore.pcCard.getPcHash(
+                    tmp_pc_id,
+                    tmp_pc_platform
+                )
+                defaultName = ChanceCustom.replyBase.getDefaultValFunTemp('发送者昵称')(valDict)({})
+                if defaultName == '':
+                    defaultName = '人物卡'
+                if action == 'get':
+                    res = OlivaDiceCore.pcCard.getPcSkillAPI(
+                        pcHash = tmp_pcHash,
+                        skillName = skillName,
+                        hagId = tmp_hagID,
+                        defaultName = defaultName
+                    )
+                elif action == 'set':
+                    ChanceCustom.replyBase.getNumRegTotal(resDict, '技能值', '0', groupDict, valDict)
+                    skillValue = resDict['技能值']
+                    OlivaDiceCore.pcCard.setPcSkillAPI(
+                        pcHash = tmp_pcHash,
+                        skillName = skillName,
+                        skillValue = skillValue,
+                        hagId = tmp_hagID,
+                        defaultName = defaultName
+                    )
+                    res = ''
+                if res == None:
+                    res = ''
+                elif type(res) == int:
+                    res = str(res)
+
+            return res
+        return PcSkillGet_f
+    return PcSkillGetFun

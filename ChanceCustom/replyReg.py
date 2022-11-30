@@ -128,6 +128,10 @@ listRegTotalFun = [
     ['今日人品', [], ChanceCustom.replyOlivaDice.JRRPFunTemp(mode = 'jrrp')],
     ['昨日人品', [], ChanceCustom.replyOlivaDice.JRRPFunTemp(mode = 'zrrp')],
     ['明日人品', [], ChanceCustom.replyOlivaDice.JRRPFunTemp(mode = 'mrrp')],
+    ['人物卡名', [], ChanceCustom.replyOlivaDice.PcNameGetFunTemp()],
+    ['读人物卡', ['技能名'], ChanceCustom.replyOlivaDice.PcSkillGetFunTemp(action = 'get')],
+    ['写人物卡', ['技能名', '技能值'], ChanceCustom.replyOlivaDice.PcSkillGetFunTemp(action = 'set')],
+
 
     # >算法计算<
     ['计算', ['计算公式'], ChanceCustom.replyEval.evalExprFunTemp()],
