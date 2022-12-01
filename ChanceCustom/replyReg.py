@@ -144,6 +144,8 @@ listRegTotalFun = [
     ['锁定人物卡', [], ChanceCustom.replyOlivaDice.PcLockSetFunTemp(action = 'lock')],
     ['解锁人物卡', [], ChanceCustom.replyOlivaDice.PcLockSetFunTemp(action = 'unlock')],
 
+    ['DICE-指令注册', ['指令前缀'], ChanceCustom.replyOlivaDice.CommandRegFunTemp()],
+
     # >算法计算<
     ['计算', ['计算公式'], ChanceCustom.replyEval.evalExprFunTemp()],
     ['排序', ['排序文本', '分割符号', '排序正逆'], ChanceCustom.replyEval.splitSortFunTemp(type="sort")],

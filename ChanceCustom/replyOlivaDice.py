@@ -262,3 +262,21 @@ def PcSkillGetFunTemp(action = 'get'):
             return res
         return PcSkillGet_f
     return PcSkillGetFun
+
+def CommandRegFunTemp():
+    def CommandRegFun(valDict):
+        def CommandReg_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+                import OlivaDiceCore
+                resDict = {}
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '指令前缀', '', groupDict, valDict)
+                commandPrefix = resDict['指令前缀']
+
+                if 'replyContextFliter' in OlivaDiceCore.crossHook.dictHookList:
+                    OlivaDiceCore.crossHook.dictHookList['replyContextFliter'].append(commandPrefix)
+
+            return res
+        return CommandReg_f
+    return CommandRegFun
