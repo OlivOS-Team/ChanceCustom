@@ -70,7 +70,7 @@ def RDFunTemp():
                 rd_para_str = resDict['表达式']
                 tmp_template_customDefault = None
                 tmp_hagID = None
-                if 'hag_id' in valDict:
+                if 'innerVal' in valDict and 'hag_id' in valDict['innerVal']:
                     tmp_hagID = valDict['innerVal']['hag_id']
                 tmp_pc_id = valDict['innerVal']['user_id']
                 tmp_pc_platform = valDict['innerVal']['platform']['platform']
@@ -123,7 +123,7 @@ def PcNameGetFunTemp():
                 import OlivaDiceCore
 
                 tmp_hagID = None
-                if 'hag_id' in valDict:
+                if 'innerVal' in valDict and 'hag_id' in valDict['innerVal']:
                     tmp_hagID = valDict['innerVal']['hag_id']
                 tmp_pc_id = valDict['innerVal']['user_id']
                 tmp_pc_platform = valDict['innerVal']['platform']['platform']
@@ -146,6 +146,72 @@ def PcNameGetFunTemp():
         return PcNameGet_f
     return PcNameGetFun
 
+def PcSwitchSetFunTemp():
+    def PcSwitchSetFun(valDict):
+        def PcSwitchSet_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+                import OlivaDiceCore
+                resDict = {}
+                ChanceCustom.replyBase.getCharRegTotal(resDict, '目标人物卡名', '', groupDict, valDict)
+                switchName = resDict['目标人物卡名']
+
+                tmp_hagID = None
+                if 'innerVal' in valDict and 'hag_id' in valDict['innerVal']:
+                    tmp_hagID = valDict['innerVal']['hag_id']
+                tmp_pc_id = valDict['innerVal']['user_id']
+                tmp_pc_platform = valDict['innerVal']['platform']['platform']
+                tmp_pcHash = OlivaDiceCore.pcCard.getPcHash(
+                    tmp_pc_id,
+                    tmp_pc_platform
+                )
+                OlivaDiceCore.pcCard.setPcSwitchAPI(
+                    pcHash = tmp_pcHash,
+                    hagId = tmp_hagID,
+                    switchName = switchName
+                )
+
+            return res
+        return PcSwitchSet_f
+    return PcSwitchSetFun
+
+def PcLockSetFunTemp(action = 'lock'):
+    def PcLockSetFun(valDict):
+        def PcLockSet_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+                import OlivaDiceCore
+
+                tmp_hagID = None
+                if 'innerVal' in valDict and 'hag_id' in valDict['innerVal']:
+                    tmp_hagID = valDict['innerVal']['hag_id']
+                tmp_pc_id = valDict['innerVal']['user_id']
+                tmp_pc_platform = valDict['innerVal']['platform']['platform']
+                tmp_pcHash = OlivaDiceCore.pcCard.getPcHash(
+                    tmp_pc_id,
+                    tmp_pc_platform
+                )
+                defaultName = ChanceCustom.replyBase.getDefaultValFunTemp('发送者昵称')(valDict)({})
+                if defaultName == '':
+                    defaultName = '人物卡'
+                setFlag = True
+                if action == 'lock':
+                    setFlag = True
+                elif action == 'unlock':
+                    setFlag = False
+                OlivaDiceCore.pcCard.setPcLockAPI(
+                    pcHash = tmp_pcHash,
+                    hagId = tmp_hagID,
+                    setFlag = setFlag,
+                    pcName = defaultName
+                )
+
+            return res
+        return PcLockSet_f
+    return PcLockSetFun
+
 def PcSkillGetFunTemp(action = 'get'):
     def PcSkillGetFun(valDict):
         def PcSkillGet_f(matched:'re.Match|dict'):
@@ -159,7 +225,7 @@ def PcSkillGetFunTemp(action = 'get'):
                 skillValue = None
 
                 tmp_hagID = None
-                if 'hag_id' in valDict:
+                if 'innerVal' in valDict and 'hag_id' in valDict['innerVal']:
                     tmp_hagID = valDict['innerVal']['hag_id']
                 tmp_pc_id = valDict['innerVal']['user_id']
                 tmp_pc_platform = valDict['innerVal']['platform']['platform']
