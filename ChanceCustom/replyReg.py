@@ -110,6 +110,7 @@ listRegTotalFun = [
     ['Fori', ['遍历体', '遍历文本', '分隔符'], ChanceCustom.replyBase.forEachFunTemp()],
     ['跳出', [], '[跳出]'],
     ['继续', [], '[继续]'],
+    ['分页', [], '[分页]'],
 
     # >IO流<
     ['输入流', ['标识类型', '最大时间', '最大次数', '单Q次数', '是否继续匹配', '回调函数'], ChanceCustom.replyContent.flowInputFunTemp()],

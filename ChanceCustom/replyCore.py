@@ -194,28 +194,30 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                             res_re = re.match(r'^\[初始化.*\]$', key_this)
                         if res_re != None:
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                tmp_value,
-                                valDict
-                            )
-                            if len(msg) > 0:
-                                reply(
-                                    plugin_event,
-                                    msg
+                            for tmp_value_this in tmp_value.split('[分页]'):
+                                msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                    tmp_value_this,
+                                    valDict
                                 )
+                                if len(msg) > 0:
+                                    reply(
+                                        plugin_event,
+                                        msg
+                                    )
                             continue
                     elif 'full' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message == tmp_dictCustomData_this[key_this]['key']:
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                tmp_value,
-                                valDict
-                            )
-                            if len(msg) > 0:
-                                reply(
-                                    plugin_event,
-                                    msg
+                            for tmp_value_this in tmp_value.split('[分页]'):
+                                msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                    tmp_value_this,
+                                    valDict
                                 )
+                                if len(msg) > 0:
+                                    reply(
+                                        plugin_event,
+                                        msg
+                                    )
                             break
                     elif 'contain' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_dictCustomData_this[key_this]['key'] != '' and tmp_dictCustomData_this[key_this]['key'] in tmp_message:
@@ -231,29 +233,31 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                 valDict[key] = codeEscape(value)
                                 count += 1
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                tmp_value,
-                                valDict
-                            )
-                            if len(msg) > 0:
-                                reply(
-                                    plugin_event,
-                                    msg
+                            for tmp_value_this in tmp_value.split('[分页]'):
+                                msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                    tmp_value_this,
+                                    valDict
                                 )
+                                if len(msg) > 0:
+                                    reply(
+                                        plugin_event,
+                                        msg
+                                    )
                             break
                     elif 'perfix' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message.startswith(tmp_dictCustomData_this[key_this]['key']):
                             valDict['内容1'] = codeEscape(tmp_message[len(tmp_dictCustomData_this[key_this]['key']):])
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                tmp_value,
-                                valDict
-                            )
-                            if len(msg) > 0:
-                                reply(
-                                    plugin_event,
-                                    msg
+                            for tmp_value_this in tmp_value.split('[分页]'):
+                                msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                    tmp_value_this,
+                                    valDict
                                 )
+                                if len(msg) > 0:
+                                    reply(
+                                        plugin_event,
+                                        msg
+                                    )
                             break
                     elif 'reg' == tmp_dictCustomData_this[key_this]['matchType']:
                         res_re = re.match('^%s$' % tmp_dictCustomData_this[key_this]['key'], tmp_message)
@@ -270,15 +274,16 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                 valDict[key] = codeEscape(value)
                                 count += 1
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                tmp_value,
-                                valDict
-                            )
-                            if len(msg) > 0:
-                                reply(
-                                    plugin_event,
-                                    msg
+                            for tmp_value_this in tmp_value.split('[分页]'):
+                                msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                    tmp_value_this,
+                                    valDict
                                 )
+                                if len(msg) > 0:
+                                    reply(
+                                        plugin_event,
+                                        msg
+                                    )
                             break
 
     setValDictUnity(valDict)
