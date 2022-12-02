@@ -498,3 +498,116 @@ def jsonGetListStrFunTemp():
             return res
         return jsonGetListStr_f
     return jsonGetListStrFun
+
+def jsonDelListContentDataHandler(data:str, pathList:list, setVal:str):
+    json_data = None
+    json_data_root = None
+    json_data_key = None
+    res = ''
+    try:
+        json_data = json.loads(data)
+    except:
+        json_data = None
+    count = 0
+    try:
+        if json_data == None:
+            return res
+        json_data_this = json_data
+        for key_this in pathList:
+            if count < len(pathList):
+                if key_this not in json_data_this:
+                    return res
+                if type(json_data_this) == dict and key_this in json_data_this:
+                    if count == len(pathList) - 1 and type(json_data_this[key_this]) == list:
+                        json_data_root = json_data_this
+                        json_data_key = key_this
+                    else:
+                        return res
+                    json_data_this = json_data_this[key_this]
+                elif type(json_data_this) == list and (
+                    int(key_this) >= -len(json_data_this)
+                ) and (
+                    int(key_this) < len(json_data_this)
+                ):
+                    if count == len(pathList) - 1 and type(json_data_this[key_this]) == list:
+                        json_data_root = json_data_this
+                        json_data_key = int(key_this)
+                    else:
+                        return res
+                    json_data_this = json_data_this[int(key_this)]
+                else:
+                    return res
+            count += 1
+        data_in = str(setVal)
+        if json_data == None:
+            return res
+        json_data_root_new = []
+        for json_data_this_this in json_data_this:
+            if str(data_in) != str(json_data_this_this):
+                json_data_root_new.append(json_data_this_this)
+        if json_data_root != None and json_data_key != None:
+            json_data_root[json_data_key] = json_data_root_new
+        else:
+            json_data = json_data_root_new
+    except:
+        pass
+    res = json.dumps(json_data, ensure_ascii = False, indent = 4)
+    return res
+
+def jsonDelListContentFunTemp():
+    def jsonDelListContentFun(valDict):
+        def jsonDelListContent_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '删除值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
+            if None != resDict['...']:
+                resDict['...'] = [
+                    ChanceCustom.replyReg.replyValueRegTotal(
+                        resData_this,
+                        valDict = valDict
+                    ) for resData_this in resDict['...']
+                ]
+            json_data = ''
+            try:
+                ChanceCustom.replyIO.releasePath(resDict['文件路径'])
+                with open(resDict['文件路径'], 'r', encoding = 'utf-8') as json_f:
+                    json_data = json_f.read()
+            except:
+                json_data = ''
+            try:
+                json_data_text = ChanceCustom.replyJson.jsonDelListContentDataHandler(json_data, resDict['...'], resDict['删除值'])
+                with open(resDict['文件路径'], 'w', encoding = 'utf-8') as json_f:
+                    json_f.write(json_data_text)
+            except:
+                pass
+            return res
+        return jsonDelListContent_f
+    return jsonDelListContentFun
+
+def jsonDelListContentStrFunTemp(flagValType:str = 'default'):
+    def jsonDelListContentStrFun(valDict):
+        def jsonDelListContentStr_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', None, groupDict, valDict)
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '删除值', '', groupDict, valDict)
+            ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
+            if None != resDict['...']:
+                resDict['...'] = [
+                    ChanceCustom.replyReg.replyValueRegTotal(
+                        resData_this,
+                        valDict = valDict
+                    ) for resData_this in resDict['...']
+                ]
+            json_data = resDict['来源']
+            try:
+                res = ChanceCustom.replyJson.jsonDelListContentDataHandler(json_data, resDict['...'], resDict['删除值'], flagValType)
+            except:
+                pass
+            return res
+        return jsonDelListContentStr_f
+    return jsonDelListContentStrFun

@@ -69,6 +69,7 @@ listRegTotalFun = [
     ['Json写-自动', ['来源', '写入值', '...'], ChanceCustom.replyJson.jsonSetStrFunTemp(flagValType = 'auto')],
     ['Json写-文本', ['来源', '写入值', '...'], ChanceCustom.replyJson.jsonSetStrFunTemp(flagValType = 'str')],
     ['Json写', ['来源', '写入值', '...'], ChanceCustom.replyJson.jsonSetStrFunTemp(flagValType = 'default')],
+    ['Json删-过滤列表', ['来源', '删除值', '...'], ChanceCustom.replyJson.jsonDelListContentStrFunTemp()],
     ['Json删', ['来源', '...'], ChanceCustom.replyJson.jsonDelStrFunTemp()],
     ['Json取', ['来源', '分隔符', '...'], ChanceCustom.replyJson.jsonGetListStrFunTemp()],
 
@@ -87,6 +88,7 @@ listRegTotalFun = [
     ['写Json-自动', ['文件路径', '写入值', '...'], ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'auto')],
     ['写Json-文本', ['文件路径', '写入值', '...'], ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'str')],
     ['写Json', ['文件路径', '写入值', '...'], ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')],
+    ['删Json-过滤列表', ['文件路径', '删除值', '...'], ChanceCustom.replyJson.jsonDelListContentFunTemp()],
     ['删Json', ['文件路径', '...'], ChanceCustom.replyJson.jsonDelFunTemp()],
     ['取Json', ['文件路径', '分隔符', '...'], ChanceCustom.replyJson.jsonGetListFunTemp()],
 
