@@ -1,3 +1,18 @@
+'''
+_________ ___________________ ____  __.
+\_   ___ \\_   ___ \______   \    |/ _|
+/    \  \//    \  \/|     ___/      <  
+\     \___\     \___|    |   |    |  \ 
+ \______  /\______  /____|   |____|__ \
+        \/        \/                 \/
+@File      :   replyTime.py
+@Author    :   Fitz161
+@Contact   :   
+@License   :   AGPL
+@Copyright :   (C) 2020-2022, OlivOS-Team
+@Desc      :   None
+'''
+
 import OlivOS
 import ChanceCustom
 
