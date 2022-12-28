@@ -23,6 +23,7 @@ import time
 def preFilter(replyValue:str, valDict:dict):
     res = True
     flagSkip = False
+    nowTime = int(time.time())
     releaseDir('./plugin')
     releaseDir('./plugin/data')
     releaseDir('./plugin/data/ChanceCustom')
@@ -37,7 +38,6 @@ def preFilter(replyValue:str, valDict:dict):
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
-                    nowTime = int(time.time())
                     lastTime = ChanceCustom.replyJson.jsonGetFunTemp()({})(
                         {
                             '文件路径': './plugin/data/ChanceCustom/冷却.json',
@@ -53,7 +53,7 @@ def preFilter(replyValue:str, valDict:dict):
                         lastTime = int(lastTime)
                     except:
                         lastTime = 0
-                    if nowTime - lastTime > setCount * 60:
+                    if nowTime - lastTime > setCount:
                         res = True
                         ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')({})(
                             {
