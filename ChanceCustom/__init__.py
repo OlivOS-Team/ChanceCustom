@@ -28,5 +28,6 @@ from . import replyTime
 from . import replyRandom
 from . import replyOlivaDice
 from . import replyReg
+from . import replyFilter
 if(platform.system() == 'Windows'):
     from . import GUI

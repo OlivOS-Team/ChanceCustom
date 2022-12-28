@@ -207,17 +207,21 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                             continue
                     elif 'full' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message == tmp_dictCustomData_this[key_this]['key']:
-                            tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
-                            for tmp_value_this in tmp_value.split('[分页]'):
-                                msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_value_this,
-                                    valDict
-                                )
-                                if len(msg) > 0:
-                                    reply(
-                                        plugin_event,
-                                        msg
+                            if ChanceCustom.replyFilter.preFilter(
+                                replyValue = tmp_dictCustomData_this[key_this]['value'],
+                                valDict = valDict
+                            ):
+                                tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
+                                for tmp_value_this in tmp_value.split('[分页]'):
+                                    msg = ChanceCustom.replyReg.replyValueRegTotal(
+                                        tmp_value_this,
+                                        valDict
                                     )
+                                    if len(msg) > 0:
+                                        reply(
+                                            plugin_event,
+                                            msg
+                                        )
                             break
                     elif 'contain' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_dictCustomData_this[key_this]['key'] != '' and tmp_dictCustomData_this[key_this]['key'] in tmp_message:
