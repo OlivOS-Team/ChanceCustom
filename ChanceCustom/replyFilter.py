@@ -45,7 +45,7 @@ def preFilter(replyValue:str, valDict:dict):
                             '...': [
                                 str(valDict['innerVal']['platform']['platform']),
                                 str(valDict['innerVal']['platform']['sdk']),
-                                str(valDict['innerVal']['user_id'])
+                                str(valDict['innerVal']['chat_id'])
                             ]
                         }
                     )
@@ -62,7 +62,7 @@ def preFilter(replyValue:str, valDict:dict):
                                 '...': [
                                     str(valDict['innerVal']['platform']['platform']),
                                     str(valDict['innerVal']['platform']['sdk']),
-                                    str(valDict['innerVal']['user_id'])
+                                    str(valDict['innerVal']['chat_id'])
                                 ]
                             }
                         )

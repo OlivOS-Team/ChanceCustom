@@ -70,6 +70,7 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
     valDict['innerVal']['platform'] = plugin_event.platform
     valDict['innerVal']['event_name'] = event_name
     valDict['innerVal']['bot_hash'] = 'unity'
+    valDict['innerVal']['chat_id'] = ''
     if 'group_message' == event_name:
         valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['host_id'] = plugin_event.data.host_id
@@ -78,13 +79,16 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
         if plugin_event.data.host_id != None:
             valDict['innerVal']['hag_id'] = '%s|%s' % (str(plugin_event.data.host_id), str(plugin_event.data.group_id))
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
+        valDict['innerVal']['chat_id'] = 'GROUP:%s' % str(valDict['innerVal']['hag_id'])
     elif 'private_message' == event_name:
         valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
+        valDict['innerVal']['chat_id'] = 'USER:%s' % str(valDict['innerVal']['user_id'])
     elif 'poke_private' == event_name:
         valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['user_id'] = str(plugin_event.data.target_id)
         valDict['innerVal']['event_name'] = 'private_message'
+        valDict['innerVal']['chat_id'] = 'USER:%s' % str(valDict['innerVal']['user_id'])
     elif 'poke_group' == event_name:
         valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['user_id'] = str(plugin_event.data.target_id)
@@ -92,12 +96,14 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
         valDict['innerVal']['host_id'] = None
         valDict['innerVal']['group_id'] = plugin_event.data.group_id
         valDict['innerVal']['hag_id'] = plugin_event.data.group_id
+        valDict['innerVal']['chat_id'] = 'GROUP:%s' % str(valDict['innerVal']['hag_id'])
     elif 'init' == event_name:
         valDict['innerVal']['user_id'] = str(88888888)
         valDict['innerVal']['event_name'] = 'group_message'
         valDict['innerVal']['host_id'] = None
         valDict['innerVal']['group_id'] = str(88888888)
         valDict['innerVal']['hag_id'] = str(88888888)
+        valDict['innerVal']['chat_id'] = 'GROUP:%s' % str(valDict['innerVal']['hag_id'])
 
     #预设变量，用于供外部调用
     valDict['defaultVal'] = {}
