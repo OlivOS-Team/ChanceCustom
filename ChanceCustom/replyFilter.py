@@ -157,7 +157,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                             '默认值': '0',
                             '...': [
                                 str(bot_hash),
-                                str(time.strftime('%Y-%m/%W', time.localtime(nowTime))),
+                                str(time.strftime('%Y/%V', time.localtime(nowTime))),
                                 str(replyKey)
                             ]
                         }
@@ -171,7 +171,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                                 '写入值': str(lastCount + 1),
                                 '...': [
                                     str(bot_hash),
-                                    str(time.strftime('%Y-%m/%W', time.localtime(nowTime))),
+                                    str(time.strftime('%Y/%V', time.localtime(nowTime))),
                                     str(replyKey)
                                 ]
                             }
