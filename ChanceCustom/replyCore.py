@@ -214,6 +214,7 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                     elif 'full' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message == tmp_dictCustomData_this[key_this]['key']:
                             if ChanceCustom.replyFilter.preFilter(
+                                replyKey = tmp_dictCustomData_this[key_this]['key'],
                                 replyValue = tmp_dictCustomData_this[key_this]['value'],
                                 valDict = valDict
                             ):
@@ -243,6 +244,7 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                 valDict[key] = codeEscape(value)
                                 count += 1
                             if ChanceCustom.replyFilter.preFilter(
+                                replyKey = tmp_dictCustomData_this[key_this]['key'],
                                 replyValue = tmp_dictCustomData_this[key_this]['value'],
                                 valDict = valDict
                             ):
@@ -262,6 +264,7 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                         if tmp_message.startswith(tmp_dictCustomData_this[key_this]['key']):
                             valDict['内容1'] = codeEscape(tmp_message[len(tmp_dictCustomData_this[key_this]['key']):])
                             if ChanceCustom.replyFilter.preFilter(
+                                replyKey = tmp_dictCustomData_this[key_this]['key'],
                                 replyValue = tmp_dictCustomData_this[key_this]['value'],
                                 valDict = valDict
                             ):
@@ -292,6 +295,7 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                 valDict[key] = codeEscape(value)
                                 count += 1
                             if ChanceCustom.replyFilter.preFilter(
+                                replyKey = tmp_dictCustomData_this[key_this]['key'],
                                 replyValue = tmp_dictCustomData_this[key_this]['value'],
                                 valDict = valDict
                             ):
