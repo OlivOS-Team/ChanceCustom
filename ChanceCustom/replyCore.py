@@ -71,6 +71,7 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
     valDict['innerVal']['event_name'] = event_name
     valDict['innerVal']['bot_hash'] = 'unity'
     valDict['innerVal']['chat_id'] = ''
+    valDict['innerVal']['replaceReply'] = None
     if 'group_message' == event_name:
         valDict['innerVal']['bot_hash'] = plugin_event.bot_info.hash
         valDict['innerVal']['host_id'] = plugin_event.data.host_id
@@ -182,7 +183,9 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
     ):
         return
 
+    bot_hash_last = None
     for tmp_hash_list_this in tmp_hash_list:
+        bot_hash_last = tmp_hash_list_this
         valDict['innerVal']['bot_hash'] = tmp_hash_list_this
         valDict['innerVal']['bot_hash_self'] = plugin_event.bot_info.hash
         if tmp_hash_list_this in tmp_dictCustomData['data']:
@@ -311,6 +314,19 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                             msg
                                         )
                             break
+
+    if bot_hash_last != None and valDict['innerVal']['replaceReply'] != None:
+        tmp_value = random.choice(valDict['innerVal']['replaceReply'].split('*'))
+        for tmp_value_this in tmp_value.split('[分页]'):
+            msg = ChanceCustom.replyReg.replyValueRegTotal(
+                tmp_value_this,
+                valDict
+            )
+            if len(msg) > 0:
+                reply(
+                    plugin_event,
+                    msg
+                )
 
     setValDictUnity(valDict)
 

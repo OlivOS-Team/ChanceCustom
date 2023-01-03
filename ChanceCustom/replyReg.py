@@ -21,6 +21,9 @@ import re
 listRegTotalFun = [
     ['换行', [], '【换行】'],
 
+    # >内置变量<
+    ['间隔', [], ChanceCustom.replyFilter.getPreFilterFunTemp('间隔')],
+
     # >常用变量<
     ['内容', ['x'], ChanceCustom.replyBase.getContextFunTemp()],
 

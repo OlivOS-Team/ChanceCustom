@@ -341,8 +341,27 @@ class ConfigUI(object):
             ipady = 0
         )
 
+        self.UIObject['frame_default_reply_root'] = tkinter.Frame(self.UIObject['Notebook_root'])
+        self.UIObject['frame_default_reply_root'].configure(relief = tkinter.FLAT)
+        self.UIObject['frame_default_reply_root'].configure(bg = self.UIConfig['color_001'])
+        self.UIObject['frame_default_reply_root'].grid(
+            row = 0,
+            column = 0,
+            sticky = "nsew",
+            rowspan = 1,
+            columnspan = 1,
+            padx = (0, 0),
+            pady = (0, 0),
+            ipadx = 0,
+            ipady = 0
+        )
+        self.UIObject['frame_default_reply_root'].grid_rowconfigure(0, weight = 15)
+        self.UIObject['frame_default_reply_root'].grid_columnconfigure(0, weight = 15)
+        self.UIObject['frame_default_reply_root'].grid_columnconfigure(1, weight = 1)
+
         self.UIObject['Notebook_root'].add(self.UIObject['frame_key_root'], text="关键词")
         self.UIObject['Notebook_root'].add(self.UIObject['frame_ccpk_root'], text="导入包")
+        self.UIObject['Notebook_root'].add(self.UIObject['frame_default_reply_root'], text="默认回复")
 
         self.tree_load()
 

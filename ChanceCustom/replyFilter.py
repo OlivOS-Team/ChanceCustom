@@ -34,7 +34,6 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
         releaseDir('./plugin')
         releaseDir('./plugin/data')
         releaseDir('./plugin/data/ChanceCustom')
-        print(valDict['innerVal']['bot_hash'])
         bot_hash = 'unity'
         if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
             bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
@@ -72,6 +71,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        getPreFilterReply('回复间隔', valDict)
         if not flagSkip:
             res_re = re.match('【一次间隔(\d+)】', replyValue)
             if res_re != None:
@@ -106,6 +106,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        getPreFilterReply('一次间隔', valDict)
+                        valDict['innerVal']['间隔'] = str(int((lastTime + setCount * 60 - nowTime) / 60) + 1)
         if not flagSkip:
             res_re = re.match('【一月上限(\d+)】', replyValue)
             if res_re != None:
@@ -142,6 +144,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        getPreFilterReply('一月上限', valDict)
         if not flagSkip:
             res_re = re.match('【一周上限(\d+)】', replyValue)
             if res_re != None:
@@ -178,6 +181,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        getPreFilterReply('一周上限', valDict)
         if not flagSkip:
             res_re = re.match('【一天上限(\d+)】', replyValue)
             if res_re != None:
@@ -214,12 +218,36 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        getPreFilterReply('一天上限', valDict)
     except:
         pass
 
     ChanceCustom.replyFilter.gPreFilterLock.release()
 
     return res
+
+def getPreFilterReply(key:str, valDict:dict):
+    bot_hash = 'unity'
+    res = None
+    if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
+        bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
+    if key in ChanceCustom.load.dictCustomData['defaultVar'][bot_hash]:
+        res = ChanceCustom.load.dictCustomData['defaultVar'][bot_hash][key]
+        valDict['innerVal']['replaceReply'] = res
+    return res
+
+def getPreFilterFunTemp(key:str):
+    def getPreFilterFun(valDict):
+        def getPreFilter_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            if 'innerVal' in valDict and key in valDict['innerVal'] and \
+                valDict['innerVal'][key] != None:
+                res = valDict['innerVal'][key]
+            return res
+        return getPreFilter_f
+    return getPreFilterFun
 
 def str2int(value:str):
     res = 0

@@ -18,6 +18,7 @@ import ChanceCustom
 
 import os
 import json
+import copy
 
 listPlugin = []
 
@@ -29,6 +30,14 @@ dictCustomData = {}
 
 flag_open = False
 
+defaultValTemp = {
+    '每月上限': '本月已达上限',
+    '每周上限': '本月已达上限',
+    '每日上限': '本月已达上限',
+    '一次间隔': '冷却中，还需等待【间隔】分钟',
+    '回复间隔': ''
+}
+
 def releaseDir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -38,6 +47,7 @@ def initEmptyCustomData():
     dictCustomData = {
         'dataVersion': dataVersion,
         'data': {},
+        'defaultVar': {},
         'ccpkList': {}
     }
 
@@ -57,6 +67,8 @@ def fixCheckCustomData():
             dictCustomData['dataVersion'] = dataVersion
     if 'data' not in dictCustomData:
         dictCustomData['data'] = {}
+    if 'defaultVar' not in dictCustomData:
+        dictCustomData['defaultVar'] = {}
     if 'ccpkList' not in dictCustomData:
         dictCustomData['ccpkList'] = {}
 
@@ -78,6 +90,8 @@ def initCustomData(botInfo = None):
     for tmp_hash_list_this in tmp_hash_list:
         if tmp_hash_list_this not in dictCustomData['data']:
             dictCustomData['data'][tmp_hash_list_this] = {}
+        if tmp_hash_list_this not in dictCustomData['defaultVar']:
+            dictCustomData['defaultVar'][tmp_hash_list_this] = copy.deepcopy(defaultValTemp)
         if tmp_hash_list_this not in dictCustomData['ccpkList']:
             dictCustomData['ccpkList'][tmp_hash_list_this] = {}
 
