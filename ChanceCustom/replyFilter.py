@@ -231,9 +231,12 @@ def getPreFilterReply(key:str, valDict:dict):
     res = None
     if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
         bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
+    if key in ChanceCustom.load.dictCustomData['defaultVar']['unity']:
+        res = ChanceCustom.load.dictCustomData['defaultVar']['unity'][key]
     if key in ChanceCustom.load.dictCustomData['defaultVar'][bot_hash]:
-        res = ChanceCustom.load.dictCustomData['defaultVar'][bot_hash][key]
-        valDict['innerVal']['replaceReply'] = res
+        if len(ChanceCustom.load.dictCustomData['defaultVar'][bot_hash][key]) > 0:
+            res = ChanceCustom.load.dictCustomData['defaultVar'][bot_hash][key]
+    valDict['innerVal']['replaceReply'] = res
     return res
 
 def getPreFilterFunTemp(key:str):

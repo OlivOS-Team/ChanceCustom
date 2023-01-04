@@ -38,6 +38,14 @@ defaultValTemp = {
     '回复间隔': ''
 }
 
+defaultValTempNone = {
+    '每月上限': '',
+    '每周上限': '',
+    '每日上限': '',
+    '一次间隔': '',
+    '回复间隔': ''
+}
+
 def releaseDir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -91,7 +99,10 @@ def initCustomData(botInfo = None):
         if tmp_hash_list_this not in dictCustomData['data']:
             dictCustomData['data'][tmp_hash_list_this] = {}
         if tmp_hash_list_this not in dictCustomData['defaultVar']:
-            dictCustomData['defaultVar'][tmp_hash_list_this] = copy.deepcopy(defaultValTemp)
+            if tmp_hash_list_this == 'unity':
+                dictCustomData['defaultVar'][tmp_hash_list_this] = copy.deepcopy(defaultValTemp)
+            else:
+                dictCustomData['defaultVar'][tmp_hash_list_this] = copy.deepcopy(defaultValTempNone)
         if tmp_hash_list_this not in dictCustomData['ccpkList']:
             dictCustomData['ccpkList'][tmp_hash_list_this] = {}
 

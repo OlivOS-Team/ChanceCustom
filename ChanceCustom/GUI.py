@@ -356,14 +356,160 @@ class ConfigUI(object):
             ipady = 0
         )
         self.UIObject['frame_default_reply_root'].grid_rowconfigure(0, weight = 15)
+        self.UIObject['frame_default_reply_root'].grid_rowconfigure(1, weight = 15)
         self.UIObject['frame_default_reply_root'].grid_columnconfigure(0, weight = 15)
         self.UIObject['frame_default_reply_root'].grid_columnconfigure(1, weight = 1)
+
+        self.tree_UI_singal_Label_Entry_init(
+            obj_root='frame_default_reply_root',
+            obj_name='default_reply_day',
+            title='达到每日上限后的默认回复',
+            str_name='default_reply_day_StringVar',
+            count=0,
+            mode='NONE'
+        )
+
+        self.tree_UI_singal_Label_Entry_init(
+            obj_root='frame_default_reply_root',
+            obj_name='default_reply_week',
+            title='达到每周上限后的默认回复',
+            str_name='default_reply_week_StringVar',
+            count=1,
+            mode='NONE'
+        )
+
+        self.tree_UI_singal_Label_Entry_init(
+            obj_root='frame_default_reply_root',
+            obj_name='default_reply_month',
+            title='达到每月上限后的默认回复',
+            str_name='default_reply_month_StringVar',
+            count=2,
+            mode='NONE'
+        )
+
+        self.tree_UI_singal_Label_Entry_init(
+            obj_root='frame_default_reply_root',
+            obj_name='default_reply_once',
+            title='达到一次间隔后的默认回复',
+            str_name='default_reply_once_StringVar',
+            count=3,
+            mode='NONE'
+        )
+
+        self.tree_UI_singal_Label_Entry_init(
+            obj_root='frame_default_reply_root',
+            obj_name='default_reply_reply',
+            title='触发回复间隔冷却后的默认回复',
+            str_name='default_reply_reply_StringVar',
+            count=4,
+            mode='NONE'
+        )
 
         self.UIObject['Notebook_root'].add(self.UIObject['frame_key_root'], text="关键词")
         self.UIObject['Notebook_root'].add(self.UIObject['frame_ccpk_root'], text="导入包")
         self.UIObject['Notebook_root'].add(self.UIObject['frame_default_reply_root'], text="默认回复")
 
         self.tree_load()
+
+    def tree_UI_singal_Label_Entry_init(
+        self,
+        obj_root:str,
+        obj_name:str,
+        title:str,
+        str_name:str,
+        count:int,
+        mode:str='NONE'
+    ):
+        tmp_span_len = 4
+        tmp_both_width_len = 400
+        tmp_label_height_len = 20
+        tmp_entry_height_len = 20
+        self.tree_UI_singal_Label_init(
+            obj_root,
+            obj_name,
+            title
+        )
+        self.UIData[str_name] = tkinter.StringVar()
+        self.tree_UI_singal_Entry_init(
+            obj_root,
+            obj_name,
+            str_name,
+            mode
+        )
+        self.UIObject[obj_name + '=Label'].place(
+            x=tmp_span_len,
+            y=tmp_span_len * (count * 2 + 1) + tmp_label_height_len * (count) + tmp_entry_height_len * (count),
+            width=tmp_both_width_len,
+            height=tmp_label_height_len
+        )
+        self.UIObject[obj_name + '=Entry'].place(
+            x=tmp_span_len,
+            y=tmp_span_len * (count * 2 + 2) + tmp_label_height_len * (count + 1) + tmp_entry_height_len * (count),
+            width=tmp_both_width_len,
+            height=tmp_entry_height_len
+        )
+
+    def tree_UI_singal_Label_init(self, obj_root, obj_name, title=''):
+        self.UIObject[obj_name + '=Label'] = tkinter.Label(
+            self.UIObject[obj_root],
+            text=title
+        )
+        self.UIObject[obj_name + '=Label'].configure(
+            bg=self.UIConfig['color_001'],
+            fg=self.UIConfig['color_004'],
+            justify='left',
+            anchor='nw'
+        )
+
+    def tree_UI_singal_Entry_init(self, obj_root, obj_name, str_name, mode='NONE'):
+        self.UIObject[obj_name + '=Entry'] = tkinter.Entry(
+            self.UIObject[obj_root],
+            textvariable=self.UIData[str_name]
+        )
+        self.UIObject[obj_name + '=Entry'].configure(
+            bg=self.UIConfig['color_004'],
+            fg=self.UIConfig['color_005'],
+            bd=0
+        )
+        if mode == 'SAFE':
+            self.UIObject[obj_name].configure(
+                show='●'
+            )
+
+    def tree_UI_Entry_init(self, obj_root, obj_name, str_name, x, y, width, height, action, title='', mode='NONE'):
+        self.UIObject[obj_name + '=Label'] = tkinter.Label(
+            self.UIObject[obj_root],
+            text=title
+        )
+        self.UIObject[obj_name + '=Label'].configure(
+            bg=self.UIConfig['color_001'],
+            fg=self.UIConfig['color_004']
+        )
+        self.UIObject[obj_name + '=Label'].place(
+            x=x - 100,
+            y=y,
+            width=100,
+            height=height
+        )
+        self.UIObject[obj_name] = tkinter.Entry(
+            self.UIObject[obj_root],
+            textvariable=self.UIData[str_name]
+        )
+        self.UIObject[obj_name].configure(
+            bg=self.UIConfig['color_004'],
+            fg=self.UIConfig['color_005'],
+            bd=0
+        )
+        if mode == 'SAFE':
+            self.UIObject[obj_name].configure(
+                show='●'
+            )
+        self.UIObject[obj_name].place(
+            x=x,
+            y=y,
+            width=width,
+            height=height
+        )
 
     def tree_UI_Combobox_init(self, obj_root, obj_name, str_name, x, y, width_t, width, height, action, title = ''):
         self.UIObject[obj_name + '=Label'] = tkinter.Label(
@@ -479,8 +625,26 @@ class ConfigUI(object):
                 )
             except:
                 pass
+        try:
+            self.UIData['default_reply_day_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每日上限'])
+            self.UIData['default_reply_week_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每周上限'])
+            self.UIData['default_reply_month_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每月上限'])
+            self.UIData['default_reply_once_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一次间隔'])
+            self.UIData['default_reply_reply_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['回复间隔'])
+        except:
+            pass
 
     def tree_save(self):
+        try:
+            tmp_dictCustomData = ChanceCustom.load.dictCustomData
+            tmp_hashSelection = self.UIData['hash_now']
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每日上限'] = self.UIData['default_reply_day_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每周上限'] = self.UIData['default_reply_week_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每月上限'] = self.UIData['default_reply_month_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一次间隔'] = self.UIData['default_reply_once_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['回复间隔'] = self.UIData['default_reply_reply_StringVar'].get()
+        except:
+            pass
         ChanceCustom.load.saveCustomData()
 
     def ccpk_read(self):
