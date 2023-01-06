@@ -20,6 +20,7 @@ import re
 import os
 import time
 import threading
+import hashlib
 
 gPreFilterLock = threading.Lock()
 
@@ -36,10 +37,17 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
         releaseDir('./plugin/data/ChanceCustom')
         bot_hash = 'unity'
         plugin_event:'OlivOS.API.Event|None' = None
+        user_hash = None
         if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
             bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
         if 'plugin_event' in valDict['innerVal']:
             plugin_event = valDict['innerVal']['plugin_event']
+        if plugin_event != None:
+            user_hash = getUserHash(
+                plugin_event.data.user_id,
+                'user',
+                plugin_event.platform['platform']
+            )
         if not flagSkip:
             if '【主人】' in replyValue and plugin_event != None:
                 if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
@@ -90,7 +98,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         flagSkip = True
         if not flagSkip:
             res_re = re.match('[\s\S]*【回复间隔(\d+)】', replyValue)
-            if res_re != None:
+            if res_re != None and plugin_event != None:
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -125,7 +133,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         getPreFilterReply('回复间隔', valDict)
         if not flagSkip:
             res_re = re.match('[\s\S]*【一次间隔(\d+)】', replyValue)
-            if res_re != None:
+            if res_re != None and plugin_event != None:
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -137,6 +145,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                             '默认值': '0',
                             '...': [
                                 str(bot_hash),
+                                str(valDict['innerVal']['chat_id']),
+                                user_hash,
                                 str(replyKey)
                             ]
                         }
@@ -150,6 +160,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                                 '写入值': str(nowTime),
                                 '...': [
                                     str(bot_hash),
+                                    str(valDict['innerVal']['chat_id']),
+                                    user_hash,
                                     str(replyKey)
                                 ]
                             }
@@ -161,7 +173,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         valDict['innerVal']['间隔'] = str(int((lastTime + setCount * 60 - nowTime) / 60) + 1)
         if not flagSkip:
             res_re = re.match('[\s\S]*【一月上限(\d+)】', replyValue)
-            if res_re != None:
+            if res_re != None and plugin_event != None:
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -174,6 +186,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                             '...': [
                                 str(bot_hash),
                                 str(time.strftime('%Y-%m', time.localtime(nowTime))),
+                                str(valDict['innerVal']['chat_id']),
+                                user_hash,
                                 str(replyKey)
                             ]
                         }
@@ -188,6 +202,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                                 '...': [
                                     str(bot_hash),
                                     str(time.strftime('%Y-%m', time.localtime(nowTime))),
+                                    str(valDict['innerVal']['chat_id']),
+                                    user_hash,
                                     str(replyKey)
                                 ]
                             }
@@ -198,7 +214,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         getPreFilterReply('一月上限', valDict)
         if not flagSkip:
             res_re = re.match('[\s\S]*【一周上限(\d+)】', replyValue)
-            if res_re != None:
+            if res_re != None and plugin_event != None:
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -211,6 +227,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                             '...': [
                                 str(bot_hash),
                                 str(time.strftime('%Y/%V', time.localtime(nowTime))),
+                                str(valDict['innerVal']['chat_id']),
+                                user_hash,
                                 str(replyKey)
                             ]
                         }
@@ -225,6 +243,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                                 '...': [
                                     str(bot_hash),
                                     str(time.strftime('%Y/%V', time.localtime(nowTime))),
+                                    str(valDict['innerVal']['chat_id']),
+                                    user_hash,
                                     str(replyKey)
                                 ]
                             }
@@ -235,7 +255,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         getPreFilterReply('一周上限', valDict)
         if not flagSkip:
             res_re = re.match('[\s\S]*【一天上限(\d+)】', replyValue)
-            if res_re != None:
+            if res_re != None and plugin_event != None:
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -248,6 +268,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                             '...': [
                                 str(bot_hash),
                                 str(time.strftime('%Y-%m-%d', time.localtime(nowTime))),
+                                str(valDict['innerVal']['chat_id']),
+                                user_hash,
                                 str(replyKey)
                             ]
                         }
@@ -262,6 +284,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                                 '...': [
                                     str(bot_hash),
                                     str(time.strftime('%Y-%m-%d', time.localtime(nowTime))),
+                                    str(valDict['innerVal']['chat_id']),
+                                    user_hash,
                                     str(replyKey)
                                 ]
                             }
@@ -314,3 +338,16 @@ def str2int(value:str):
 def releaseDir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
+
+def getUserHash(userId, userType, platform, subId = None):
+    hash_tmp = hashlib.new('md5')
+    if subId != None:
+        tmp_strID = '%s|%s' % (str(subId), str(userId))
+        hash_tmp.update(tmp_strID.encode(encoding='UTF-8'))
+    else:
+        hash_tmp.update(str(userId).encode(encoding='UTF-8'))
+    hash_tmp.update(str(userType).encode(encoding='UTF-8'))
+    hash_tmp.update(str(platform).encode(encoding='UTF-8'))
+    if subId != None:
+        hash_tmp.update(str(subId).encode(encoding='UTF-8'))
+    return hash_tmp.hexdigest()
