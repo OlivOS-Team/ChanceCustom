@@ -405,6 +405,15 @@ class ConfigUI(object):
             mode='NONE'
         )
 
+        self.tree_UI_singal_Label_Entry_init(
+            obj_root='frame_default_reply_root',
+            obj_name='default_reply_role',
+            title='权限不足时的默认回复',
+            str_name='default_reply_role_StringVar',
+            count=5,
+            mode='NONE'
+        )
+
         self.UIObject['Notebook_root'].add(self.UIObject['frame_key_root'], text="关键词")
         self.UIObject['Notebook_root'].add(self.UIObject['frame_ccpk_root'], text="导入包")
         self.UIObject['Notebook_root'].add(self.UIObject['frame_default_reply_root'], text="默认回复")
@@ -631,6 +640,7 @@ class ConfigUI(object):
             self.UIData['default_reply_month_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每月上限'])
             self.UIData['default_reply_once_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一次间隔'])
             self.UIData['default_reply_reply_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['回复间隔'])
+            self.UIData['default_reply_role_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['权限限制'])
         except:
             pass
 
@@ -643,6 +653,7 @@ class ConfigUI(object):
             tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每月上限'] = self.UIData['default_reply_month_StringVar'].get()
             tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一次间隔'] = self.UIData['default_reply_once_StringVar'].get()
             tmp_dictCustomData['defaultVar'][tmp_hashSelection]['回复间隔'] = self.UIData['default_reply_reply_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['权限限制'] = self.UIData['default_reply_role_StringVar'].get()
         except:
             pass
         ChanceCustom.load.saveCustomData()

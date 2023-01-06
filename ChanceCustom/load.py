@@ -35,7 +35,8 @@ defaultValTemp = {
     '每周上限': '本周已达上限',
     '每日上限': '本日已达上限',
     '一次间隔': '冷却中，还需等待【间隔】分钟',
-    '回复间隔': ''
+    '回复间隔': '',
+    '权限限制': '权限不足'
 }
 
 defaultValTempNone = {
@@ -43,7 +44,8 @@ defaultValTempNone = {
     '每周上限': '',
     '每日上限': '',
     '一次间隔': '',
-    '回复间隔': ''
+    '回复间隔': '',
+    '权限限制': ''
 }
 
 def releaseDir(dir_path):
@@ -103,6 +105,14 @@ def initCustomData(botInfo = None):
                 dictCustomData['defaultVar'][tmp_hash_list_this] = copy.deepcopy(defaultValTemp)
             else:
                 dictCustomData['defaultVar'][tmp_hash_list_this] = copy.deepcopy(defaultValTempNone)
+        if tmp_hash_list_this == 'unity':
+            for defaultValTemp_key in defaultValTemp:
+                if defaultValTemp_key not in dictCustomData['defaultVar'][tmp_hash_list_this]:
+                    dictCustomData['defaultVar'][tmp_hash_list_this][defaultValTemp_key] = defaultValTemp[defaultValTemp_key]
+        else:
+            for defaultValTemp_key in defaultValTempNone:
+                if defaultValTemp_key not in dictCustomData['defaultVar'][tmp_hash_list_this]:
+                    dictCustomData['defaultVar'][tmp_hash_list_this][defaultValTemp_key] = defaultValTempNone[defaultValTemp_key]
         if tmp_hash_list_this not in dictCustomData['ccpkList']:
             dictCustomData['ccpkList'][tmp_hash_list_this] = {}
 

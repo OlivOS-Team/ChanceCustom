@@ -35,12 +35,62 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
         releaseDir('./plugin/data')
         releaseDir('./plugin/data/ChanceCustom')
         bot_hash = 'unity'
+        plugin_event:'OlivOS.API.Event|None' = None
         if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
             bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
+        if 'plugin_event' in valDict['innerVal']:
+            plugin_event = valDict['innerVal']['plugin_event']
         if not flagSkip:
-            res_re = re.match('【回复间隔(\d+)】', replyValue)
+            if '【主人】' in replyValue and plugin_event != None:
+                if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+                    try:
+                        import OlivaDiceCore
+                        if not OlivaDiceCore.ordinaryInviteManager.isInMasterList(
+                            bot_hash,
+                            OlivaDiceCore.userConfig.getUserHash(
+                                plugin_event.data.user_id,
+                                'user',
+                                plugin_event.platform['platform']
+                            )
+                        ):
+                            getPreFilterReply('权限限制', valDict)
+                            res = False
+                            flagSkip = True
+                    except:
+                        pass
+        if not flagSkip:
+            if '【群管】' in replyValue and plugin_event != None:
+                if 'role' in plugin_event.data.sender and \
+                    plugin_event.data.sender['role'] not in ['admin', 'onwer']:
+                        getPreFilterReply('权限限制', valDict)
+                        res = False
+                        flagSkip = True
+        if not flagSkip:
+            if '【管理】' in replyValue and plugin_event != None:
+                if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+                    try:
+                        import OlivaDiceCore
+                        if not OlivaDiceCore.ordinaryInviteManager.isInMasterList(
+                            bot_hash,
+                            OlivaDiceCore.userConfig.getUserHash(
+                                plugin_event.data.user_id,
+                                'user',
+                                plugin_event.platform['platform']
+                            )
+                        ):
+                            getPreFilterReply('权限限制', valDict)
+                            res = False
+                            flagSkip = True
+                    except:
+                        pass
+                if 'role' in plugin_event.data.sender and \
+                    plugin_event.data.sender['role'] not in ['admin', 'onwer']:
+                        getPreFilterReply('权限限制', valDict)
+                        res = False
+                        flagSkip = True
+        if not flagSkip:
+            res_re = re.match('[\s\S]*【回复间隔(\d+)】', replyValue)
             if res_re != None:
-                flagSkip = True
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -71,11 +121,11 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        flagSkip = True
                         getPreFilterReply('回复间隔', valDict)
         if not flagSkip:
-            res_re = re.match('【一次间隔(\d+)】', replyValue)
+            res_re = re.match('[\s\S]*【一次间隔(\d+)】', replyValue)
             if res_re != None:
-                flagSkip = True
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -106,12 +156,12 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        flagSkip = True
                         getPreFilterReply('一次间隔', valDict)
                         valDict['innerVal']['间隔'] = str(int((lastTime + setCount * 60 - nowTime) / 60) + 1)
         if not flagSkip:
-            res_re = re.match('【一月上限(\d+)】', replyValue)
+            res_re = re.match('[\s\S]*【一月上限(\d+)】', replyValue)
             if res_re != None:
-                flagSkip = True
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -144,11 +194,11 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        flagSkip = True
                         getPreFilterReply('一月上限', valDict)
         if not flagSkip:
-            res_re = re.match('【一周上限(\d+)】', replyValue)
+            res_re = re.match('[\s\S]*【一周上限(\d+)】', replyValue)
             if res_re != None:
-                flagSkip = True
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -181,11 +231,11 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        flagSkip = True
                         getPreFilterReply('一周上限', valDict)
         if not flagSkip:
-            res_re = re.match('【一天上限(\d+)】', replyValue)
+            res_re = re.match('[\s\S]*【一天上限(\d+)】', replyValue)
             if res_re != None:
-                flagSkip = True
                 res_re_list = res_re.groups()
                 if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
                     setCount = int(res_re_list[0])
@@ -218,6 +268,7 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         )
                     else:
                         res = False
+                        flagSkip = True
                         getPreFilterReply('一天上限', valDict)
     except:
         pass
