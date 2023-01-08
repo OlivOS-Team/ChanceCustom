@@ -635,9 +635,9 @@ class ConfigUI(object):
             except:
                 pass
         try:
-            self.UIData['default_reply_day_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每日上限'])
-            self.UIData['default_reply_week_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每周上限'])
-            self.UIData['default_reply_month_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每月上限'])
+            self.UIData['default_reply_day_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一天上限'])
+            self.UIData['default_reply_week_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一周上限'])
+            self.UIData['default_reply_month_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一月上限'])
             self.UIData['default_reply_once_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一次间隔'])
             self.UIData['default_reply_reply_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['回复间隔'])
             self.UIData['default_reply_role_StringVar'].set(tmp_dictCustomData['defaultVar'][tmp_hashSelection]['权限限制'])
@@ -648,9 +648,9 @@ class ConfigUI(object):
         try:
             tmp_dictCustomData = ChanceCustom.load.dictCustomData
             tmp_hashSelection = self.UIData['hash_now']
-            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每日上限'] = self.UIData['default_reply_day_StringVar'].get()
-            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每周上限'] = self.UIData['default_reply_week_StringVar'].get()
-            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['每月上限'] = self.UIData['default_reply_month_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一天上限'] = self.UIData['default_reply_day_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一周上限'] = self.UIData['default_reply_week_StringVar'].get()
+            tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一月上限'] = self.UIData['default_reply_month_StringVar'].get()
             tmp_dictCustomData['defaultVar'][tmp_hashSelection]['一次间隔'] = self.UIData['default_reply_once_StringVar'].get()
             tmp_dictCustomData['defaultVar'][tmp_hashSelection]['回复间隔'] = self.UIData['default_reply_reply_StringVar'].get()
             tmp_dictCustomData['defaultVar'][tmp_hashSelection]['权限限制'] = self.UIData['default_reply_role_StringVar'].get()
