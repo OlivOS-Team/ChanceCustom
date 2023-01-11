@@ -203,6 +203,19 @@ listRegTotalFun = [
     ['行操作-添加文本', ['被添文本', '添加类型', '添加参数', '添加文本'], ChanceCustom.replyText.addTextForEachLineFunTemp()],
     ['行操作-替换文本', ['被替文本', '替换类型', '替换参数1', '替换参数2', '替换文本'], ChanceCustom.replyText.replaceTextForEachLineFunTemp()],
 
+    # >高级文本操作<
+    ['隐藏', ['内容'], ChanceCustom.replyText.hideResultFunTemp()],
+    ['分割取出', ['被分割文本', '分隔符', '取出序号'], ChanceCustom.replyText.splitAndSelectFunTemp()],
+    ['范围取整', ['数值', '下界', '上界'], ChanceCustom.replyText.roundNumberFunTemp()],
+    ['取整', ['被取文本'], ChanceCustom.replyText.filterNumberFunTemp()],
+    ['取中间', ['XX1', 'XX2', 'XX3', 'XX4'], ChanceCustom.replyText.selectMiddleFunTemp()],
+    ['正则重构', ['重构文本', '表达式', '重构格式'], ChanceCustom.replyText.regExpRefactorFunTemp()],
+    ['正则', ['表达式', '被搜索的文本', '序次', '替换文本'], ChanceCustom.replyText.regExpReplaceFunTemp()],
+    ['子正则', ['表达式', '被搜索的文本', '序次'], ChanceCustom.replyText.subRegExpFunTemp()],
+    ['删除', ['欲被删除文本', '删除文本开头', '删除文本结尾'], ChanceCustom.replyText.deleteTextFunTemp()],
+    ['选择', ['序号或逻辑组', '...'], ChanceCustom.replyText.switchAndReturnFunTemp()],
+    ['替换', ['被替换内容', '被替换文本', '替换文本', '替换次数', '并列替换'], ChanceCustom.replyText.replaceFunTemp()],
+
     # >自定义函数<
     ['函数全局', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
     ['函数', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
@@ -220,7 +233,8 @@ listRegTotalAfter = [
     ['#yzk', '】'],
     ['#fgf', '>=<'],
     ['#xh', '*'],
-    ['#jh', '#']
+    ['#jh', '#'],
+    ['#hz', '||']
 ]
 
 listRegTotalDisEscape = [
