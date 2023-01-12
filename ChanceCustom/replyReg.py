@@ -233,8 +233,8 @@ listRegTotalAfter = [
     ['#yzk', '】'],
     ['#fgf', '>=<'],
     ['#xh', '*'],
-    ['#jh', '#'],
-    ['#hz', '||']
+    ['#hz', '||'],
+    ['#jh', '#']
 ]
 
 listRegTotalDisEscape = [
@@ -242,11 +242,13 @@ listRegTotalDisEscape = [
     ['#yzk', '】'],
     ['#fgf', '>=<'],
     ['#xh', '*'],
+    ['#hz', '||'],
     ['#jh', '#']
 ]
 
 listRegTotalEscape = [
     ['#', '#jh'],
+    ['||', '#hz'],
     ['*', '#xh'],
     ['>=<', '#fgf'],
     ['】', '#yzk'],
