@@ -1,5 +1,5 @@
 # 程心自定义 ChanceCustom
-Once upon time.
+Once upon time. [程心自定义 - 变量说明](https://forum.olivos.run/p/1)
 
 ## 在一切之前
 此插件为`酷Q(CoolQ)`时代的知名插件`铃心自定义(club.myepk.customReply)`的OlivOS版本，采用Python重构，并暂未参考源码。
