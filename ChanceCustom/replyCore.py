@@ -155,19 +155,9 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
 
     flag_fetch = False
     if 'group_message' == event_name:
-        if not tmp_dictCustomData_this[key_this]["division"] or \
-            str(not tmp_dictCustomData_this[key_this]["division"]) == "0":
-            flag_matchPlace_target |= 0b01
-        elif str(plugin_event.data.group_id) in \
-            str(not tmp_dictCustomData_this[key_this]["division"]).split("*"):
-            flag_matchPlace_target |= 0b01
+        flag_matchPlace_target |= 0b01
     elif 'private_message' == event_name:
-        if not tmp_dictCustomData_this[key_this]["division"] or \
-            str(not tmp_dictCustomData_this[key_this]["division"]) == "0":
-            flag_matchPlace_target |= 0b10
-        elif str(plugin_event.data.user_id) in \
-            str(not tmp_dictCustomData_this[key_this]["division"]).split("*"):
-            flag_matchPlace_target |= 0b10
+        flag_matchPlace_target |= 0b10
     elif 'poke' == event_name:
         if str(plugin_event.data.target_id) == str(plugin_event.bot_info.id):
             if plugin_event.data.group_id in [-1, None]:
@@ -208,8 +198,22 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
             )
             for key_this in it_list_tmp_dictCustomData:
                 flag_matchPlace = int(tmp_dictCustomData_this[key_this]['matchPlace'])
+                
+                get_division = False
 
-                if (flag_matchPlace_target & flag_matchPlace) != 0:
+                if not tmp_dictCustomData_this[key_this]["division"] or \
+                    str(not tmp_dictCustomData_this[key_this]["division"]) == "0":
+                    get_division = True
+                elif str(plugin_event.data.group_id) in \
+                    str(not tmp_dictCustomData_this[key_this]["division"]).split("*") and \
+                    flag_matchPlace & 0b10 != 0:
+                    get_division = True
+                elif str(plugin_event.data.user_id) in \
+                    str(not tmp_dictCustomData_this[key_this]["division"]).split("*") and \
+                    flag_matchPlace & 0b10 != 0:
+                    get_division = True
+
+                if (flag_matchPlace_target & flag_matchPlace) != 0 and get_division:
                     if flag_fetch:
                         res_re = None
                         if tmp_message == '[初始化]':
