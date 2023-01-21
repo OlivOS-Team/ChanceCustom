@@ -710,6 +710,7 @@ class ConfigUI(object):
                         for key_this in ini:
                             data_this = {
                                 "key": key_this,
+                                "division": 0,
                                 "matchType": "full",
                                 "matchPlace": "1",
                                 "priority": 0,
@@ -1109,7 +1110,7 @@ class TreeEditUI(object):
                     ChanceCustom.load.dictCustomData['data'][self.bot_hash].pop(self.key)
                 ChanceCustom.load.dictCustomData['data'][self.bot_hash][tmp_key] = {
                     'key': tmp_key,
-                    "division":tmp_division,
+                    "division":tmp_division or None,
                     'matchType': dictSLMap['matchTypeList_saveMap'][tmp_matchType],
                     'matchPlace': dictSLMap['matchPlaceList_saveMap'][tmp_matchPlace],
                     'priority': tmp_priority,
