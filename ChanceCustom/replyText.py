@@ -723,6 +723,7 @@ def switchAndReturnFunTemp():
             case = resDict['序号或逻辑组']
             cases = resDict['...']
             if None == case or None == cases or 0 == len(cases):
+            # if not any([case,cases,len(case)]):
                 res = ''
             elif case.find('||') != -1:
                 logic_exps = case.split('||')

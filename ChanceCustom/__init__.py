@@ -29,5 +29,7 @@ from . import replyRandom
 from . import replyOlivaDice
 from . import replyFilter
 from . import replyReg
+
+from . import replyAuth
 if(platform.system() == 'Windows'):
     from . import GUI
