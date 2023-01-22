@@ -129,7 +129,7 @@ listRegTotalFun = [
     ['判真', ['逻辑值', '为真返回', '否则返回'], ChanceCustom.replyBase.ifFunTemp()],
 
     # 管理
-    ["禁言",["时间","QQ"],ChanceCustom.replyAuth.set_group_ban_matcher()]
+    ["禁言",["时间","QQ"],ChanceCustom.replyAuth.set_group_ban_matcher()],
 
     # >OlivaDice联动<
     ['牌堆', ['牌堆名', '牌数', '是否放回', '分隔符'], ChanceCustom.replyOlivaDice.drawFunTemp()],

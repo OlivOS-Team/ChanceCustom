@@ -15,7 +15,6 @@ _________ ___________________ ____  __.
 
 import OlivOS
 import ChanceCustom
-
 import re
 import time
 import hashlib
@@ -63,3 +62,4 @@ def set_group_ban_matcher(matched:'re.Match|dict',**kwargs):
             duration=resDict['时间'])
     except:
         print("？",flush=True)
+    return ""
