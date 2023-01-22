@@ -20,7 +20,8 @@ import sys
 
 import re
 
-def getDataRaw(resDict, calKey, default, groupDict):
+def getDataRaw(resDict:dict, calKey, default, groupDict):
+    # resDict.setdefault(calKey, groupDict.get(calKey,default))
     resDict[calKey] = default
     if calKey in groupDict:
         resDict[calKey] = groupDict[calKey]
@@ -30,7 +31,12 @@ def getCharRaw(resDict, calKey, default, groupDict):
     if calKey in groupDict:
         resDict[calKey] = groupDict[calKey]
 
-def getCharRegTotal(resDict, calKey, default, groupDict, valDict):
+def getCharRegTotal(resDict:dict, calKey, default, groupDict, valDict):
+    # resDict.setdefault(calKey,
+    #         ChanceCustom.replyReg.replyValueRegTotal(
+    #             groupDict[calKey],
+    #             valDict = valDict
+    #         ) if groupDict.get(calKey) else default)
     resDict[calKey] = default
     if calKey in groupDict:
         if len(groupDict[calKey]):
