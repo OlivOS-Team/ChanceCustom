@@ -150,26 +150,26 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         tmp_message = '[初始化]'
     else:
         tmp_message = plugin_event.data.message
-    falg_matchPlace_target = 0
+    flag_matchPlace_target = 0
     valDict = {}
 
     flag_fetch = False
     if 'group_message' == event_name:
-        falg_matchPlace_target |= 1
+        flag_matchPlace_target |= 0b01
     elif 'private_message' == event_name:
-        falg_matchPlace_target |= 2
+        flag_matchPlace_target |= 0b10
     elif 'poke' == event_name:
         if str(plugin_event.data.target_id) == str(plugin_event.bot_info.id):
             if plugin_event.data.group_id in [-1, None]:
-                falg_matchPlace_target |= 2
+                flag_matchPlace_target |= 0b10
                 event_name = 'poke_private'
             else:
-                falg_matchPlace_target |= 1
+                flag_matchPlace_target |= 0b01
                 event_name = 'poke_group'
         else:
             return
     elif 'init' == event_name:
-        falg_matchPlace_target |= 1
+        flag_matchPlace_target |= 0b01
         flag_fetch = True
 
     getValDict(valDict, plugin_event, Proc, event_name)
@@ -183,6 +183,8 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
     ):
         return
 
+
+
     bot_hash_last = None
     for tmp_hash_list_this in tmp_hash_list:
         bot_hash_last = tmp_hash_list_this
@@ -195,8 +197,23 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                 reverse = False
             )
             for key_this in it_list_tmp_dictCustomData:
-                falg_matchPlace = int(tmp_dictCustomData_this[key_this]['matchPlace'])
-                if (falg_matchPlace_target & falg_matchPlace) != 0:
+                flag_matchPlace = int(tmp_dictCustomData_this[key_this]['matchPlace'])
+                
+                get_division = False
+
+                if not tmp_dictCustomData_this[key_this].get("division") or \
+                    str(tmp_dictCustomData_this[key_this]["division"]) == "0" or \
+                    str(tmp_dictCustomData_this[key_this]["division"]) == "1":
+                    get_division = True
+                elif 'group_message' == event_name and str(plugin_event.data.group_id) in \
+                    str(tmp_dictCustomData_this[key_this]["division"]).split("*"):
+                    get_division = True
+                elif 'private_message' == event_name and str(plugin_event.data.user_id) in \
+                    str(tmp_dictCustomData_this[key_this]["division"]).split("*") and \
+                    flag_matchPlace & 0b10 != 0:
+                    get_division = True
+
+                if (flag_matchPlace_target & flag_matchPlace) != 0 and get_division:
                     if flag_fetch:
                         res_re = None
                         if tmp_message == '[初始化]':

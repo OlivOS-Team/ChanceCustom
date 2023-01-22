@@ -615,7 +615,7 @@ class ConfigUI(object):
                     )
                 )
             except:
-                pass
+                pass # 能不能为所有excepetion打日志？
         tmp_tree_item_children = self.UIObject['tree_ccpk'].get_children()
         for tmp_tree_item_this in tmp_tree_item_children:
             self.UIObject['tree_ccpk'].delete(tmp_tree_item_this)
@@ -710,6 +710,7 @@ class ConfigUI(object):
                         for key_this in ini:
                             data_this = {
                                 "key": key_this,
+                                "division":"1",
                                 "matchType": "full",
                                 "matchPlace": "1",
                                 "priority": 0,
@@ -718,6 +719,8 @@ class ConfigUI(object):
                             if key_this not in ['DEFAULT']:
                                 if '回复' in ini[key_this]:
                                     data_this['value'] = ini[key_this]['回复'].replace('【分隔】', '\n')
+                                if '分群' in ini[key_this]:
+                                    data_this['division'] = str(ini[key_this]['分群'])
                                 if '优先级' in ini[key_this]:
                                     data_this['priority'] = int(ini[key_this]['优先级'])
                                 if '匹配方式' in ini[key_this]:
@@ -880,12 +883,25 @@ class TreeEditUI(object):
             title = '关键词'
         )
 
+        self.tree_edit_UI_Entry_init(
+            obj_root = 'edit_root',
+            obj_name = 'edit_root_division',
+            str_name = 'edit_root_division_StringVar',
+            x = 70,
+            y = 60,
+            width_t = 70,
+            width = 550 - 70 - 15,
+            height = 24,
+            action = self.action,
+            title = '分群/分人'
+        )
+
         self.tree_edit_UI_Combobox_init(
             obj_root = 'edit_root',
             obj_name = 'edit_root_matchType',
             str_name = 'edit_root_matchType_StringVar',
             x = 70,
-            y = 60,
+            y = 60 +45,
             width_t = 70,
             width = 100,
             height = 24,
@@ -898,7 +914,7 @@ class TreeEditUI(object):
             obj_name = 'edit_root_matchPlace',
             str_name = 'edit_root_matchPlace_StringVar',
             x = 280,
-            y = 60,
+            y = 60 +45,
             width_t = 70,
             width = 100,
             height = 24,
@@ -911,7 +927,7 @@ class TreeEditUI(object):
             obj_name = 'edit_root_priority',
             str_name = 'edit_root_priority_StringVar',
             x = 550 - 15 - 70,
-            y = 60,
+            y = 60 + 45,
             width_t = 50,
             width = 70,
             height = 24,
@@ -924,13 +940,14 @@ class TreeEditUI(object):
             obj_name = 'edit_root_value',
             str_name = 'edit_root_value_StringVar',
             x = 15,
-            y = 100,
+            y = 100 + 45,
             width_t = 0,
             width = 550 - 15 * 2 - 18,
             height = 30 * 8,
             action = self.action,
             title = '回复'
         )
+
         self.UIObject['edit_root_value_yscroll'] = ttk.Scrollbar(
             self.UIObject['edit_root'],
             orient = "vertical",
@@ -1055,12 +1072,14 @@ class TreeEditUI(object):
         self.UIObject['edit_root_matchType']['value'] = tuple(dictSLMap['matchTypeList'])
         self.UIObject['edit_root_matchPlace']['value'] = tuple(dictSLMap['matchPlaceList'])
         if self.action == 'create':
+            self.UIData['edit_root_division_StringVar'].set(str(1))
             self.UIObject['edit_root_matchType'].current(0)
             self.UIObject['edit_root_matchPlace'].current(0)
             self.UIData['edit_root_priority_StringVar'].set(str(0))
         elif self.action == 'update':
             tmp_data_this = ChanceCustom.load.dictCustomData['data'][self.bot_hash][self.key]
             self.UIData['edit_root_key_StringVar'].set(str(tmp_data_this['key']))
+            self.UIData["edit_root_division_StringVar"].set(str(tmp_data_this.get("division","1")))
             self.UIObject['edit_root_matchType'].current(
                 dictSLMap['matchTypeList'].index(
                     dictSLMap['matchTypeList_loadMap'][
@@ -1080,6 +1099,9 @@ class TreeEditUI(object):
 
     def tree_edit_data_save(self):
         tmp_key = self.UIData['edit_root_key_StringVar'].get()
+        tmp_division = self.UIData.get("edit_root_division_StringVar","1")
+        if tmp_division != "1":
+            tmp_division = tmp_division.get()
         tmp_matchType = self.UIObject['edit_root_matchType'].get()
         tmp_matchPlace = self.UIObject['edit_root_matchPlace'].get()
         tmp_priority = self.UIData['edit_root_priority_StringVar'].get()
@@ -1092,13 +1114,14 @@ class TreeEditUI(object):
             try:
                 if self.action == 'update':
                     ChanceCustom.load.dictCustomData['data'][self.bot_hash].pop(self.key)
-                ChanceCustom.load.dictCustomData['data'][self.bot_hash][tmp_key] = {
-                    'key': tmp_key,
-                    'matchType': dictSLMap['matchTypeList_saveMap'][tmp_matchType],
-                    'matchPlace': dictSLMap['matchPlaceList_saveMap'][tmp_matchPlace],
-                    'priority': tmp_priority,
-                    'value': tmp_value[:-1]
-                }
+                    ChanceCustom.load.dictCustomData['data'][self.bot_hash][tmp_key] = {
+                        'key': tmp_key,
+                        "division": tmp_division,
+                        'matchType': dictSLMap['matchTypeList_saveMap'][tmp_matchType],
+                        'matchPlace': dictSLMap['matchPlaceList_saveMap'][tmp_matchPlace],
+                        'priority': tmp_priority,
+                        'value': tmp_value[:-1]
+                    }
             except:
                 pass
         if self.root != None:
