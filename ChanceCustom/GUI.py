@@ -1114,14 +1114,14 @@ class TreeEditUI(object):
             try:
                 if self.action == 'update':
                     ChanceCustom.load.dictCustomData['data'][self.bot_hash].pop(self.key)
-                    ChanceCustom.load.dictCustomData['data'][self.bot_hash][tmp_key] = {
-                        'key': tmp_key,
-                        "division": tmp_division,
-                        'matchType': dictSLMap['matchTypeList_saveMap'][tmp_matchType],
-                        'matchPlace': dictSLMap['matchPlaceList_saveMap'][tmp_matchPlace],
-                        'priority': tmp_priority,
-                        'value': tmp_value[:-1]
-                    }
+                ChanceCustom.load.dictCustomData['data'][self.bot_hash][tmp_key] = {
+                    'key': tmp_key,
+                    "division": tmp_division,
+                    'matchType': dictSLMap['matchTypeList_saveMap'][tmp_matchType],
+                    'matchPlace': dictSLMap['matchPlaceList_saveMap'][tmp_matchPlace],
+                    'priority': tmp_priority,
+                    'value': tmp_value[:-1]
+                }
             except:
                 pass
         if self.root != None:
