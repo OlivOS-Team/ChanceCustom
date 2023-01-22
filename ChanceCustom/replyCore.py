@@ -201,15 +201,15 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                 
                 get_division = False
 
-                if not tmp_dictCustomData_this[key_this]["division"] or \
-                    str(not tmp_dictCustomData_this[key_this]["division"]) == "0":
+                if not tmp_dictCustomData_this[key_this].get("division") or \
+                    str(tmp_dictCustomData_this[key_this]["division"]) == "0" or \
+                    str(tmp_dictCustomData_this[key_this]["division"]) == "1":
                     get_division = True
-                elif str(plugin_event.data.group_id) in \
-                    str(not tmp_dictCustomData_this[key_this]["division"]).split("*") and \
-                    flag_matchPlace & 0b10 != 0:
+                elif 'group_message' == event_name and str(plugin_event.data.group_id) in \
+                    str(tmp_dictCustomData_this[key_this]["division"]).split("*"):
                     get_division = True
-                elif str(plugin_event.data.user_id) in \
-                    str(not tmp_dictCustomData_this[key_this]["division"]).split("*") and \
+                elif 'private_message' == event_name and str(plugin_event.data.user_id) in \
+                    str(tmp_dictCustomData_this[key_this]["division"]).split("*") and \
                     flag_matchPlace & 0b10 != 0:
                     get_division = True
 
