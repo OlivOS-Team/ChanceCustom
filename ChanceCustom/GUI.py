@@ -615,7 +615,7 @@ class ConfigUI(object):
                     )
                 )
             except:
-                pass
+                pass # 能不能为所有excepetion打日志？
         tmp_tree_item_children = self.UIObject['tree_ccpk'].get_children()
         for tmp_tree_item_this in tmp_tree_item_children:
             self.UIObject['tree_ccpk'].delete(tmp_tree_item_this)
@@ -720,7 +720,7 @@ class ConfigUI(object):
                                 if '回复' in ini[key_this]:
                                     data_this['value'] = ini[key_this]['回复'].replace('【分隔】', '\n')
                                 if '分群' in ini[key_this]:
-                                    data_this['division'] = ini[key_this]['分群']
+                                    data_this['division'] = str(ini[key_this]['分群'])
                                 if '优先级' in ini[key_this]:
                                     data_this['priority'] = int(ini[key_this]['优先级'])
                                 if '匹配方式' in ini[key_this]:
@@ -1079,7 +1079,7 @@ class TreeEditUI(object):
         elif self.action == 'update':
             tmp_data_this = ChanceCustom.load.dictCustomData['data'][self.bot_hash][self.key]
             self.UIData['edit_root_key_StringVar'].set(str(tmp_data_this['key']))
-            self.UIData["edit_root_division_StringVar"].set(str(tmp_data_this['division']))
+            self.UIData["edit_root_division_StringVar"].set(str(tmp_data_this.get("division","1")))
             self.UIObject['edit_root_matchType'].current(
                 dictSLMap['matchTypeList'].index(
                     dictSLMap['matchTypeList_loadMap'][
@@ -1099,7 +1099,7 @@ class TreeEditUI(object):
 
     def tree_edit_data_save(self):
         tmp_key = self.UIData['edit_root_key_StringVar'].get()
-        tmp_division = self.UIData.get("edit_root_division_StringVar",{}) or "1"
+        tmp_division = self.UIData.get("edit_root_division_StringVar","1")
         if tmp_division != "1":
             tmp_division = tmp_division.get()
         tmp_matchType = self.UIObject['edit_root_matchType'].get()
