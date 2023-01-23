@@ -6,7 +6,7 @@ _________ ___________________ ____  __.
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyBase.py
-@Author    :   lunzhiPenxil仑质、Amber-Keter
+@Author    :   lunzhiPenxil仑质、Amber-Keter、Linnest
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
@@ -19,6 +19,25 @@ import os
 import sys
 
 import re
+
+from typing import Optional,Callable
+
+def CurryTemp(func:Callable):
+    def reciveStatus(key:Optional[str]=None,*,
+                    valLife:Optional[str]=None,
+                    flagGlobal:Optional[bool]=None,**anyothers
+                    ):
+        def reciveValDict(valDict:Optional[dict]=None):
+            def TempExcute(*args,**kwargs):
+                return func(*args,
+                        key=key,
+                        valLife=valLife,
+                        flagGlobal=flagGlobal,
+                        valDict=valDict,**anyothers,
+                        **kwargs)
+            return TempExcute
+        return reciveValDict
+    return reciveStatus
 
 def getDataRaw(resDict:dict, calKey, default, groupDict):
     # resDict.setdefault(calKey, groupDict.get(calKey,default))

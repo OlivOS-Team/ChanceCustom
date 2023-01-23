@@ -15,6 +15,7 @@ _________ ___________________ ____  __.
 
 import OlivOS
 import ChanceCustom
+from ChanceCustom.replyBase import CurryTemp
 import re
 import time
 import hashlib
@@ -22,24 +23,6 @@ import uuid
 
 from typing import Optional,Callable
 
-
-
-def CurryTemp(func:Callable):
-    def reciveStatus(key:Optional[str]=None,*,
-                    valLife:Optional[str]=None,
-                    flagGlobal:Optional[bool]=None,**anyothers
-                    ):
-        def reciveValDict(valDict:Optional[dict]=None):
-            def TempExcute(*args,**kwargs):
-                return func(*args,
-                        key=key,
-                        valLife=valLife,
-                        flagGlobal=flagGlobal,
-                        valDict=valDict,**anyothers,
-                        **kwargs)
-            return TempExcute
-        return reciveValDict
-    return reciveStatus
 
 def set_group_ban(plugin_event:OlivOS.API.Event, 
     group_id: 'str|int', user_id: 'str|int', 
