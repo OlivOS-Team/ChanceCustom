@@ -861,7 +861,7 @@ class TreeEditUI(object):
             self.UIObject['edit_root'].title('添加')
         elif 'update' == self.action:
             self.UIObject['edit_root'].title('编辑')
-        self.UIObject['edit_root'].geometry('550x350')
+        self.UIObject['edit_root'].geometry('550x395')
         self.UIObject['edit_root'].resizable(
             width = False,
             height = False
@@ -888,7 +888,7 @@ class TreeEditUI(object):
             obj_name = 'edit_root_division',
             str_name = 'edit_root_division_StringVar',
             x = 70,
-            y = 60,
+            y = 15 + 45 * 1,
             width_t = 70,
             width = 550 - 70 - 15,
             height = 24,
@@ -901,7 +901,7 @@ class TreeEditUI(object):
             obj_name = 'edit_root_matchType',
             str_name = 'edit_root_matchType_StringVar',
             x = 70,
-            y = 60 +45,
+            y = 15 + 45 * 2,
             width_t = 70,
             width = 100,
             height = 24,
@@ -914,7 +914,7 @@ class TreeEditUI(object):
             obj_name = 'edit_root_matchPlace',
             str_name = 'edit_root_matchPlace_StringVar',
             x = 280,
-            y = 60 +45,
+            y = 15 + 45 * 2,
             width_t = 70,
             width = 100,
             height = 24,
@@ -927,7 +927,7 @@ class TreeEditUI(object):
             obj_name = 'edit_root_priority',
             str_name = 'edit_root_priority_StringVar',
             x = 550 - 15 - 70,
-            y = 60 + 45,
+            y = 15 + 45 * 2,
             width_t = 50,
             width = 70,
             height = 24,
@@ -940,7 +940,7 @@ class TreeEditUI(object):
             obj_name = 'edit_root_value',
             str_name = 'edit_root_value_StringVar',
             x = 15,
-            y = 100 + 45,
+            y = 15 + 45 * 3,
             width_t = 0,
             width = 550 - 15 * 2 - 18,
             height = 30 * 8,
@@ -955,7 +955,7 @@ class TreeEditUI(object):
         )
         self.UIObject['edit_root_value_yscroll'].place(
             x = 550 - 18 - 15,
-            y = 100,
+            y = 15 + 45 * 3,
             width = 18,
             height = 30 * 8
         )
