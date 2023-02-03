@@ -39,7 +39,7 @@ class Event(object):
             fake_plugin_event = OlivOS.API.Event(
                 OlivOS.contentAPI.fake_sdk_event(
                     bot_info = bot_info,
-                    fakename = OlivaDiceCore.data.OlivaDiceCore_name
+                    fakename = 'ChanceCustom'
                 ),
                 Proc.log
             )

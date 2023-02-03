@@ -737,7 +737,6 @@ def switchAndReturnFunTemp():
                     res = cases[-1] if len(cases) > 0 else ''
             else:
                 res = cases[max(min(str2int(case) - 1, len(cases)), 0)]
-            res = ChanceCustom.replyReg.replyValueRegTotal(res, valDict)
             return res
         return switchAndReturn_f
     return switchAndReturnFun
