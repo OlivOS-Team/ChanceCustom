@@ -219,6 +219,9 @@ listRegTotalFun = [
     ['选择', ['序号或逻辑组', '...'], ChanceCustom.replyText.switchAndReturnFunTemp()],
     ['替换', ['被替换内容', '被替换文本', '替换文本', '替换次数', '并列替换'], ChanceCustom.replyText.replaceFunTemp()],
 
+    # >逻辑变量<
+    ['逻辑', ['表达式'], ChanceCustom.replyEval.logicEvalExprFunTemp()],
+
     # >自定义函数<
     ['函数全局', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],
     ['函数', ['函数名称', '代码体'], ChanceCustom.replyBase.setFuncValFunTemp(flagGlobal = True)],

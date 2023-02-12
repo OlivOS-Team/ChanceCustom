@@ -26,11 +26,22 @@ import requests
 OPERATORS = {}
 PRIORITY = {}
 
+LOGIC_OPERATORS = {}
+LOGIC_PRIORITY = {}
+
 def addOperator(*names_and_prios):
     def add(fn):
         for name, priority in names_and_prios:
             OPERATORS[name] = fn
             PRIORITY[name] = priority
+        return fn
+    return add
+
+def addLogicOperator(*names_and_prios):
+    def add(fn):
+        for name, priority in names_and_prios:
+            LOGIC_OPERATORS[name] = fn
+            LOGIC_PRIORITY[name] = priority
         return fn
     return add
 
@@ -93,6 +104,89 @@ def operatorRound(x, y):
         return round(round(x, y))
     else:
         return round(x, y)
+
+@addLogicOperator(('&&', 3), ('且', 3))
+def operatorAnd(x, y):
+    return x and y
+
+@addLogicOperator(('||', 2), ('或', 2))
+def operatorOr(x, y):
+    return x or y
+
+@addLogicOperator(('+', 10))
+def operatorAdd(x, y):
+    return operator.add(x, y)
+
+@addLogicOperator(('-', 10))
+def operatorSub(x, y):
+    return operator.sub(x, y)
+
+@addLogicOperator(('/', 11))
+def operatorDiv(x, y):
+    try:
+        return operator.truediv(x, y)
+    except ZeroDivisionError:
+        return float('inf')
+
+@addLogicOperator(('*', 11))
+def operatorMul(x, y):
+    return operator.mul(x, y)
+
+@addLogicOperator(('%', 11))
+def operatorMod(x, y):
+    return divmod(x, y)[1]
+
+@addLogicOperator(('\\', 11))
+def operatorQuotient(x, y):
+    return divmod(x, y)[0]
+
+@addLogicOperator(('<', 5))
+def operatorLess(x, y):
+    return operator.lt(x, y)
+
+@addLogicOperator(('>', 5))
+def operatorGreater(x, y):
+    return operator.gt(x, y)
+
+@addLogicOperator(('<=', 5))
+def operatorLessEqual(x, y):
+    return operator.le(x, y)
+
+@addLogicOperator(('>=', 5))
+def operatorGreaterEqual(x, y):
+    return operator.ge(x, y)
+
+@addLogicOperator(('=', 5))
+def operatorEqual(x, y):
+    return operator.eq(x, y)
+
+@addLogicOperator(('!=', 5))
+def operatorNotEqual(x, y):
+    return operator.ne(x, y)
+
+@addLogicOperator(('==', 5))
+def operatorIdentity(x, y):
+    return operator.is_(x, y)
+
+@addLogicOperator(('!==', 5))
+def operatorNotIdentity(x, y):
+    return operator.is_not(x, y)
+
+@addLogicOperator(('in', 5))
+def operatorIn(x, y):
+    return operator.contains(str(y), str(x))
+
+@addLogicOperator(('!in', 5))
+def operatorNotIn(x, y):
+    return not operator.contains(str(y), str(x))
+
+@addLogicOperator(('reg', 5))
+def operatorRegMatch(x, y):
+    return operator.truth(re.search(str(x), str(y)))
+
+@addLogicOperator(('!reg', 5))
+def operatorRegNotMatch(x, y):
+    return re.search(str(x), str(y)) == None
 
 class Symbol:
     _BINARY_OPERATOR = set('+-*×/÷%\^@&|⊕<>')
@@ -196,6 +290,173 @@ def customEval(get_one_token):
     left = operand_stack.pop()
     return OPERATORS[operator](left, right)
 
+class LogicSymbol:
+    _BINARY_OPERATOR = set('+-*/\\%')
+    _SINGLE_CHAR_OPERATOR = _BINARY_OPERATOR | set('或且')
+    _SINGLE_CHAR_OPERAND = set('真假')
+    _MULTI_CHAR_OPERATOR_START = set('=|&!><ir')
+    _MULTI_CHAR_OPERATOR_MID = set('=rein')
+    _MULTI_CHAR_OPERATOR_END = set('|&=><egn')
+    _NUMERAL_START = set(digits) | set('.')
+    _NUMERAL_END = set(digits) | set('.')
+    _WHITESPACE = set(' \t\n\r')
+    _OPERATOR_START = _MULTI_CHAR_OPERATOR_START | _SINGLE_CHAR_OPERATOR
+    _MULTI_CHAR_OPERATOR = _MULTI_CHAR_OPERATOR_MID | _MULTI_CHAR_OPERATOR_END
+    _SINGLE_CHAR_TOKENS = _SINGLE_CHAR_OPERAND | _SINGLE_CHAR_OPERATOR | set('()')
+
+class LogicOperator:
+    def __init__(self, op:str):
+        self.op = op
+    
+    def __str__(self):
+        return self.op
+
+class LogicLexer:
+    def __init__(self, string:str):
+        self.string = string
+        self.len = len(string)
+    
+    def tokenGenerator(self):
+        k = 0
+
+        def matchNumber():
+            nonlocal k
+            i = k
+            while i < self.len:
+                if i == self.len-1:
+                    break
+                char = self.string[i]
+                next_char = self.string[i+1]
+                if next_char in LogicSymbol._NUMERAL_END:
+                    i += 1
+                elif next_char not in LogicSymbol._SINGLE_CHAR_OPERATOR | \
+                        LogicSymbol._MULTI_CHAR_OPERATOR_START | set('()'):
+                    return -1
+                else:
+                    break
+            offset = i - k + 1
+            return offset
+        
+        def matchOperator():
+            nonlocal k
+            i = k
+            while i < self.len:
+                if i == self.len-1:
+                    break
+                char = self.string[i]
+                next_char = self.string[i+1]
+                if next_char in LogicSymbol._MULTI_CHAR_OPERATOR:
+                    i += 1
+                elif char in LogicSymbol._MULTI_CHAR_OPERATOR_END \
+                        and next_char not in LogicSymbol._MULTI_CHAR_OPERATOR_END:
+                    i += 1
+                    break
+                else:
+                    raise TypeError("invalid operator")
+            offset = i - k
+            return offset
+
+        def getNextToken():
+            nonlocal k
+            minus = False
+            in_string, str_buffer = False, ''
+            while k < self.len:
+                c = self.string[k]
+                if not in_string and c in LogicSymbol._WHITESPACE:
+                    k += 1
+                elif not in_string and c == '-' and \
+                        self.string[k-1] in LogicSymbol._BINARY_OPERATOR | set('(（'):
+                    minus = True
+                    k += 1
+                elif not in_string and not str_buffer and c in LogicSymbol._SINGLE_CHAR_TOKENS:
+                    k += 1
+                    if c in set('真假'):
+                        return True if c == '真' else False
+                    elif c in set('()'):
+                        return c
+                    return LogicOperator(c)
+                elif c in set('['):
+                    in_string = True
+                    k += 1
+                elif c in set(']'):
+                    in_string = False
+                    k += 1
+                    tmp, str_buffer = str_buffer, ''
+                    return tmp
+                elif not in_string and str_buffer and c in LogicSymbol._OPERATOR_START \
+                        and self.string[k-1] not in LogicSymbol._OPERATOR_START:
+                    tmp, str_buffer = str_buffer, ''
+                    return tmp
+                elif not in_string and not str_buffer and c in LogicSymbol._NUMERAL_START:
+                    offset = matchNumber()
+                    if offset == -1:
+                        str_buffer += c
+                        k += 1
+                        continue
+                    token = self.string[k:k+offset]
+                    k += offset
+                    if '.' in token:
+                        num = float(token)
+                    else:
+                        num = int(token)
+                    num = -num if minus else num
+                    minus = False
+                    return num
+                elif not in_string and c in LogicSymbol._MULTI_CHAR_OPERATOR_START:
+                    offset = matchOperator()         
+                    token = self.string[k:k+offset]
+                    k += offset
+                    return LogicOperator(token)
+                else:
+                    str_buffer += c
+                    k += 1
+            if str_buffer:
+                tmp, str_buffer = str_buffer, ''
+                return tmp
+        return getNextToken
+
+def logicEval(get_one_token):
+    operator_stack = []
+    operand_stack = []
+    token = get_one_token()
+    while token or token == 0:
+        if isinstance(token, (int, float, bool, str)) and token not in set('()'):
+            operand_stack.append(token)
+        elif isinstance(token, LogicOperator):
+            if not len(operator_stack):
+                operator_stack.append(token)
+            else:
+                operator:LogicOperator = operator_stack.pop()
+                assert isinstance(operator, LogicOperator)
+                if LOGIC_PRIORITY[token.op] > LOGIC_PRIORITY[operator.op]:
+                    right = get_one_token()
+                    if right in set('('):
+                        right = logicEval(get_one_token)
+                    left = operand_stack.pop()
+                    operand_stack.append(LOGIC_OPERATORS[token.op](left, right))
+                    operator_stack.append(operator)
+                else:
+                    right = operand_stack.pop()
+                    left = operand_stack.pop()
+                    operand_stack.append(LOGIC_OPERATORS[operator.op](left, right))
+                    operator_stack.append(token)        
+        elif token in set('('):
+            operand_stack.append(logicEval(get_one_token))
+        elif token in set(')'):
+            if not operator_stack and len(operand_stack) == 1:
+                return operand_stack[0]
+            operator:LogicOperator = operator_stack.pop()
+            right = operand_stack.pop()
+            left = operand_stack.pop()
+            return LOGIC_OPERATORS[operator.op](left, right)
+        token = get_one_token()
+    if not operator_stack and len(operand_stack) == 1:
+        return operand_stack[0]
+    operator:LogicOperator = operator_stack.pop()
+    right = operand_stack.pop()
+    left = operand_stack.pop()
+    return LOGIC_OPERATORS[operator.op](left, right)
+
 def evalExprFunTemp():
     def evalExprFun(valDict):
         def evalExpr_f(matched:'re.Match|dict'):
@@ -211,6 +472,23 @@ def evalExprFunTemp():
             return res
         return evalExpr_f
     return evalExprFun
+
+def logicEvalExprFunTemp():
+    def logicEvalExprFun(valDict):
+        def logicEvalExpr_f(matched:'re.Match|dict'):
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            res = ''
+            resDict = {}
+            ChanceCustom.replyBase.getCharRegTotal(resDict, '表达式', '假', groupDict, valDict)
+            expr = resDict['表达式']
+            try:
+                result = bool(logicEval(LogicLexer(expr).tokenGenerator()))
+                res = '真' if result == True else '假'
+            except:
+                res = '[逻辑]表达式含有语法错误'
+            return res
+        return logicEvalExpr_f
+    return logicEvalExprFun
 
 def baseConvFunTmp():
     def encode(num, base):
