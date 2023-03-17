@@ -43,6 +43,7 @@ def getReRxEvent_group_message(src:OlivOS.API.Event, message:str):
         message = '',
         sub_type = 'group'
     )
+    res.plugin_info['func_type'] = 'group_message'
     if type(src.data) is OlivOS.API.Event.group_message:
         res.active = True
         res.data.sub_type = src.data.sub_type
@@ -81,6 +82,7 @@ def getReRxEvent_private_message(src:OlivOS.API.Event, message:str):
         message = '',
         sub_type = 'private'
     )
+    res.plugin_info['func_type'] = 'private_message'
     if type(src.data) is OlivOS.API.Event.private_message:
         res.active = True
         res.data.sub_type = src.data.sub_type
