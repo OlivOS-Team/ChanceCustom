@@ -62,6 +62,18 @@ def setValDictUnity(valDict:dict):
         if 'valGOData' in valDict:
             globalValDict['valGOData'][bot_hash] = valDict['valGOData'].copy()
 
+def getFakePluginEvent(valDict:dict, plugin_event:OlivOS.API.Event, event_name:str, message:str):
+    if 'poke_private' == event_name:
+        valDict['innerVal']['plugin_event'] = ChanceCustom.replyEvent.getReRxEvent_private_message(
+            src = plugin_event,
+            message = message
+        )
+    elif 'poke_group' == event_name:
+        valDict['innerVal']['plugin_event'] = ChanceCustom.replyEvent.getReRxEvent_group_message(
+            src = plugin_event,
+            message = message
+        )
+
 def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
     #内置变量，用于内部调用
     valDict['innerVal'] = {}
@@ -160,7 +172,7 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         flag_matchPlace_target |= 0b10
     elif 'poke' == event_name:
         if str(plugin_event.data.target_id) == str(plugin_event.bot_info.id):
-            if plugin_event.data.group_id in [-1, None]:
+            if plugin_event.data.group_id in [-1, '-1', None]:
                 flag_matchPlace_target |= 0b10
                 event_name = 'poke_private'
             else:
@@ -173,6 +185,8 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         flag_fetch = True
 
     getValDict(valDict, plugin_event, Proc, event_name)
+    getFakePluginEvent(valDict, plugin_event, event_name, tmp_message)
+
     getValDictUnity(valDict)
 
     if not ChanceCustom.replyContent.contextRegTryHit(
