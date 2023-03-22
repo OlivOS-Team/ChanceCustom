@@ -576,14 +576,14 @@ def selectMiddleFunTemp():
             candidates = re.findall(pattern, text)
 
             if selectType == '':
-                if candidates is []:
+                if candidates == []:
                     candidates.append('')
                 res = random.choice(candidates)
             elif selectType.isdigit():
                 res = candidates[min(len(candidates), str2int(selectType)) - 1]
             elif selectType.startswith('all'):
                 delimeter = selectType[3:]
-                if delimeter is '':
+                if delimeter == '':
                     for i, candidate in enumerate(candidates):
                         res += f'{i+1}.{candidate} '
                     res = res[:-1]
@@ -650,7 +650,7 @@ def regExpReplaceFunTemp():
                     res = matched_items[min(len(matched_items), str2int(selectType)) - 1]
                 elif selectType.startswith('all'):
                     delimeter = selectType[3:]
-                    if delimeter is '':
+                    if delimeter == '':
                         for i, item in enumerate(matched_items):
                             res += f'{i+1}.{item} '
                         res = res[:-1]

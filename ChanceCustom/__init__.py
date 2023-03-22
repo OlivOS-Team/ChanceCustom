@@ -16,6 +16,7 @@ _________ ___________________ ____  __.
 import platform
 from . import main
 from . import load
+from . import replyEvent
 from . import replyCore
 from . import replyBase
 from . import replyContent
