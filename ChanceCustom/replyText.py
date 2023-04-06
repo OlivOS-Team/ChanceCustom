@@ -757,16 +757,45 @@ def replaceFunTemp():
             count = str2int(resDict['替换次数'])
             pattern = resDict['被替换文本']
             repl = resDict['替换文本']
-            if resDict['并列替换'] != '[并列]':
-                res = text.replace(pattern, repl, count)
-            else:
-                patterns = pattern.split('||')
-                replaces = repl.split('||')
-                if len(patterns) != len(replaces):
-                    res = text.replace(pattern, repl, count)
+            patterns = pattern.split('||')
+            replaces = repl.split('||')
+            if len(patterns) != len(replaces):
+                res = text.replace(pattern, repl, total_count)
+            elif total_count == 0:
+                res = text
+            elif total_count < 0:
+                if resDict['并列替换'] == '并列':
+                    while any([text.find(pattern) != -1 for pattern in patterns]):
+                        for pattern, repl in zip(patterns, replaces):
+                            text = text.replace(pattern, repl, 1)
+                    res = text
                 else:
                     for pattern, repl in zip(patterns, replaces):
-                        text = text.replace(pattern, repl, count)
+                        text = text.replace(pattern, repl)
+                    res = text
+            else:
+                if resDict['并列替换'] == '并列':
+                    while any([text.find(pattern) != -1 for pattern in patterns]) and total_count > 0:
+                        for pattern, repl in zip(patterns, replaces):
+                            if text.find(pattern) != -1:
+                                text = text.replace(pattern, repl, 1)
+                                total_count -= 1
+                            if total_count == 0:
+                                break
+                    res = text
+                else:
+                    for pattern, repl in zip(patterns, replaces):
+                        count = text.count(pattern)
+                        if count == 0:
+                            continue
+                        if total_count >= count:
+                            text = text.replace(pattern, repl, count)
+                            total_count -= count
+                        elif total_count < count:
+                            text = text.replace(pattern, repl, total_count)
+                            total_count = 0
+                        if total_count == 0:
+                            break
                     res = text
             return res
         return replace_f
