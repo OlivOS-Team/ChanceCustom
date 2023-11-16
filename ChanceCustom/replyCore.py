@@ -53,11 +53,11 @@ def setValDictUnity(valDict:dict):
         globalValDict['valGData'] = valDict['valGData'].copy()
     if 'innerVal' in valDict and 'bot_hash' in valDict['innerVal']:
         bot_hash = valDict['innerVal']['bot_hash']
-        if 'valRawGOData' not in valDict:
+        if 'valRawGOData' not in globalValDict:
             globalValDict['valRawGOData'] = {}
         if 'valRawGOData' in valDict:
             globalValDict['valRawGOData'][bot_hash] = valDict['valRawGOData'].copy()
-        if 'valGOData' not in valDict:
+        if 'valGOData' not in globalValDict:
             globalValDict['valGOData'] = {}
         if 'valGOData' in valDict:
             globalValDict['valGOData'][bot_hash] = valDict['valGOData'].copy()
