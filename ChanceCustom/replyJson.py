@@ -518,22 +518,24 @@ def jsonDelListContentDataHandler(data:str, pathList:list, setVal:str):
                 if key_this not in json_data_this:
                     return res
                 if type(json_data_this) == dict and key_this in json_data_this:
-                    if count == len(pathList) - 1 and type(json_data_this[key_this]) == list:
-                        json_data_root = json_data_this
-                        json_data_key = key_this
-                    else:
-                        return res
+                    if count == len(pathList) - 1:
+                        if type(json_data_this[key_this]) is list:
+                            json_data_root = json_data_this
+                            json_data_key = key_this
+                        else:
+                            return res
                     json_data_this = json_data_this[key_this]
                 elif type(json_data_this) == list and (
                     int(key_this) >= -len(json_data_this)
                 ) and (
                     int(key_this) < len(json_data_this)
                 ):
-                    if count == len(pathList) - 1 and type(json_data_this[key_this]) == list:
-                        json_data_root = json_data_this
-                        json_data_key = int(key_this)
-                    else:
-                        return res
+                    if count == len(pathList) - 1:
+                        if type(json_data_this[int(key_this)]) is list:
+                            json_data_root = json_data_this
+                            json_data_key = int(key_this)
+                        else:
+                            return res
                     json_data_this = json_data_this[int(key_this)]
                 else:
                     return res
