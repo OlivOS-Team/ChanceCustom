@@ -88,7 +88,7 @@ class ConfigUI(object):
     def start(self):
         self.UIObject['root'] = tkinter.Toplevel()
         self.UIObject['root'].title('程心自定义')
-        self.UIObject['root'].geometry('518x400')
+        self.UIObject['root'].geometry('518x430')
         self.UIObject['root'].resizable(
             width = False,
             height = False
@@ -161,6 +161,32 @@ class ConfigUI(object):
             height = 34
         )
 
+        # 添加跳转到论坛的按钮
+        self.tree_UI_Button_init(
+            name = 'root_Button_FORUM',
+            text = '程心使用教学',
+            command = lambda : self.open_forum(),
+            x = 15,
+            y = 55,
+            width = 100,
+            height = 28
+        )
+
+        # 添加右键提示标签
+        self.UIObject['root_hint_label'] = tkinter.Label(
+            self.UIObject['root'],
+            text = '提示：右键可新建条目',
+            font = ('等线', 9),
+            bg = self.UIConfig['color_001'],
+            fg = self.UIConfig['color_004']
+        )
+        self.UIObject['root_hint_label'].place(
+            x = 130,
+            y = 60,
+            width = 150,
+            height = 20
+        )
+
         self.UIObject['root'].iconbitmap('./resource/tmp_favoricon.ico')
         self.UIObject['root'].mainloop()
         #ChanceCustom.load.flag_open = False
@@ -210,7 +236,7 @@ class ConfigUI(object):
         )
 
         self.UIObject['Notebook_root'] = ttk.Notebook(self.UIObject['root'], style = 'TNotebook')
-        self.UIObject['Notebook_root'].place(x = 15, y = 64, width = 488, height = 321)
+        self.UIObject['Notebook_root'].place(x = 15, y = 94, width = 488, height = 321)
         self.UIObject['Notebook_root'].grid_rowconfigure(0, weight = 15)
         self.UIObject['Notebook_root'].grid_columnconfigure(0, weight = 15)
 
@@ -760,6 +786,20 @@ class ConfigUI(object):
             edit_commit_callback = None,
             root = self
         ).start()
+
+    def open_forum(self):
+        """打开论坛链接"""
+        import webbrowser
+        url = 'https://forum.olivos.run/p/1'
+        
+        try:
+            res = tkinter.messagebox.askquestion("程心自定义使用教学", "是否打开程心自定义使用教学页面?")
+            if res == 'yes':
+                webbrowser.open(url)
+        except webbrowser.Error as error_info:
+            tkinter.messagebox.showerror("webbrowser.Error", str(error_info))
+        except Exception as e:
+            tkinter.messagebox.showwarning('打开失败', f'无法打开浏览器，请手动访问：{url}\n错误信息：{str(e)}')
 
     def tree_rightKey(self, event, name = 'key'):
         if name == 'key':
