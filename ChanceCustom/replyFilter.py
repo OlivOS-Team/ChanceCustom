@@ -17,6 +17,13 @@ import OlivOS
 import ChanceCustom
 
 import re
+
+# 尝试导入OlivaDiceCore，如果导入成功才使用重定向逻辑
+try:
+    import OlivaDiceCore
+    has_olivadicecore = True
+except:
+    has_olivadicecore = False
 import os
 import time
 import threading
@@ -306,11 +313,16 @@ def getPreFilterReply(key:str, valDict:dict):
     res = None
     if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
         bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
+    # 应用重定向逻辑（对于非unity的hash，仅在OlivaDiceCore可用时）
+    if bot_hash != 'unity' and has_olivadicecore:
+        redirected_bot_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(bot_hash)
+    else:
+        redirected_bot_hash = bot_hash
     if key in ChanceCustom.load.dictCustomData['defaultVar']['unity']:
         res = ChanceCustom.load.dictCustomData['defaultVar']['unity'][key]
-    if key in ChanceCustom.load.dictCustomData['defaultVar'][bot_hash]:
-        if len(ChanceCustom.load.dictCustomData['defaultVar'][bot_hash][key]) > 0:
-            res = ChanceCustom.load.dictCustomData['defaultVar'][bot_hash][key]
+    if key in ChanceCustom.load.dictCustomData['defaultVar'][redirected_bot_hash]:
+        if len(ChanceCustom.load.dictCustomData['defaultVar'][redirected_bot_hash][key]) > 0:
+            res = ChanceCustom.load.dictCustomData['defaultVar'][redirected_bot_hash][key]
     valDict['innerVal']['replaceReply'] = res
     return res
 
