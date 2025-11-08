@@ -6,7 +6,7 @@
     "priority" : 40000,
     "version" : "0.2.17",
     "svn" : 32,
-    "compatible_svn" : 101,
+    "compatible_svn" : 190,
     "message_mode" : "old_string",
     "support" : [
         {
