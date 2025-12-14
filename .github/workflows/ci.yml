@@ -32,9 +32,12 @@ jobs:
           path: ${{ env.PACK_NAME }}.opk
       - name: Draft Release
         if: github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v2
+        uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
           draft: true
-          files: |
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: |
             ./${{ env.PACK_NAME }}.opk
