@@ -216,7 +216,7 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
             try:
                 redirected_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(tmp_hash_list_this)
             except:
-                redirected_bot_hash = bot_hash
+                redirected_hash = tmp_hash_list_this
         else:
             redirected_hash = tmp_hash_list_this
         
