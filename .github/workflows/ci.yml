@@ -32,7 +32,7 @@ jobs:
           path: ${{ env.PACK_NAME }}.opk
       - name: Draft Release
         if: github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
