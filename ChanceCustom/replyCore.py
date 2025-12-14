@@ -213,7 +213,10 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         valDict['innerVal']['bot_hash_self'] = plugin_event.bot_info.hash
         # 应用重定向逻辑（对于非unity的hash，仅在OlivaDiceCore可用时）
         if tmp_hash_list_this != 'unity' and has_olivadicecore:
-            redirected_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(tmp_hash_list_this)
+            try:
+                redirected_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(tmp_hash_list_this)
+            except:
+                redirected_bot_hash = bot_hash
         else:
             redirected_hash = tmp_hash_list_this
         
