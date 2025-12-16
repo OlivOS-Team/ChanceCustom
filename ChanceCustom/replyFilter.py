@@ -17,13 +17,6 @@ import OlivOS
 import ChanceCustom
 
 import re
-
-# 尝试导入OlivaDiceCore，如果导入成功才使用重定向逻辑
-try:
-    import OlivaDiceCore
-    has_olivadicecore = True
-except:
-    has_olivadicecore = False
 import os
 import time
 import threading
@@ -313,8 +306,9 @@ def getPreFilterReply(key:str, valDict:dict):
     res = None
     if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
         bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
-    # 应用重定向逻辑（对于非unity的hash，仅在OlivaDiceCore可用时）
-    if bot_hash != 'unity' and has_olivadicecore:
+    # 应用重定向逻辑
+    if bot_hash != 'unity' and 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+        import OlivaDiceCore
         redirected_bot_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(bot_hash)
     else:
         redirected_bot_hash = bot_hash

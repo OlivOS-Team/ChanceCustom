@@ -19,13 +19,6 @@ import ChanceCustom
 import re
 import random
 
-# 尝试导入OlivaDiceCore，如果导入成功才使用重定向逻辑
-try:
-    import OlivaDiceCore
-    has_olivadicecore = True
-except:
-    has_olivadicecore = False
-
 globalValDict = {}
 
 def unity_reply(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
@@ -211,8 +204,9 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         bot_hash_last = tmp_hash_list_this
         valDict['innerVal']['bot_hash'] = tmp_hash_list_this
         valDict['innerVal']['bot_hash_self'] = plugin_event.bot_info.hash
-        # 应用重定向逻辑（对于非unity的hash，仅在OlivaDiceCore可用时）
-        if tmp_hash_list_this != 'unity' and has_olivadicecore:
+        # 应用重定向逻辑
+        if tmp_hash_list_this != 'unity' and 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
+            import OlivaDiceCore
             redirected_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(tmp_hash_list_this)
         else:
             redirected_hash = tmp_hash_list_this
