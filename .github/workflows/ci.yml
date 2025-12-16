@@ -4,9 +4,14 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+    tags:
+      - '*.*.*'
+      - '*.*.*-*.*'
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       PACK_NAME: ""
     steps:
@@ -25,9 +30,14 @@ jobs:
         with:
           name: Artifacts
           path: ${{ env.PACK_NAME }}.opk
-      - name: Release
+      - name: Draft Release
         if: github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          files: ${{ env.PACK_NAME }}.opk
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+          draft: true
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: |
+            ./${{ env.PACK_NAME }}.opk
