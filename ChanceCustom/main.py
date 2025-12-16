@@ -18,8 +18,8 @@ import ChanceCustom
 
 import platform
 
-version = '0.2.19'
-svn = 34
+version = '0.2.20'
+svn = 35
 
 version_full = '%s(%d)' % (version, svn)
 
@@ -28,6 +28,7 @@ class Event(object):
         pass
 
     def init_after(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow):
+        ChanceCustom.load.globalProc = Proc
         ChanceCustom.load.listPlugin = Proc.get_plugin_list()
         ChanceCustom.load.dictBotInfo = Proc.Proc_data['bot_info_dict']
         ChanceCustom.load.initCustomData(ChanceCustom.load.dictBotInfo)

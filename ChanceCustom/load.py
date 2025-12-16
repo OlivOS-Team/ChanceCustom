@@ -24,6 +24,8 @@ listPlugin = []
 
 dictBotInfo = {}
 
+globalProc = None
+
 dataVersion = 2
 
 dictCustomData = {}

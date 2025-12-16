@@ -74,6 +74,93 @@ dictSLMap = {
     }
 }
 
+
+class BrowserChoiceDialog(object):
+    def __init__(self, parent, title, message, url):
+        self.result = 'cancel'
+        
+        self.dialog = tkinter.Toplevel(parent)
+        self.dialog.title(title)
+        self.dialog.geometry('350x150')
+        self.dialog.resizable(width=False, height=False)
+        self.dialog.configure(bg='#00A0EA')
+        
+        self.dialog.transient(parent)
+        self.dialog.grab_set()
+        
+        msg_label = tkinter.Label(
+            self.dialog,
+            text=message,
+            bg='#00A0EA',
+            fg='#FFFFFF',
+            font=('等线', 11)
+        )
+        msg_label.pack(pady=(20, 5))
+        
+        url_label = tkinter.Label(
+            self.dialog,
+            text=url,
+            bg='#00A0EA',
+            fg='#BBE9FF',
+            font=('等线', 9),
+            wraplength=320
+        )
+        url_label.pack(pady=(0, 15))
+        
+        btn_frame = tkinter.Frame(self.dialog, bg='#00A0EA')
+        btn_frame.pack(pady=10)
+        
+        btn_internal = tkinter.Button(
+            btn_frame,
+            text='内置浏览器',
+            command=self.on_internal,
+            width=12,
+            bd=0,
+            bg='#40C3FF',
+            fg='#FFFFFF',
+            activebackground='#BBE9FF',
+            activeforeground='#00A0EA'
+        )
+        btn_internal.pack(side=tkinter.LEFT, padx=5)
+        
+        btn_external = tkinter.Button(
+            btn_frame,
+            text='默认浏览器',
+            command=self.on_external,
+            width=12,
+            bd=0,
+            bg='#40C3FF',
+            fg='#FFFFFF',
+            activebackground='#BBE9FF',
+            activeforeground='#00A0EA'
+        )
+        btn_external.pack(side=tkinter.LEFT, padx=5)
+        
+        try:
+            self.dialog.iconbitmap('./resource/tmp_favoricon.ico')
+        except:
+            pass
+        
+        self.dialog.update_idletasks()
+        x = parent.winfo_x() + (parent.winfo_width() - self.dialog.winfo_width()) // 2
+        y = parent.winfo_y() + (parent.winfo_height() - self.dialog.winfo_height()) // 2
+        self.dialog.geometry(f'+{x}+{y}')
+        
+        parent.wait_window(self.dialog)
+    
+    def on_cancel(self):
+        self.result = 'cancel'
+        self.dialog.destroy()
+    
+    def on_internal(self):
+        self.result = 'internal'
+        self.dialog.destroy()
+    
+    def on_external(self):
+        self.result = 'external'
+        self.dialog.destroy()
+
+
 class ConfigUI(object):
     def __init__(self, Model_name, logger_proc = None):
         self.Model_name = Model_name
@@ -793,8 +880,33 @@ class ConfigUI(object):
         url = 'https://forum.olivos.run/p/1'
         
         try:
-            res = tkinter.messagebox.askquestion("程心自定义使用教学", "是否打开程心自定义使用教学页面?")
-            if res == 'yes':
+            # 创建三选一对话框
+            dialog = BrowserChoiceDialog(
+                self.UIObject['root'],
+                "程心自定义使用教学",
+                "请选择打开方式：",
+                url
+            )
+            choice = dialog.result
+            
+            if choice == 'internal':
+                # 使用内置浏览器
+                try:
+                    if ChanceCustom.load.globalProc is not None:
+                        OlivOS.webviewUIAPI.sendOpenWebviewPage(
+                            ChanceCustom.load.globalProc.Proc_info.control_queue,
+                            'ChanceCustom_forum_page',
+                            '程心自定义使用教学',
+                            url
+                        )
+                    else:
+                        tkinter.messagebox.showwarning('提示', '内置浏览器暂不可用，将使用默认浏览器打开')
+                        webbrowser.open(url)
+                except Exception as e:
+                    tkinter.messagebox.showwarning('提示', f'内置浏览器打开失败，将使用默认浏览器打开\n错误信息：{str(e)}')
+                    webbrowser.open(url)
+            elif choice == 'external':
+                # 使用默认浏览器
                 webbrowser.open(url)
         except webbrowser.Error as error_info:
             tkinter.messagebox.showerror("webbrowser.Error", str(error_info))
