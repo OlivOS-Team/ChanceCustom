@@ -307,8 +307,9 @@ def getPreFilterReply(key:str, valDict:dict):
     if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
         bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
     # 应用重定向逻辑（对于非unity的hash，仅在OlivaDiceCore可用时）
-    if bot_hash != 'unity' and has_olivadicecore:
+    if bot_hash != 'unity' and 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
         try:
+            import OlivaDiceCore
             redirected_bot_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(bot_hash)
         except:
             redirected_bot_hash = bot_hash
