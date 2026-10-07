@@ -21,8 +21,6 @@ import random
 
 globalValDict = {}
 
-gRegexWarnedSet = set()
-
 
 def unity_reply(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow, event_name: str):
     reply_runtime(plugin_event=plugin_event, Proc=Proc, event_name=event_name)
@@ -305,14 +303,11 @@ def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow
                         try:
                             res_re = re.match('^%s$' % tmp_dictCustomData_this[key_this]['key'], tmp_message)
                         except (re.error, RecursionError, OverflowError) as e:
-                            tmp_warnKey = (tmp_hash_list_this, tmp_dictCustomData_this[key_this]['key'])
-                            if tmp_warnKey not in gRegexWarnedSet:
-                                gRegexWarnedSet.add(tmp_warnKey)
-                                Proc.log(
-                                    1,
-                                    'ChanceCustom 规则[%s]的正则表达式无效，已跳过: %s'
-                                    % (tmp_dictCustomData_this[key_this]['key'], e)
-                                )
+                            Proc.log(
+                                1,
+                                'ChanceCustom 规则[%s]的正则表达式无效，已跳过: %s'
+                                % (tmp_dictCustomData_this[key_this]['key'], e)
+                            )
                             continue
                         if res_re is not None:
                             res_re_list = res_re.groups()

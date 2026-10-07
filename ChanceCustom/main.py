@@ -18,8 +18,8 @@ import ChanceCustom
 
 import platform
 
-version = '0.2.23'
-svn = 38
+version = '0.2.24'
+svn = 39
 
 version_full = '%s(%d)' % (version, svn)
 
