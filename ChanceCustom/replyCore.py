@@ -300,7 +300,15 @@ def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow
                                         reply(plugin_event, msg)
                             break
                     elif 'reg' == tmp_dictCustomData_this[key_this]['matchType']:
-                        res_re = re.match('^%s$' % tmp_dictCustomData_this[key_this]['key'], tmp_message)
+                        try:
+                            res_re = re.match('^%s$' % tmp_dictCustomData_this[key_this]['key'], tmp_message)
+                        except (re.error, RecursionError, OverflowError) as e:
+                            Proc.log(
+                                1,
+                                'ChanceCustom 规则[%s]的正则表达式无效，已跳过: %s'
+                                % (tmp_dictCustomData_this[key_this]['key'], e)
+                            )
+                            continue
                         if res_re is not None:
                             res_re_list = res_re.groups()
                             count = 1
