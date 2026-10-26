@@ -48,6 +48,9 @@ dictSLMap = {
 }
 
 
+_owned_root = None
+
+
 def resolve_host_root():
     """取宿主（OlivOS 插件进程）提供的 tk 根窗口，取不到时返回 None"""
     proc = getattr(ChanceCustom.load, 'globalProc', None)
@@ -60,24 +63,48 @@ def resolve_host_root():
         return None
 
 
+def _is_alive(widget):
+    if widget is None:
+        return False
+    try:
+        return bool(widget.winfo_exists())
+    except tkinter.TclError:
+        return False
+
+
+def get_shared_root():
+    """返回本模块共用的 tk 根窗口
+
+    优先用宿主 main_tk；它和 tkinter._default_root 不是同一个解释器时以 _default_root 为准，
+    因为未指定 master 的 StringVar/BooleanVar 会绑到 _default_root，解释器不一致会让控件
+    初始化失败或取值不生效。宿主没有根窗口时（system.proc_mode = webUI）自建一个隐藏根窗口
+    并 withdraw()，这样所有窗口共用同一个解释器，且面板之间互为兄弟窗口。
+    """
+    global _owned_root
+    default_root = getattr(tkinter, '_default_root', None)
+    host_root = resolve_host_root()
+    if _is_alive(host_root) and (not _is_alive(default_root) or host_root.tk is default_root.tk):
+        return host_root
+    if _is_alive(default_root):
+        return default_root
+    if _is_alive(host_root):
+        return host_root
+    if not _is_alive(_owned_root):
+        _owned_root = tkinter.Tk()
+        _owned_root.withdraw()
+    return _owned_root
+
+
 def create_window(master=None):
     """创建窗口对象，供本模块所有顶层窗口使用
 
-    优先挂到宿主根窗口，其次挂到已存在的默认根窗口；两者都没有时把自己当作主窗口。
+    所有窗口都挂到同一个根窗口下：面板之间互为兄弟，关掉一个不会带走另一个。
     不要直接写 tkinter.Toplevel()：_default_root 为空时 tkinter 会隐式创建一个标题为
     tk 的空白根窗口，本窗口成为它的子窗口——关本窗口它留着，关它本窗口一起消失。
-    宿主仅在 system.proc_mode != 'webUI' 时提供根窗口，因此兜底分支是必需的。
     """
-    if master is None:
-        master = resolve_host_root()
-    if master is None:
-        master = getattr(tkinter, '_default_root', None)
-    if master is not None:
-        try:
-            return tkinter.Toplevel(master)
-        except tkinter.TclError:
-            pass
-    return tkinter.Tk()
+    if not _is_alive(master):
+        master = get_shared_root()
+    return tkinter.Toplevel(master)
 
 
 class BrowserChoiceDialog(object):
