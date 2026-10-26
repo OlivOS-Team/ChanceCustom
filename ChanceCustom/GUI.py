@@ -48,6 +48,38 @@ dictSLMap = {
 }
 
 
+def resolve_host_root():
+    """取宿主（OlivOS 插件进程）提供的 tk 根窗口，取不到时返回 None"""
+    proc = getattr(ChanceCustom.load, 'globalProc', None)
+    getter = getattr(proc, 'get_main_root', None)
+    if getter is None:
+        return None
+    try:
+        return getter()
+    except Exception:
+        return None
+
+
+def create_window(master=None):
+    """创建窗口对象，供本模块所有顶层窗口使用
+
+    优先挂到宿主根窗口，其次挂到已存在的默认根窗口；两者都没有时把自己当作主窗口。
+    不要直接写 tkinter.Toplevel()：_default_root 为空时 tkinter 会隐式创建一个标题为
+    tk 的空白根窗口，本窗口成为它的子窗口——关本窗口它留着，关它本窗口一起消失。
+    宿主仅在 system.proc_mode != 'webUI' 时提供根窗口，因此兜底分支是必需的。
+    """
+    if master is None:
+        master = resolve_host_root()
+    if master is None:
+        master = getattr(tkinter, '_default_root', None)
+    if master is not None:
+        try:
+            return tkinter.Toplevel(master)
+        except tkinter.TclError:
+            pass
+    return tkinter.Tk()
+
+
 class BrowserChoiceDialog(object):
     def __init__(self, parent, title, message, url):
         self.result = 'cancel'
@@ -133,7 +165,7 @@ class ConfigUI(object):
         self.UIConfig.update(dictColorContext)
 
     def start(self):
-        self.UIObject['root'] = tkinter.Toplevel()
+        self.UIObject['root'] = create_window()
         self.UIObject['root'].title('程心自定义')
         self.UIObject['root'].geometry('518x430')
         self.UIObject['root'].resizable(width=False, height=False)
@@ -835,7 +867,7 @@ class TreeEditUI(object):
         self.UIData = {}
 
     def start(self):
-        self.UIObject['edit_root'] = tkinter.Toplevel()
+        self.UIObject['edit_root'] = create_window()
         self.UIObject['edit_root'].title('编辑')
         if 'create' == self.action:
             self.UIObject['edit_root'].title('添加')
@@ -1045,7 +1077,7 @@ class PackUpUI(object):
         self.UIData['click_record'] = {}
 
     def start(self):
-        self.UIObject['edit_root'] = tkinter.Toplevel()
+        self.UIObject['edit_root'] = create_window()
         self.UIObject['edit_root'].title('打包...')
         self.UIObject['edit_root'].geometry('600x400')
         self.UIObject['edit_root'].resizable(width=False, height=False)
